@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.dao.rainbow.RainbowDao">
+	<select id="getResult" resultType="java.lang.String">
+		select sum(sum_device -
+		online_device_ED)/sum(sum_device) 复合关机率
+		from
+		(
+		select in_motion.dt,online_device_ED,
+		@csum := @csum + sum_shop_ED sum_device
+		from
+		(select @csum := 0) s,
+		(select sheet2.dt,ifnull(sum_shop,0) sum_shop_ED
+		from
+		(select dt,count(distinct(SHOP_Uid)) sum_shop
+		from
+		(
+		select b.device_no,d.SHOP_Uid,c.DDI_Type,date(min(a.created_at )) dt
+		from t_storage_checkout_packages_detail a join t_storage_checkout_packages
+		b
+		on a.package_no = b.package_no
+		left join t_device_device_info c
+		on b.device_no = c.DDI_No
+		left join t_shop_shop_info d
+		on c.DDI_SPUid = d.SHOP_Uid
+		left join netfiance_db.t_shop_shop_info e
+		on e.SHOP_Uid = d.SHOP_Uid
+		left join netfiance_db.t_shop_agent_list f
+		on e.SHOP_AGUid = f.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top g
+		on f.AGNT_ATUid = g.ATOP_Uid
+		where c.DDI_SPUid in (select SHOP_Uid from t_shop_shop_info where
+		SHOP_State = 1)
+		#and d.DDI_SPUid = {{选择网点id}}
+		#and c.device_no = {{选择设备编码}}
+		#and g.ATOP_Title = {{选择渠道}}
+		#and c.DDI_Type = {{选择设备类型}}
+		group by b.device_no
+		order by dt ) t
+		group by dt) sheet1
+
+		right join
+		(select date(a.CreateDate) dt from t_shop_order_info a where
+		date(a.CreateDate)>='2019-05-01' group by dt) sheet2
+		on sheet1.dt = sheet2.dt) in_motion
+
+
+		left join
+
+
+		(select date(a.CreateDate) dt,count(distinct(a.DOL_DUid)) online_device_ED
+		from t_device_online_list a left join t_device_device_info b
+		on a.DOL_DUid = b.DDI_Uid
+		left join t_shop_shop_info c
+		on b.DDI_SPUid = c.SHOP_Uid
+		left join t_storage_checkout_packages g
+		on b.DDI_No = g.device_no
+		left join t_storage_checkout_packages_detail h
+		on h.package_no = g.package_no
+		left join netfiance_db.t_shop_shop_info d
+		on d.SHOP_Uid = c.SHOP_Uid
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		where date(a.CreateDate) >= date(h.created_at)
+		and c.SHOP_State = 1
+		#and c.SHOP_Uid = {{选择网点id}}
+		#and b.device_no = {{选择设备编码}}
+		#and f.ATOP_Title = {{选择渠道}}
+		#and b.DDI_Type = {{选择设备类型}}
+		group by dt ) online_device
+		on online_device.dt = in_motion.dt) o
+	</select>
+</mapper>
