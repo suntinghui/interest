@@ -5,6 +5,9 @@ import com.interest.model.utils.PageResult;
 import com.interest.model.utils.ResponseWrapper;
 import com.interest.service.MsgRecordsService;
 import com.interest.utils.SecurityAuthenUtil;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -14,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class MsgRecordsController {
 
-    @Autowired
+	@Resource(name = "msgRecordsServiceImpl")
     private MsgRecordsService msgRecordsService;
 
     @InterestLog

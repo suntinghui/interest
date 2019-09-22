@@ -23,6 +23,7 @@ public class MsgRecordsServiceImpl implements MsgRecordsService {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
     @Override
+    @Transactional
     public void addMsg(MsgRecordEntity entity) {
         threadPoolTaskExecutor.execute(()->{
             msgRecordsDao.addMsg(entity);
@@ -30,6 +31,7 @@ public class MsgRecordsServiceImpl implements MsgRecordsService {
     }
 
     @Override
+    @Transactional
     public int getUnreadMsgCount(Integer userid) {
         return msgRecordsDao.getUnreadMsgCount(userid);
     }
@@ -48,6 +50,7 @@ public class MsgRecordsServiceImpl implements MsgRecordsService {
     }
 
     @Override
+    @Transactional
     public void updateMsgRecordIsread(Integer msgRecordId, int isread) {
         msgRecordsDao.updateMsgRecordIsread(msgRecordId,isread);
     }

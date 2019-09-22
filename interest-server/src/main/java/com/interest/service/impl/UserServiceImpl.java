@@ -46,31 +46,37 @@ public class UserServiceImpl implements UserService {
     private PathsProperties pathsProperties;
 
     @Override
+    @Transactional
     public void insert(UserEntity userEntity) {
         userDao.insert(userEntity);
     }
 
     @Override
+    @Transactional
     public void del(UserEntity userEntity) {
         userDao.del(userEntity);
     }
 
     @Override
+    @Transactional
     public UserEntity getUserEntityByLoginName(String loginName) {
         return userDao.getUserEntityByLoginName(loginName);
     }
 
     @Override
+    @Transactional
     public List<UserEntity> usersList(String name, int pageSize, int start) {
         return userDao.usersList(name, pageSize, start);
     }
 
     @Override
+    @Transactional
     public Integer usersSize(String name, int pageSize, int start) {
         return userDao.usersSize(name, pageSize, start);
     }
 
     @Override
+    @Transactional
     public void insertUser(UserEntity userEntity) {
 		/*String password = null;
 		try {
@@ -85,6 +91,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUser(UserEntity userEntity) {
         //userEntity.setPassword(new Md5PasswordEncoder().encodePassword(userEntity.getPassword(), null));
         if (userEntity.getId() != 8888) {
@@ -94,6 +101,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUsers(List<String> groupId) {
         userDao.deleteUsers(groupId);
     }
@@ -116,22 +124,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserEntity getEntityById(int userid) {
         return userDao.getUserEntityById(userid);
     }
 
     @Override
+    @Transactional
     public UserInfoResponse getUserInfoById(int userId) {
         return userDao.getUserInfoById(userId);
     }
 
     @Override
+    @Transactional
     public void updateUserInfoByUserId(int userId, UserInfoRequest userInfoRequest) {
         userDao.updateUserInfo(userId, userInfoRequest.getName(), userInfoRequest.getUrl(), userInfoRequest.getEmail());
         userDetailService.updateUserInfo(userId, userInfoRequest.getInfo(), userInfoRequest.getLocation(), userInfoRequest.getSkill());
     }
 
     @Override
+    @Transactional
     public void updateUserHeadImageToLocation() {
         List<UserIdHeadImg> githubUserId = userDao.allGithubUserId();
         List<UserIdHeadImg> qqUserId = userDao.allQQUserId();
@@ -155,6 +167,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserHeadImg(int userId, String headImg) {
         String oldHeadImg = userDao.getUserEntityById(userId).getHeadimg();
         userDao.updateHeadImg(userId, headImg);
@@ -169,6 +182,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void updateUserUrl(int id) {
         String url = pathsProperties.getDomainName()+"/page/user/"+id;
         userDao.updateUserUrlById(id,url);

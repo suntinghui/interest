@@ -285,6 +285,22 @@ const routers = [
 	    meta: {
 	      title: "rainbow/fhgjl"
 	    }
+	  },
+	  {
+	    path: "rainbow/zhkjsc",
+	    name: "rainbow/zhkjsc",
+	    component: resolve => require(["./views/rainbow/zhkjsc.vue"], resolve),
+	    meta: {
+	      title: "rainbow/zhkjsc"
+	    }
+	  },
+	  {
+	    path: "rainbow/sbda",
+	    name: "rainbow/sbda",
+	    component: resolve => require(["./views/rainbow/sbda.vue"], resolve),
+	    meta: {
+	      title: "rainbow/sbda"
+	    }
 	  }
     ]
   },

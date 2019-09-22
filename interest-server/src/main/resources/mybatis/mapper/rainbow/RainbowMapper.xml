@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.dao.rainbow.RainbowDao">
+
+	<resultMap id="deviceDocResponse" type="com.interest.model.entity.RainbowDeviceDocEntity">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="channel" property="channel"/>
+        <result column="yixiangTime" property="yixiangTime"/>
+        <result column="guanlianTime" property="guanlianTime"/>
+        <result column="openTime" property="openTime"/>
+    </resultMap>
+
+	<!--复合关机率 -->
+	<select id="fhgjl" resultType="String">
+		select sum(sum_device -
+		online_device_ED)/sum(sum_device) 复合关机率
+		from
+		(
+		select in_motion.dt,online_device_ED,
+		@csum := @csum + sum_shop_ED sum_device
+		from
+		(select @csum := 0) s,
+		(select sheet2.dt,ifnull(sum_shop,0) sum_shop_ED
+		from
+		(select dt,count(distinct(SHOP_Uid)) sum_shop
+		from
+		(
+		select b.device_no,d.SHOP_Uid,c.DDI_Type,date(min(a.created_at )) dt
+		from t_storage_checkout_packages_detail a join t_storage_checkout_packages
+		b
+		on a.package_no = b.package_no
+		left join t_device_device_info c
+		on b.device_no = c.DDI_No
+		left join t_shop_shop_info d
+		on c.DDI_SPUid = d.SHOP_Uid
+		left join netfiance_db.t_shop_shop_info e
+		on e.SHOP_Uid = d.SHOP_Uid
+		left join netfiance_db.t_shop_agent_list f
+		on e.SHOP_AGUid = f.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top g
+		on f.AGNT_ATUid = g.ATOP_Uid
+		where c.DDI_SPUid in (select SHOP_Uid from t_shop_shop_info where
+		SHOP_State = 1)
+		#and d.DDI_SPUid = {{选择网点id}}
+		#and c.device_no = {{选择设备编码}}
+		#and g.ATOP_Title = {{选择渠道}}
+		#and c.DDI_Type = {{选择设备类型}}
+		group by b.device_no
+		order by dt ) t
+		group by dt) sheet1
+
+		right join
+		(select date(a.CreateDate) dt from t_shop_order_info a where
+		date(a.CreateDate) &gt;= '2019-05-01' group by dt) sheet2
+		on sheet1.dt = sheet2.dt) in_motion
+
+
+		left join
+
+
+		(select date(a.CreateDate) dt,count(distinct(a.DOL_DUid)) online_device_ED
+		from t_device_online_list a left join t_device_device_info b
+		on a.DOL_DUid = b.DDI_Uid
+		left join t_shop_shop_info c
+		on b.DDI_SPUid = c.SHOP_Uid
+		left join t_storage_checkout_packages g
+		on b.DDI_No = g.device_no
+		left join t_storage_checkout_packages_detail h
+		on h.package_no = g.package_no
+		left join netfiance_db.t_shop_shop_info d
+		on d.SHOP_Uid = c.SHOP_Uid
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		where date(a.CreateDate) &gt;= date(h.created_at)
+		and DOL_Length &lt;> 0
+		and c.SHOP_State = 1
+		#and c.SHOP_Uid = {{选择网点id}}
+		#and b.device_no = {{选择设备编码}}
+		#and f.ATOP_Title = {{选择渠道}}
+		#and b.DDI_Type = {{选择设备类型}}
+		group by dt ) online_device
+		on online_device.dt = in_motion.dt) o
+
+		#where o.dt &gt;= '2019-08-10' and o.dt &lt;= {{选择时段}}
+		#选择某个时间段（设备开机记录是从8月10日开始，之前无数据）
+
+	</select>
+	
+	<!-- 机头空仓频度 -->
+	<select id="jtkcpd" resultType="String">
+	select count(SHOP_Title)
+	from
+	(
+	select d.SHOP_Title,c.DDI_No,b.DSL_Note,b.DSL_No,a.CreateDate 空仓时间
+	from t_device_sub_change_log a left join t_device_sub_list b
+	on a.DSLG_DSUid = b.DSL_Uid
+	left join t_device_device_info c
+	on b.DSL_DUid = c.DDI_Uid
+	left join t_shop_shop_info d
+	on c.DDI_SPUid = d.SHOP_Uid
+	left join netfiance_db.t_shop_shop_info e
+	on e.SHOP_Uid = d.SHOP_Uid
+	left join netfiance_db.t_shop_agent_list f
+	on e.SHOP_AGUid = f.AGNT_Uid
+	left join netfiance_db.t_shop_agent_top g
+	on f.AGNT_ATUid = g.ATOP_Uid
+	where DSLG_NewCount = 0 and dslg_mnuid = '8bf30bce2e914a8fa591635612e20641'
+	) o
+	</select>
+	
+	<!-- 综合开机时长 -->
+	<select id="zhkjsc" resultType="String">
+	select sum(last_hour) sum_last_hour
+	from(
+	select SHOP_Title,DDI_No,dt,last_hour
+	from
+	(select c.SHOP_Title,b.DDI_No,date(a.CreateDate)
+	dt,round(sum(a.DOL_Length)/60,1) last_hour
+	from t_device_online_list a left join t_device_device_info b
+	on a.DOL_DUid = b.DDI_Uid
+	left join t_shop_shop_info c
+	on b.DDI_SPUid = c.SHOP_Uid
+	left join netfiance_db.t_shop_shop_info e
+	on e.SHOP_Uid = c.SHOP_Uid
+	left join netfiance_db.t_shop_agent_list f
+	on e.SHOP_AGUid = f.AGNT_Uid
+	left join netfiance_db.t_shop_agent_top g
+	on f.AGNT_ATUid = g.ATOP_Uid
+	where DOL_Length &lt;&gt; 0
+	and c.SHOP_State = 1
+	group by SHOP_Title,b.DDI_No,dt) t
+	where last_hour &lt;&gt; 0 )o
+	</select>
+	
+	<!-- 设备档案，有改动，标题、添加分页 -->
+	<select id="getDeviceDocList" resultMap="deviceDocResponse">
+	select sheet1.SHOP_Uid id,sheet1.SHOP_Title name,ATOP_Title
+	channel,sheet1.意向时间 yixiangTime,ifnull(sheet2.关联时间,'')
+	guanlianTime,ifnull(sheet4.dt,'') openTime
+	from
+	(select distinct(SHOP_Uid) SHOP_Uid,SHOP_Title,i.ATOP_Title,date(a.CreateDate)
+	意向时间,'意向网点'
+	from netfiance_db.t_shop_shop_info a
+	left join netfiance_db.t_shop_agent_list h
+	on a.SHOP_AGUid = h.AGNT_Uid
+	left join netfiance_db.t_shop_agent_top i
+	on h.AGNT_ATUid = i.ATOP_Uid
+
+	where date(a.CreateDate) &lt;= '2019-09-15'
+	group by SHOP_Uid) sheet1
+
+	left join
+
+	(select distinct(SHOP_Uid) SHOP_Uid,date(a.CreateDate) 关联时间,'关联网点'
+	from t_device_sub_list a left join t_device_device_info b
+	on a.DSL_DUid = b.DDI_Uid
+	left join t_shop_shop_info c
+	on c.SHOP_Uid = b.DDI_SPUid
+	where b.DDI_SPUid in (select SHOP_Uid from t_shop_shop_info where SHOP_State
+	= 1)
+	and SHOP_Title &lt;&gt; '公司总部'
+	and date(a.CreateDate) &lt;= '2019-09-15') sheet2
+
+	on sheet1.SHOP_Uid = sheet2.SHOP_Uid
+
+
+	left join
+
+	(select distinct(SHOP_Uid) SHOP_Uid,dt,'已装票开启'
+	from
+	(
+	select d.SHOP_Uid,date(min(a.created_at )) dt
+	from t_storage_checkout_packages_detail a join t_storage_checkout_packages
+	b
+	on a.package_no = b.package_no
+	left join t_device_device_info c
+	on b.device_no = c.DDI_No
+	join t_shop_shop_info d
+	on c.DDI_SPUid = d.SHOP_Uid
+	where c.DDI_SPUid in (select SHOP_Uid from t_shop_shop_info where SHOP_State
+	= 1)
+	group by SHOP_Uid
+	order by dt )turn_on
+	where turn_on.dt &lt;= '2019-09-15' ) sheet4
+
+	on sheet1.SHOP_Uid = sheet4.SHOP_Uid
+
+	order by 关联网点 desc,已装票开启 desc
+
+	limit #{pageWrapper.start},#{pageWrapper.pageSize};
+	
+	</select>
+	
+	<!-- 有改动，添加count -->
+	<select id="getDevieDocSize" parameterType="String" resultType = "Integer">
+	select count(*)
+	from
+	(select distinct(SHOP_Uid) SHOP_Uid,SHOP_Title,i.ATOP_Title,date(a.CreateDate)
+	意向时间,'意向网点'
+	from netfiance_db.t_shop_shop_info a
+	left join netfiance_db.t_shop_agent_list h
+	on a.SHOP_AGUid = h.AGNT_Uid
+	left join netfiance_db.t_shop_agent_top i
+	on h.AGNT_ATUid = i.ATOP_Uid
+
+	where date(a.CreateDate) &lt;= '2019-09-15'
+	group by SHOP_Uid) sheet1
+
+	left join
+
+	(select distinct(SHOP_Uid) SHOP_Uid,date(a.CreateDate) 关联时间,'关联网点'
+	from t_device_sub_list a left join t_device_device_info b
+	on a.DSL_DUid = b.DDI_Uid
+	left join t_shop_shop_info c
+	on c.SHOP_Uid = b.DDI_SPUid
+	where b.DDI_SPUid in (select SHOP_Uid from t_shop_shop_info where SHOP_State = 1)
+	and SHOP_Title &lt;&gt; '公司总部'
+	and date(a.CreateDate) &lt;= '2019-09-15') sheet2
+
+	on sheet1.SHOP_Uid = sheet2.SHOP_Uid
+
+
+	left join
+
+	(select distinct(SHOP_Uid) SHOP_Uid,dt,'已装票开启'
+	from
+	(
+	select d.SHOP_Uid,date(min(a.created_at )) dt
+	from t_storage_checkout_packages_detail a join t_storage_checkout_packages
+	b
+	on a.package_no = b.package_no
+	left join t_device_device_info c
+	on b.device_no = c.DDI_No
+	join t_shop_shop_info d
+	on c.DDI_SPUid = d.SHOP_Uid
+	where c.DDI_SPUid in (select SHOP_Uid from t_shop_shop_info where SHOP_State = 1)
+	group by SHOP_Uid
+	order by dt )turn_on
+	where turn_on.dt &lt;= '2019-09-15' ) sheet4
+
+	on sheet1.SHOP_Uid = sheet4.SHOP_Uid
+
+	order by 关联网点 desc,已装票开启 desc ;
+	
+	</select>
+	
+	
+	
+</mapper>

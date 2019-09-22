@@ -10,6 +10,7 @@ import com.interest.model.response.ReplyCardResponse;
 import com.interest.service.MsgRecordsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.interest.service.ReplyCardService;
 import com.interest.utils.DateUtil;
@@ -28,16 +29,19 @@ public class ReplyCardServiceImpl implements ReplyCardService {
     private MsgRecordsService msgRecordsService;
 
     @Override
+    @Transactional
     public List<ReplyCardResponse> replycardList(int postcardid, int pageSize, int start) {
         return replyCardDao.replycardList(postcardid, pageSize, start);
     }
 
     @Override
+    @Transactional
     public Integer replycardSize(int postcardid, int pageSize, int start) {
         return replyCardDao.replycardSize(postcardid, pageSize, start);
     }
 
     @Override
+    @Transactional
     public void insertEntity(ReplyCardEntity replyCardEntity) {
 
         //User user = SecurityAuthenUtil.getAuthenticationUser();

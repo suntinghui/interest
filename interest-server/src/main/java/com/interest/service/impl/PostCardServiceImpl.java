@@ -24,16 +24,19 @@ public class PostCardServiceImpl implements PostCardService {
 	private ReplyCardDao replyCardDao;
 
 	@Override
+	@Transactional
 	public List<PostCardResponse> postcardList(String interestid, int pageSize, int start) {
 		return postCardDao.postcardList(interestid,pageSize,start);
 	}
 
 	@Override
+	@Transactional
 	public Integer postcardSize(String interestid, int pageSize, int start) {
 		return postCardDao.postcardSize(interestid,pageSize,start);
 	}
 
 	@Override
+	@Transactional
 	public void insertEntity(PostCardEntity postCardEntity) {
 		int userid = SecurityAuthenUtil.getId();
 
@@ -45,6 +48,7 @@ public class PostCardServiceImpl implements PostCardService {
 	}
 
 	@Override
+	@Transactional
 	public PostCardResponse getPostcard(int id) {
 		return postCardDao.getPostcard(id);
 	}

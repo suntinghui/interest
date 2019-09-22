@@ -8,6 +8,7 @@ import com.interest.dao.master.RoleDao;
 import com.interest.model.entity.MenuEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.interest.service.MenuService;
 
@@ -21,6 +22,7 @@ public class MenuServiceImpl implements MenuService {
 	private RoleDao roleDao;
 
 	@Override
+	@Transactional
 	public List<MenuEntity> menuList(int id) {
 		List<String> idList = roleDao.getModulesById(id);
 		
@@ -48,36 +50,43 @@ public class MenuServiceImpl implements MenuService {
 	}
 
 	@Override
+	@Transactional
 	public List<MenuEntity> menusList(int pageSize, int start, String menuId) {
 		return menuDao.menusList(pageSize, start, menuId);
 	}
 
 	@Override
+	@Transactional
 	public Integer menusSize(int pageSize, int start, String menuId) {
 		return menuDao.menusSize(pageSize, start, menuId);
 	}
 
 	@Override
+	@Transactional
 	public void insertMenu(MenuEntity menuEntity) {
 		menuDao.insertMenu(menuEntity);
 	}
 
 	@Override
+	@Transactional
 	public void updateMenu(MenuEntity menuEntity) {
 		menuDao.updateMenu(menuEntity);
 	}
 
 	@Override
+	@Transactional
 	public void deleteMenus(List<String> groupId) {
 		menuDao.deleteMenus(groupId);
 	}
 
 	@Override
+	@Transactional
 	public List<MenuEntity> menusByParentId(int parentId) {
 		return menuDao.menusByParentId(parentId);
 	}
 
 	@Override
+	@Transactional
 	public List<MenuEntity> getSubmenus() {
 		return menuDao.getSubmenus();
 	}

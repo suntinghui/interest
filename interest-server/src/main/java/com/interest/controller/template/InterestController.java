@@ -17,13 +17,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 @RestController
 public class InterestController {
 
-    @Autowired
+	@Resource(name = "interestServiceImpl")
     private InterestService interestService;
 
-    @Autowired
+	@Resource(name = "pictureServiceImpl")
     private PictureService pictureService;
 
     @InterestLog

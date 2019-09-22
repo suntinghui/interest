@@ -6,13 +6,16 @@ import com.interest.model.response.ReplyCardResponse;
 import com.interest.model.utils.PageResult;
 import com.interest.model.utils.ResponseWrapper;
 import com.interest.service.ReplyCardService;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ReplyCardController {
 
-    @Autowired
+	@Resource(name = "replyCardServiceImpl")
     private ReplyCardService replyCardService;
 
     @InterestLog

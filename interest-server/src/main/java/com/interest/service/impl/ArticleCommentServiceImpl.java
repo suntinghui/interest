@@ -13,6 +13,7 @@ import com.interest.utils.DateUtil;
 import com.interest.utils.SecurityAuthenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
     @Autowired
     private MsgRecordsService msgRecordsService;
 
+    @Transactional
     @Override
     public void putArticleCommentService(ArticleCommentRequest articleCommentRequest) {
 
@@ -65,6 +67,7 @@ public class ArticleCommentServiceImpl implements ArticleCommentService {
 
     }
 
+    @Transactional
     @Override
     public PageResult getArticleCommentByArticleId(int articleId, PageWrapper pageWrapper) {
         List<ArticleCommentResponse> list = articleCommentDao.getArticleCommentByArticleId(articleId,pageWrapper);

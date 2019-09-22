@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 @RestController
 public class PostCardController {
 
-    @Autowired
+	@Resource(name = "postCardServiceImpl")
     private PostCardService postCardService;
 
     @InterestLog

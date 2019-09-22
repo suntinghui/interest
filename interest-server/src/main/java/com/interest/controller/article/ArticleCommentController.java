@@ -8,6 +8,9 @@ import com.interest.model.utils.ResponseWrapper;
 import com.interest.service.ArticleCommentService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @Api(tags = "文章评论模块")
 public class ArticleCommentController {
 
-    @Autowired
+	@Resource(name = "articleCommentServiceImpl")
     private ArticleCommentService articleCommentService;
 
     @InterestLog

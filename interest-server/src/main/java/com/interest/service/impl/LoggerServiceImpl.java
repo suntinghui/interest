@@ -7,6 +7,7 @@ import com.interest.service.LoggerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +20,7 @@ public class LoggerServiceImpl implements LoggerService {
     private RedisTemplate<String, Object> redisTemplate;
 
     @Override
+    @Transactional
     public PageResult<InterestException> getLogs(Integer pageIndex, Integer pageSize) {
 
         List<InterestException> interestExceptionList = Objects.requireNonNull(redisTemplate.opsForList().range(InterestLogAspect.INTEREST_LOG_KEY, pageIndex * pageSize, pageIndex * pageSize + pageSize - 1)).stream().map(o -> (InterestException) o).collect(Collectors.toList());

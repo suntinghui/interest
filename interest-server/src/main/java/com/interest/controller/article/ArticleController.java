@@ -18,13 +18,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 @RestController
 public class ArticleController {
 
-    @Autowired
+	@Resource(name = "articleServiceImpl")
     private ArticleService articleService;
 
-    @Autowired
+	@Resource(name = "pictureServiceImpl")
     private PictureService pictureService;
 
     @InterestLog

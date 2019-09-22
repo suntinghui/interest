@@ -22,21 +22,25 @@ public class UserDetailServiceImpl implements UserDetailService {
     private UserDetailDao userDetailDao;
 
     @Override
+    @Transactional
     public void updatedDaily() {
         userDetailDao.updateArticleSign(0);
     }
 
     @Override
+    @Transactional
     public UserDetailEntity getEntityByUserid(int userid) {
         return userDetailDao.getEntityByUserid(userid);
     }
 
     @Override
+    @Transactional
     public void updateArticleSign(int articleSign, int userid) {
         userDetailDao.updateUseridArticleSign(articleSign,userid);
     }
 
     @Override
+    @Transactional
     public void updateUserInfo(int userId, String info, String location, String skill) {
         userDetailDao.updateUserInfo(userId,info,location,skill);
     }

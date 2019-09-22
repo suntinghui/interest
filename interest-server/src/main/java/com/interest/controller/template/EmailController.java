@@ -12,10 +12,12 @@ import com.interest.utils.SecurityAuthenUtil;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 @RestController
 public class EmailController {
 
-    @Autowired
+	@Resource(name = "emailServiceImpl")
     private EmailService emailService;
 
     @InterestLog

@@ -17,6 +17,7 @@ public class RelationServiceImpl implements RelationService {
 	private RelationDao relationDao;
 
 	@Override
+	@Transactional
 	public List<RelationEntity> getRelationByUserId(int userId) {
 		return relationDao.getRelationByUserId(userId);
 	}

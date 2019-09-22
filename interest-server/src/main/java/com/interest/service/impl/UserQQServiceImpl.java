@@ -5,6 +5,7 @@ import com.interest.model.entity.UserQQEntity;
 import com.interest.service.UserQQService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserQQServiceImpl implements UserQQService {
@@ -13,6 +14,7 @@ public class UserQQServiceImpl implements UserQQService {
 	private UserQQDao userQQDao;
 
 	@Override
+	@Transactional
 	public void insertEntity(UserQQEntity userQQEntity) {
 		userQQDao.insertEntity(userQQEntity);
 	}

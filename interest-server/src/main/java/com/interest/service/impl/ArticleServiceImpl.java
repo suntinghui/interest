@@ -64,6 +64,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public PageResult getArticle(String searchContent, PageWrapper pageWrapper) {
         List<ArticleResponse> list = articleDao.getArticleList(searchContent, pageWrapper);
         int size = articleDao.getArticleSize(searchContent);
@@ -71,6 +72,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public ArticleDetailResponse getArticleById(int id) {
         threadPoolTaskExecutor.execute(() -> {
             articleDao.addClickRateById(1, id);
@@ -80,6 +82,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public void addCommentCountById(Integer articleid) {
         threadPoolTaskExecutor.execute(() -> {
             articleDao.addCommentCountById(1, articleid);
@@ -87,6 +90,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public PageResult getArticlesByUserId(int userId, PageWrapper pageWrapper) {
         List<ArticleResponse> list = articleDao.getArticlesListByUserId(userId, pageWrapper);
         int size = articleDao.getArticlesSizeByUserId(userId);
@@ -94,6 +98,7 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public PageResult getArticleOnManagement(String searchContent, String dateTimestamp, int del, PageWrapper pageWrapper) {
         String dayStart = null;
         String dayEnd = null;
@@ -107,22 +112,26 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
+    @Transactional
     public void updateArticlesDelByIds(List<String> groupId, int del) {
         articleDao.updateArticlesDelByIds(groupId, del);
     }
 
     @Override
+    @Transactional
     public void updateArticlesTopByIds(List<String> groupId, int top) {
         articleDao.updateArticlesTopByIds(groupId, top);
     }
 
     @Override
+    @Transactional
     public void updateArticlesDelById(int articleId) {
         int userId = SecurityAuthenUtil.getId();
         articleDao.updateArticlesDelByIdAndUserId(userId,articleId);
     }
 
     @Override
+    @Transactional
     public void updateArticle(ArticleUpdateRequest articleCreateRequest) {
         int userId = SecurityAuthenUtil.getId();
 
@@ -141,6 +150,7 @@ public class ArticleServiceImpl implements ArticleService {
 
     }
 
+    
     public String htmlText(String htmlStr) {
         String textStr = "";
         java.util.regex.Pattern p_script;
