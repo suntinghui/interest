@@ -17,7 +17,8 @@ module.exports = {
         'quill':'Quill',
         'vue-router': 'VueRouter',
         'vuex':'Vuex',
-        'axios': 'axios'
+        'axios': 'axios',
+		'echarts': 'echarts'
     },
     plugins: [
       new webpack.ProvidePlugin({

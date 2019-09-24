@@ -46,11 +46,13 @@
 				</Col>
 			</Row>
 
-			<Row style="margin-bottom: 25px; text-align: center;">
-				<Col><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
+			<Row style="margin-bottom: 25px; text-align: right;">
+				<Col span="22"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
 			</Row>
 		</div>
-
+		
+		<Spin size="large" fix v-if="showSpin"></Spin>
+		
 		<div style="padding: 10px 0;">
 			<Table border :columns="columns1" :data="data1" :height="350"></Table>
 		</div>
@@ -62,15 +64,21 @@
 
 
 <script>
+	
+	// for axios add finally
+	import promiseFinally from 'promise.prototype.finally';
+	promiseFinally.shim();
+	
 	export default {
 		data() {
 			return {
+				showSpin: false,
 				date: null,
 				searchContent: null,
 				groupId: [],
 				wangdianList: [{
 					id: 1,
-					title: "好的"
+					title: "第一"
 				}],
 				total: 0,
 				/*pageInfo实体*/
@@ -86,25 +94,21 @@
 					},
 					{
 						title: "所属渠道",
-						width: 250,
 						key: "channel",
 						align: "center"
 					},
 					{
 						title: "意向时间",
-						width: 200,
 						key: "yixiangTime",
 						align: "center"
 					},
 					{
 						title: "关联时间",
-						width: 200,
 						key: "guanlianTime",
 						align: "center"
 					},
 					{
 						title: "装票开启时间",
-						width: 200,
 						key: "openTime",
 						align: "center"
 					}
@@ -125,6 +129,8 @@
 			},
 			/*得到表数据*/
 			getTable(e) {
+				this.showSpin = true;
+				
 				this.axios({
 						method: "get",
 						url: "/rainbow/sbda",
@@ -145,7 +151,10 @@
 					)
 					.catch(function(error) {
 						alert(error);
-					});
+					})
+					.finally(function(){
+						this.showSpin = false;
+					}.bind(this));
 
 			},
 			search() {

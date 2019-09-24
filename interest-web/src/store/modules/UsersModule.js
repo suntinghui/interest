@@ -44,7 +44,7 @@ export default {
         }
       })
         .then(function(response) {
-          /*console.log(response.data);*/
+          console.log(response.data);
           context.commit("setUser", {
             user_name: user_name,
             user_token: response.data.access_token,
@@ -59,14 +59,13 @@ export default {
           /*this.$route.router.push({ path: '/base' });*/
         })
         .catch(function(error) {
-			alert(JSON.stringify(error))
+			// alert("发生错误 "+JSON.stringify(error))
           /*iView.Message.error('用户名或密码错误！');*/
           context.commit("setSignTrue", null, { root: true });
         });
     },
     loginOUt(context, { router }) {
       router.push({ path: "/login" });
-      location.reload();
       context.commit("clearUser");
     }
   }

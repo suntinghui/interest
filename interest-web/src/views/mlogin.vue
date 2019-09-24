@@ -87,7 +87,7 @@
                             </div>
                         </li>
                         <li>
-                            <div class="name-password-error" v-if="this.$store.state.ifSign">用户名或密码错误</div>
+                            <div class="name-password-error" v-if="this.$store.state.ifSign" style="margin-top: 10px;">用户名或密码错误</div>
                             <dl>
                                 <FormItem prop="userName" >
                                     <Input v-model="formLogin.userName" type="text" placeholder="登录名" >

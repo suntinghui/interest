@@ -84,12 +84,12 @@
                     <ul style="list-style: none;box-shadow:10px 10px 20px rgba(0,0,0,.5);">
                         <li style="border-bottom: 1px solid #e9eaec;">
                             <div class="content">
-                                <img src="../images/logo.jpg" style="width: 40px;height: 40px;" align="absmiddle" />
+                                <img src="../images/logo.jpg" style="width: 30px;height: 30px;" align="absmiddle" />
                                 <span style="float:right;font-size: 15px"><Icon type="ios-log-in"></Icon>欢迎登录</span>
                             </div>
                         </li>
                         <li>
-                            <div class="name-password-error" v-if="this.$store.state.ifSign">用户名或密码错误</div>
+                            <div class="name-password-error" v-if="this.$store.state.ifSign" style="margin-top: 10px;">用户名或密码错误</div>
                             <dl>
                                 <FormItem prop="userName" >
                                     <Input v-model="formLogin.userName" type="text" placeholder="登录名" >
@@ -101,8 +101,9 @@
                                     <Icon type="ios-lock-outline" slot="prepend"></Icon></Input>
                                 </FormItem>
                                 <FormItem>
-                                    <Button type="primary" @click="login('formLogin')" style="width: 250px">登录</Button>
-                                    <ul class="account-list">
+                                    <Button type="primary" @click="login('formLogin')" style="width: 250px; margin-bottom: 25px;">登录</Button>
+									
+                                    <ul class="account-list" style="display: none;">
                                         <li>
                                             <a href="https://github.com/login/oauth/authorize?client_id=bbb5cc2034eb62484c1c&state=github" style="{right: 26px;}">
                                                 <!-- <Icon  style="color: rebeccapurple;" size="40" type="social-github"></Icon> -->
