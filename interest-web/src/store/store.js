@@ -1,10 +1,12 @@
 import Vuex from "vuex";
 import Vue from "vue";
+import BaseParamModule from "./modules/BaseParamModule";
 import UsersModule from "./modules/UsersModule";
 
 Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
+	param: BaseParamModule,
     users: UsersModule
   },
   state: {
@@ -13,12 +15,8 @@ export default new Vuex.Store({
       { id: 2, text: "...", done: false }
     ],
     /*域名*/
-    // 测试
     domainName: 'http://127.0.0.1:8088',
     userUrlPre: "http://127.0.0.1:8088/page/user/",
-    //生产
-    // domainName: "https://www.lovemtt.com",
-    // userUrlPre: "https://www.lovemtt.com/page/user/",
     count: 0,
     /*登录界面判断是否显示错误提示*/
     ifSign: false

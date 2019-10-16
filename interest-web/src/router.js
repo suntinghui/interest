@@ -301,7 +301,18 @@ const routers = [
 	    meta: {
 	      title: "rainbow/sbda"
 	    }
-	  }
+	  },
+	  {
+	    path: "rainbow/jqsxxx", // 单机器档案统计 - 机器属性信息
+	    name: "rainbow/jqsxxx",
+	    component: resolve => require(["./views/rainbow/djqdatj/jqsxxx.vue"], resolve),
+	    meta: {
+	      title: "rainbow/jqsxxx"
+	    }
+	  },
+	  
+	  
+	  
     ]
   },
   {

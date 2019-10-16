@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.dao.rainbow.RainbowDjqdatjDao">
+
+	<!-- 设备档案，有改动，标题、添加分页 -->
+	<select id="getDeviceInfoList" resultType="com.interest.model.entity.RainbowJqsxxxEntity">
+		select a.DDI_No ddiNo,a.DDI_Type ddiType,b.SHOP_Address shopAddress,b.SHOP_No shopNo,c.DSI_Mobilecard dsiMobileCard
+		from t_device_device_info a left join netfiance_db.t_shop_shop_info b
+		on a.DDI_SPUid = b.SHOP_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON b.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join study.t_device_sub_info c
+		on a.DDI_No = c.DDI_No
+		left join study.t_shop_sub_info d
+		on a.DDI_SPUid = d.SHOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = b.SHOP_Class
+
+		limit #{pageWrapper.start},#{pageWrapper.pageSize};
+
+	</select>
+
+	<!-- 有改动，添加count -->
+	<select id="getDevieInfoSize" parameterType="String" resultType = "Integer">
+		select count(a.DDI_No)
+		from t_device_device_info a left join netfiance_db.t_shop_shop_info b
+		on a.DDI_SPUid = b.SHOP_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON b.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join study.t_device_sub_info c
+		on a.DDI_No = c.DDI_No
+		left join study.t_shop_sub_info d
+		on a.DDI_SPUid = d.SHOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = b.SHOP_Class
+	</select>
+
+	<!-- 对select中的字段添加中文解释，直接显示在界面上。添加where查询条件。添加LIMIT 1控制只能显示一条数据 -->
+	<select id="getShopInfo" parameterType="String" resultType = "java.util.HashMap">
+		select a.SHOP_No 网点编号,a.SHOP_Title 网点名称,a.SHOP_Address 网点地址,c.SHOP_Area,a.SHOP_Position,t.DICT_Name 网点类型,c.SHOP_Traffic,c.SHOP_Consume,c.SHOP_Distance,c.SHOP_ShoppingCenter,c.SHOP_OpenTime,c.SHOP_CloseTime,c.SHOP_AreaManager
+		from  netfiance_db.t_shop_shop_info a
+		left join study.t_shop_sub_info c
+		on a.SHOP_Uid = c.SHOP_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON a.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join t_device_device_info d
+		on d.DDI_SPUid = a.SHOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = a.SHOP_Class
+
+		where a.SHOP_No = #{shopNo} LIMIT 1
+	</select>
+
+
+
+	
+	
+</mapper>

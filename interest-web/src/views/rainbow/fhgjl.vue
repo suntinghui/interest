@@ -9,18 +9,18 @@
 			<Row style="margin-bottom: 25px;">
 
 				<Col span="8">日期：
-				<DatePicker v-model="date" type="date" placeholder="选择日期" style="width: 250px"></DatePicker>
+				<DatePicker v-model="dateModel" type="date" placeholder="选择日期" style="width: 250px"></DatePicker>
 				</Col>
 
 				<Col span="8">设备：
-				<Select v-model="wangdianType" clearable style="width: 250px">
-					<Option v-for="item in wangdianList" :value="item.id" :key="item.id">{{ item.title }}</Option>
+				<Select v-model="deviceModel" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.deviceTypeList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
 				</Select>
 				</Col>
 
 				<Col span="8">所属地区：
-				<Select v-model="wangdianType" clearable style="width: 250px">
-					<Option v-for="item in areaList" :value="item.id" :key="item.id">{{ item.title }}</Option>
+				<Select v-model="areaModel" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.areaList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
 				</Select>
 				</Col>
 
@@ -28,20 +28,20 @@
 			<Row style="margin-bottom: 25px;">
 
 				<Col span="8">渠道：
-				<Select v-model="wangdianType" clearable style="width: 250px">
-					<Option v-for="item in wangdianList" :value="item.id" :key="item.id">{{ item.title }}</Option>
+				<Select v-model="channelModel"  filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.channelList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
 				</Select>
 				</Col>
 
 				<Col span="8">网点：
-				<Select v-model="wangdianType" clearable style="width: 250px">
-					<Option v-for="item in wangdianList" :value="item.id" :key="item.id">{{ item.title }}</Option>
+				<Select v-model="shopModel" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.shopList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }} ({{item.paramKey}})</Option>
 				</Select>
 				</Col>
 
 				<Col span="8">网点类型：
-				<Select v-model="wangdianType" clearable style="width: 250px">
-					<Option v-for="item in wangdianList" :value="item.id" :key="item.id">{{ item.title }}</Option>
+				<Select v-model="shopTypeModel" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.shopTypeList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
 				</Select>
 				</Col>
 			</Row>
@@ -50,14 +50,13 @@
 				<Col span="22"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
 			</Row>
 		</div>
-
+		
 		<Spin size="large" fix v-if="showSpin"></Spin>
 
 		<div style="padding: 10px 0;">
-			<Table border :columns="columns1" :data="data1" :height="350"></Table>
+			<Table border :columns="columns1" :data="data1" :height="350" :search="true"></Table>
 		</div>
-
-		<div ref="chart" :style="{width: '600px', height: '300px', display:'none'}"></div>
+		
 	</div>
 </template>
 
@@ -76,11 +75,6 @@
 				date: null,
 				searchContent: null,
 				groupId: [],
-				wangdianList: [{
-					id: 1,
-					title: "第一"
-				}],
-				areaList: data.areaList(),
 				/*表显示字段*/
 				columns1: [{
 						title: "标题",
@@ -97,10 +91,11 @@
 			};
 		},
 		mounted() {
+			// 查询所有的参数
+			this.$store.dispatch('queryAllParam');
+			
 			/*页面初始化调用方法*/
 			this.search();
-			
-			this.showCharts();
 		},
 		methods: {
 			search() {
@@ -134,24 +129,7 @@
 					}.bind(this));
 
 			},
-			showCharts: function() {
-				var option = {
-				    xAxis: {
-				        type: 'category',
-				        data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-				    },
-				    yAxis: {
-				        type: 'value'
-				    },
-				    series: [{
-				        data: [820, 932, 901, 934, 1290, 1330, 1320],
-				        type: 'line'
-				    }]
-				};
-				
-				var myChart = this.$echarts.init(this.$refs.chart);
-				myChart.setOption(option);
-			}
+			
 
 		}
 	};

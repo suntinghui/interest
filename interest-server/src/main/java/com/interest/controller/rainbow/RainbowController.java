@@ -2,6 +2,7 @@ package com.interest.controller.rainbow;
 
 import javax.annotation.Resource;
 
+import com.interest.service.RainbowParamService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +52,4 @@ public class RainbowController {
 		PageResult pageResult = rainbowService.getDeviceDocList(searchContent, pageWrapper);
 		return new ResponseWrapper<>(pageResult);
 	}
-
 }

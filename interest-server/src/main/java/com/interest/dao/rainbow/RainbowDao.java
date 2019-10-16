@@ -22,6 +22,7 @@ public interface RainbowDao {
 	
 	// 设备档案
 	List<RainbowDeviceDocEntity> getDeviceDocList(@Param("searchContent") String searchContent, @Param("pageWrapper") PageWrapper pageWrapper);
+
 	int getDevieDocSize(@Param("searchContent") String searchContent);
 
 }

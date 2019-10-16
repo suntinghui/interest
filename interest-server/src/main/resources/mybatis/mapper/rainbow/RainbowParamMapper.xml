@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.dao.rainbow.RainbowParamDao">
+
+	<select id="areaList" resultType="com.interest.model.entity.ParamEntity">
+		select DISTINCT SHOP_Area as paramKey, SHOP_Area as paramValue from study.t_shop_sub_info
+	</select>
+
+	<select id="shopTypeList" resultType="com.interest.model.entity.ParamEntity">
+		select DICT_Value as paramKey,DICT_Name as paramValue from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class'
+	</select>
+
+	<select id="shopList" resultType="com.interest.model.entity.ParamEntity">
+		select SHOP_No as paramKey, SHOP_Title as paramValue from netfiance_db.t_shop_shop_info
+	</select>
+
+	<select id="deviceTypeList" resultType="com.interest.model.entity.ParamEntity">
+		select DISTINCT DDI_Type as paramKey , DDI_Type as paramValue from t_device_device_info
+	</select>
+
+	<select id="channelList" resultType="com.interest.model.entity.ParamEntity">
+		select DISTINCT ATOP_Uid as paramKey, ATOP_Title as paramValue from netfiance_db.t_shop_agent_top
+	</select>
+
+
+	
+	
+</mapper>
