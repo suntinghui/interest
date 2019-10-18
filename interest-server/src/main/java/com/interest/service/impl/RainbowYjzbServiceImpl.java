@@ -1,5 +1,6 @@
 package com.interest.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -40,6 +41,11 @@ public class RainbowYjzbServiceImpl implements RainbowYjzbService {
 	@Override
 	public String kcscbl(String startDate, String endDate) {
 		return rainbowYjzbDao.kcscbl(startDate, endDate);
+	}
+
+	@Override
+	public HashMap djrxpj(String startDate, String endDate) {
+		return rainbowYjzbDao.djrxpj(startDate, endDate);
 	}
 
 	@Override

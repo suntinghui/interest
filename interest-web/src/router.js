@@ -303,6 +303,14 @@ const routers = [
 	    }
 	  },
 	  {
+	    path: "rainbow/djrxpj",
+	    name: "rainbow/djrxpj",
+	    component: resolve => require(["./views/rainbow/yjzb/djrxpj.vue"], resolve),
+	    meta: {
+	      title: "rainbow/djrxpj"
+	    }
+	  },
+	  {
 	    path: "rainbow/zhkjsc",
 	    name: "rainbow/zhkjsc",
 	    component: resolve => require(["./views/rainbow/zhkjsc.vue"], resolve),

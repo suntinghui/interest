@@ -14,6 +14,8 @@ import com.interest.model.utils.PageWrapper;
 import com.interest.model.utils.ResponseWrapper;
 import com.interest.service.RainbowYjzbService;
 
+import java.util.HashMap;
+
 /**
  * 业绩指标
  */
@@ -52,6 +54,18 @@ public class RainbowYjzbController {
 			return new ResponseWrapper<>(result);
 		} catch (Exception e) {
 			return new ResponseWrapper<>("");
+		}
+	}
+
+	// 空仓时长比率
+	@InterestLog
+	@GetMapping("/rainbow/djrxpj")
+	public ResponseWrapper<HashMap> djrxpj( @RequestParam(value = "startDate", required = false) String startDate,  @RequestParam(value = "endDate", required = false) String endDate) {
+		try{
+			HashMap result = rainbowYjzbService.djrxpj(startDate, endDate);
+			return new ResponseWrapper<>(result);
+		} catch (Exception e) {
+			return new ResponseWrapper<>(new HashMap());
 		}
 	}
 

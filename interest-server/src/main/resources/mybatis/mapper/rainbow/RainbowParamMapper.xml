@@ -22,7 +22,4 @@
 		select DISTINCT ATOP_Uid as paramKey, ATOP_Title as paramValue from netfiance_db.t_shop_agent_top
 	</select>
 
-
-	
-	
 </mapper>

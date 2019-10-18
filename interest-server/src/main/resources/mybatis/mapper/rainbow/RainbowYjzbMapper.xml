@@ -252,6 +252,80 @@
 		) o
 	</select>
 
+	<!-- 单机日销平均  替换日期  修改select字段 -->
+	<select id="djrxpj" resultType="java.util.HashMap" >
+		select avg(日均销售额) avg1,avg(开机日均销售额) avg2
+		from(
+		select sheet1.DDI_No 设备编号,sheet1.SHOP_No 网点编号,sheet1.启用时间,DDI_Type 设备类型,tol_money 销售总额,搜索时段内天数,sum_turn_on 搜索时段内开机天数,日均销售额,tol_money/sum_turn_on 开机日均销售额
+		from
+		(select *,tol_money/搜索时段内天数 日均销售额
+		from
+		(
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(sum(ODER_Money),0) tol_money,
+		case when first_sub.dt>='#{startDate}' then datediff('#{endDate}',first_sub.dt)+1
+		when first_sub.dt &lt;'#{startDate}' then datediff('#{endDate}','#{startDate}')+1 end as 搜索时段内天数
+		from
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,b.DDI_Type
+		from study.t_device_sub_info a left join t_device_device_info b
+		on a.DDI_No = b.DDI_No
+		left join netfiance_db.t_shop_shop_info d
+		on d.SHOP_No = a.SHOP_No
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on a.SHOP_No = g.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = d.SHOP_Class
+		where a.DSI_Anti is null
+		#and b.DDI_Type = '{{设备类型}}'
+		#and f.ATOP_Title = {{选择渠道}}
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.SHOP_Area = '{{ 所属地区 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		order by dt) first_sub             #每台机器在网点真实开启时间
+
+		left join
+
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_Money
+		from t_shop_order_info e left join t_device_device_info b
+		on e.ODER_DUid = b.DDI_Uid
+		left join study.t_device_sub_info a
+		on b.DDI_No = a.DDI_No
+		where date(e.CreateDate)>='#{startDate}' and date(e.CreateDate) &lt;= '#{endDate}'
+		and e.ODER_State = 0
+		and a.DSI_Anti is null
+		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
+		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
+
+		where first_sub.dt &lt;='#{endDate}'
+		group by DDI_No,SHOP_No,启用时间   )t
+		order by 日均销售额 desc     ) sheet1
+
+
+		left join
+
+
+		(select DDI_No,SHOP_No,启用时间,count(DDI_No) sum_turn_on
+		from
+		(select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,round(sum(a.DOL_Length)/60,1) last_hour
+		from t_device_online_list a left join t_device_device_info b
+		on a.DOL_DUid = b.DDI_Uid
+		left join study.t_device_sub_info c
+		on b.DDI_No = c.DDI_No
+		where DOL_Length &lt;> 0
+		and date(DATE_ADD(a.CreateDate,interval 1 minute)) &lt;= '#{endDate}' and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= '#{startDate}'
+		and c.DSI_Anti is null
+		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
+		group by DDI_No,SHOP_No,启用时间) t
+		where last_hour &lt;> 0
+		group by DDI_No,SHOP_No,启用时间       )sheet2
+		on sheet1.DDI_No = sheet2.DDI_No and sheet1.SHOP_No = sheet2.SHOP_No and sheet1.启用时间 = sheet2.启用时间) tol
+
+
+	</select>
+
 	<!-- 综合开机时长 -->
 	<select id="zhkjsc" resultType="String">
 		select sum(last_hour) sum_last_hour

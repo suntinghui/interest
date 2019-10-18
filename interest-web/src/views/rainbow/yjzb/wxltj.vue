@@ -112,13 +112,12 @@
 						function(response) {
 							console.log(JSON.stringify(response))
 
-							var item = {
+
+							this.data1 = [{
 								"title": "非关机无销量比率",
 								"value": util.toPercent(response.data.data)
-							};
-
-							this.data1 = [];
-							this.data1.push(item);
+							}];
+							
 						}.bind(this)
 					)
 					.catch(function(error) {

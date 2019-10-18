@@ -3,6 +3,8 @@ package com.interest.service;
 import com.interest.model.utils.PageResult;
 import com.interest.model.utils.PageWrapper;
 
+import java.util.HashMap;
+
 public interface RainbowYjzbService {
 	
 	// 复合关机率
@@ -13,7 +15,10 @@ public interface RainbowYjzbService {
 
 	// 空仓时长比率
 	String kcscbl(String startDate, String endDate);
-	
+
+	// 单机日销平均
+    HashMap djrxpj(String startDate, String endDate);
+
 	// 机头空仓频度
 	String jtkcpd();
 	

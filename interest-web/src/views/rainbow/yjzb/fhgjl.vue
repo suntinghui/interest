@@ -117,8 +117,10 @@
 								"value": util.toPercent(response.data.data)
 							};
 
-							this.data1 = [];
-							this.data1.push(item);
+							this.data1 = [{
+								"title": "复合关机率",
+								"value": util.toPercent(response.data.data)
+							}];
 						}.bind(this)
 					)
 					.catch(function(error) {

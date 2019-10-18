@@ -1,5 +1,6 @@
 package com.interest.dao.rainbow;
 
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -19,6 +20,8 @@ public interface RainbowYjzbDao {
 	String tcgjxlbl();
 
 	String kcscbl(String startDate, String endDate);
+
+	HashMap djrxpj(String startDate, String endDate);
 
 	String jtkcpd();
 	

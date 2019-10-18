@@ -1,4 +1,4 @@
-<!-- 空仓时长比率  -->
+<!-- 单机日销平均  -->
 <style>
 
 </style>
@@ -43,7 +43,7 @@
 				groupId: [],
 				/*表显示字段*/
 				columns1: [{
-						title: "标题",
+						title: "指标",
 						key: "title",
 						align: "center"
 					},
@@ -96,7 +96,7 @@
 
 				this.axios({
 						method: "get",
-						url: "/rainbow/kcscbl",
+						url: "/rainbow/djrxpj",
 						params: {
 							startDate: this.dateValue[0],
 							endDate: this.dateValue[1],
@@ -107,9 +107,13 @@
 							console.log(JSON.stringify(response))
 
 							this.data1 = [{
-								"title": "空仓时长比率",
-								"value": util.toPercent(response.data.data)
+								"title": "日均销售额",
+								"value": response.data.data.avg1
+							},{
+								"title": "开机日均销售额",
+								"value": response.data.data.avg2
 							}];
+							
 						}.bind(this)
 					)
 					.catch(function(error) {
