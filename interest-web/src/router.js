@@ -281,9 +281,25 @@ const routers = [
 	  {
 	    path: "rainbow/fhgjl",
 	    name: "rainbow/fhgjl",
-	    component: resolve => require(["./views/rainbow/fhgjl.vue"], resolve),
+	    component: resolve => require(["./views/rainbow/yjzb/fhgjl.vue"], resolve),
 	    meta: {
 	      title: "rainbow/fhgjl"
+	    }
+	  },
+	  {
+	    path: "rainbow/wxltj",
+	    name: "rainbow/wxltj",
+	    component: resolve => require(["./views/rainbow/yjzb/wxltj.vue"], resolve),
+	    meta: {
+	      title: "rainbow/wxltj"
+	    }
+	  },
+	  {
+	    path: "rainbow/kcscbl",
+	    name: "rainbow/kcscbl",
+	    component: resolve => require(["./views/rainbow/yjzb/kcscbl.vue"], resolve),
+	    meta: {
+	      title: "rainbow/kcscbl"
 	    }
 	  },
 	  {

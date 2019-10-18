@@ -1,13 +1,8 @@
 package com.interest.service.impl;
 
-import com.interest.dao.rainbow.RainbowDao;
 import com.interest.dao.rainbow.RainbowParamDao;
 import com.interest.model.entity.ParamEntity;
-import com.interest.model.entity.RainbowDeviceDocEntity;
-import com.interest.model.utils.PageResult;
-import com.interest.model.utils.PageWrapper;
 import com.interest.service.RainbowParamService;
-import com.interest.service.RainbowService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

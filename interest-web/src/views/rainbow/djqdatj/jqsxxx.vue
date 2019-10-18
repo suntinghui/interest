@@ -138,7 +138,8 @@
 					{
 						title: "机器类型",
 						key: "ddiType",
-						align: "center"
+						align: "center",
+						sortable: true
 					},
 					{
 						title: "网点地址",
@@ -149,7 +150,8 @@
 					{
 						title: "网点编号",
 						key: "shopNo",
-						align: "center"
+						align: "center",
+						sortable: true
 					},
 					{
 						title: "操作",
