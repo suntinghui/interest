@@ -160,13 +160,14 @@
 	<select id="kcscbl"  resultType="String">
 		select sum_empty_time/sum_online_time 空仓时长占比
 		from
-
 		(
 		select 'sheet',sum(last_hour) sum_online_time
 		from(
-		select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,round(sum(a.DOL_Length)/60,1) last_hour
+		select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,m.DSL_Note,date(a.CreateDate) dt,round(sum(a.DOL_Length)/60,1) last_hour
 		from t_device_online_list a left join t_device_device_info b
 		on a.DOL_DUid = b.DDI_Uid
+		left join t_device_sub_list m
+		on b.DDI_Uid = m.DSL_DUid
 		left join study.t_device_sub_info c
 		on b.DDI_No = c.DDI_No
 		left join netfiance_db.t_shop_shop_info d
@@ -182,13 +183,13 @@
 
 		where DOL_Length &lt;> 0
 		and c.DSI_Anti is null
-		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		and a.CreateDate >='#{startDate}' and a.CreateDate  &lt;='#{endDate}'
+		and a.CreateDate >= c.DSI_Try and (a.CreateDate&lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
+		and a.CreateDate >='#{startDate}' and a.CreateDate &lt;='#{endDate}'
 		#and b.DDI_Type = {{选择设备类型}}
 		#and f.ATOP_Title = {{选择渠道}}
 		#and g.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
-		group by b.DDI_No,SHOP_No,启用时间,dt  ) t )sheet1
+		group by b.DDI_No,SHOP_No,启用时间,m.DSL_Note,dt  ) t )sheet1
 
 		left join
 
@@ -199,7 +200,7 @@
 		select DDI_No,SHOP_No,DSL_Note,空仓时间,ifnull(补票时间,'#{endDate}') 补票时间,timestampdiff(minute,空仓时间,ifnull(补票时间,'#{endDate}'))/60 empty_time
 		from
 		(
-		select d.DDI_No,d.SHOP_No,b.DSL_Note,b.DSL_No,a.CreateDate 空仓时间,(select created_at from t_storage_checkout_packages_detail where warehouse_id = a.DSLG_DSUid and created_at > a.`CreateDate` order by created_at asc limit 1) 补票时间,d.DSI_Withdraw
+		select d.DDI_No,d.SHOP_No,b.DSL_Note,b.DSL_No,a.CreateDate 空仓时间,(select n.updated_at from t_storage_checkout_packages_detail m join t_storage_checkout_packages n on m.package_no = n.package_no where warehouse_id = a.DSLG_DSUid and n.updated_at > a.`CreateDate` order by n.updated_at asc limit 1) 补票时间,d.DSI_Withdraw
 		from t_device_sub_change_log a left join t_device_sub_list b
 		on a.DSLG_DSUid = b.DSL_Uid
 		left join t_device_device_info c
@@ -218,8 +219,8 @@
 		on t.DICT_Value = h.SHOP_Class
 		where DSLG_NewCount = 0 and dslg_mnuid = '8bf30bce2e914a8fa591635612e20641'
 		and d.DSI_Anti is null
-		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
-		and a.CreateDate >= '#{startDate}' and a.CreateDate  &lt;= '#{endDate}'
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate&lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and a.CreateDate >= '#{startDate}' and a.CreateDate &lt;= '#{endDate}'
 		#and f.ATOP_Title = {{选择渠道}}
 		#and c.DDI_Type = {{选择设备类型}}
 		#and g.SHOP_Area = '{{ 所属地区 }}'
@@ -228,6 +229,7 @@
 		where 补票时间 &lt; DSI_Withdraw                  )o   )sheet2
 
 		on sheet1.sheet = sheet2.sheet
+
 	</select>
 
 	<!-- 机头空仓频度 -->

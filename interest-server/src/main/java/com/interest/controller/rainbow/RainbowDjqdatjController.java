@@ -8,6 +8,7 @@ import com.interest.service.RainbowDjqdatjService;
 import com.interest.utils.RainbowUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -39,15 +40,24 @@ public class RainbowDjqdatjController {
 		return new ResponseWrapper<>(pageResult);
 	}
 
-	// 门店属性信息
+	// 详情信息
 	@InterestLog
 	@GetMapping("/rainbow/mdsxxx")
 	public ResponseWrapper<HashMap> mdsxxx(@RequestParam(value = "shopNo", required = false) String shopNo) {
 		HashMap<String, HashMap<String, String>> resultMap = new HashMap<>();
 
-		HashMap<String, String> shopInfoMap = RainbowUtil.decodeMap(rainbowDjqdatjService.getShopInfo(shopNo));
+		if (!StringUtils.isEmpty(shopNo)) {
+			HashMap<String, String> deviceInfoMap = rainbowDjqdatjService.getDeviceInfo(shopNo);
+			resultMap.put("deviceInfo", deviceInfoMap);
 
-		resultMap.put("shopInfo", shopInfoMap);
+			HashMap<String, String> shopInfoMap = rainbowDjqdatjService.getShopInfo(shopNo);
+			resultMap.put("shopInfo", shopInfoMap);
+
+
+		} else {
+			resultMap.put("deviceInfo", new HashMap<>());
+			resultMap.put("shopInfo", new HashMap<>());
+		}
 
 		return new ResponseWrapper<>(resultMap);
 	}

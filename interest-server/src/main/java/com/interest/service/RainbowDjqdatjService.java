@@ -12,7 +12,10 @@ public interface RainbowDjqdatjService {
 	// 机器属性信息
 	PageResult getDeviceInfoList(String searchContent, PageWrapper pageWrapper);
 
+	// 单机器属性
+	HashMap<String, String> getDeviceInfo(String shopNo);
+
 	// 门店属性
-	HashMap<String, Object> getShopInfo(String shopNo);
+	HashMap<String, String> getShopInfo(String shopNo);
 
 }

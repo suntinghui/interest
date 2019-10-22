@@ -1,6 +1,8 @@
 package com.interest.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RainbowUtil {
@@ -25,5 +27,13 @@ public class RainbowUtil {
         }
 
         return resultMap;
+    }
+
+    public static List<HashMap<String, String>> decodeList(List<HashMap> list) {
+        List<HashMap<String, String>> resultList = new ArrayList<>();
+        for (HashMap map : list) {
+            resultList.add(RainbowUtil.decodeMap(map));
+        }
+        return resultList;
     }
 }
