@@ -21,6 +21,10 @@
 		<div style="padding: 10px 0;">
 			<Table border :columns="columns1" :data="data1" :height="350" :search="true"></Table>
 		</div>
+		
+		<div style="margin-top: 0.3125rem;text-align: right;">
+			备注：2019年8月14日前无数据
+		</div>
 
 	</div>
 </template>

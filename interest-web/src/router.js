@@ -265,74 +265,57 @@ const routers = [
       {
         path: "banner",
         name: "banner",
-        component: resolve => require(["./views/sys/banner.vue"], resolve),
-        meta: {
-          title: "banner"
-        }
+        component: resolve => require(["./views/sys/banner.vue"], resolve)
       },
       {
         path: "article",
         name: "article",
-        component: resolve => require(["./views/sys/article.vue"], resolve),
-        meta: {
-          title: "article"
-        }
+        component: resolve => require(["./views/sys/article.vue"], resolve)
       },
 	  {
 	    path: "rainbow/fhgjl",
 	    name: "rainbow/fhgjl",
 	    component: resolve => require(["./views/rainbow/yjzb/fhgjl.vue"], resolve),
-	    meta: {
-	      title: "rainbow/fhgjl"
-	    }
 	  },
 	  {
 	    path: "rainbow/wxltj",
 	    name: "rainbow/wxltj",
 	    component: resolve => require(["./views/rainbow/yjzb/wxltj.vue"], resolve),
-	    meta: {
-	      title: "rainbow/wxltj"
-	    }
 	  },
 	  {
 	    path: "rainbow/kcscbl",
 	    name: "rainbow/kcscbl",
 	    component: resolve => require(["./views/rainbow/yjzb/kcscbl.vue"], resolve),
-	    meta: {
-	      title: "rainbow/kcscbl"
-	    }
 	  },
 	  {
 	    path: "rainbow/djrxpj",
 	    name: "rainbow/djrxpj",
 	    component: resolve => require(["./views/rainbow/yjzb/djrxpj.vue"], resolve),
-	    meta: {
-	      title: "rainbow/djrxpj"
-	    }
 	  },
 	  {
 	    path: "rainbow/zhkjsc",
 	    name: "rainbow/zhkjsc",
 	    component: resolve => require(["./views/rainbow/zhkjsc.vue"], resolve),
-	    meta: {
-	      title: "rainbow/zhkjsc"
-	    }
 	  },
 	  {
 	    path: "rainbow/sbda",
 	    name: "rainbow/sbda",
 	    component: resolve => require(["./views/rainbow/sbda.vue"], resolve),
-	    meta: {
-	      title: "rainbow/sbda"
-	    }
 	  },
 	  {
 	    path: "rainbow/jqsxxx", // 单机器档案统计 - 机器属性信息
 	    name: "rainbow/jqsxxx",
-	    component: resolve => require(["./views/rainbow/djqdatj/jqsxxx.vue"], resolve),
-	    meta: {
-	      title: "rainbow/jqsxxx"
-	    }
+	    component: resolve => require(["./views/rainbow/djqdatj/jqsxxx.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/rbxhjkpjytj", // 日报表细化 - 即开票交易统计
+	    name: "rainbow/rbxhjkpjytj",
+	    component: resolve => require(["./views/rainbow/rbbxh/jkpjytj.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/rbxhjkpjy50", // 日报表细化 - 即开票交易Top50
+	    name: "rainbow/rbxhjkpjy50",
+	    component: resolve => require(["./views/rainbow/rbbxh/jkpjy50.vue"], resolve)
 	  },
 	  
 	  

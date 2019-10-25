@@ -1,4 +1,4 @@
-<!-- 非关机无销量统计  -->
+<!-- 即开票交易统计  -->
 <style>
 
 </style>
@@ -57,10 +57,6 @@
 			<Table border :columns="columns1" :data="data1" :height="350" :search="true"></Table>
 		</div>
 		
-		<div style="margin-top: 0.3125rem;text-align: right;">
-			备注：2019年8月14日前无数据
-		</div>
-		
 	</div>
 </template>
 
@@ -81,14 +77,40 @@
 				groupId: [],
 				/*表显示字段*/
 				columns1: [{
-						title: "指标",
-						key: "title",
-						align: "center"
+						title: "日期",
+						key: "日期",
+						align: "center",
+						sortable: true
 					},
 					{
-						title: "数值",
-						key: "value",
-						align: "center"
+						title: "设备类型",
+						key: "设备类型",
+						align: "center",
+						sortable: true
+					},
+					{
+						title: "交易总笔数",
+						key: "交易总笔数",
+						align: "center",
+						sortable: true
+					},
+					{
+						title: "单台最大交易笔数",
+						key: "单台最大交易笔数",
+						align: "center",
+						sortable: true
+					},
+					{
+						title: "平均单台交易笔数",
+						key: "平均单台交易笔数",
+						align: "center",
+						sortable: true
+					},
+					{
+						title: "退订数",
+						key: "退订数",
+						align: "center",
+						sortable: true
 					}
 				],
 				data1: []
@@ -107,7 +129,7 @@
 
 				this.axios({
 						method: "get",
-						url: "/rainbow/tcgjxlbl",
+						url: "/rainbow/rbxhjkpjytj",
 						params: {
 
 						}
@@ -116,12 +138,7 @@
 						function(response) {
 							console.log(JSON.stringify(response))
 
-
-							this.data1 = [{
-								"title": "非关机无销量比率",
-								"value": util.toPercent(response.data.data)
-							}];
-							
+							this.data1 = response.data.data;
 						}.bind(this)
 					)
 					.catch(function(error) {

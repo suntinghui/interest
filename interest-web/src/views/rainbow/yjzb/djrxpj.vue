@@ -21,6 +21,10 @@
 		<div style="padding: 10px 0;">
 			<Table border :columns="columns1" :data="data1" :height="350" :search="true"></Table>
 		</div>
+		
+		<div style="margin-top: 0.3125rem;text-align: right;">
+			备注：2019年8月14日前无数据
+		</div>
 
 	</div>
 </template>
@@ -48,7 +52,7 @@
 						align: "center"
 					},
 					{
-						title: "数值",
+						title: "数值（单位：元）",
 						key: "value",
 						align: "center"
 					}
@@ -108,10 +112,10 @@
 
 							this.data1 = [{
 								"title": "日均销售额",
-								"value": response.data.data.avg1
+								"value": util.numFixed(response.data.data['在网设备日均销售额'])
 							},{
 								"title": "开机日均销售额",
-								"value": response.data.data.avg2
+								"value": util.numFixed(response.data.data['开机在网设备日均单台销额'])
 							}];
 							
 						}.bind(this)

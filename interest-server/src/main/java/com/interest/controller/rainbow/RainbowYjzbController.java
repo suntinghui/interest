@@ -53,11 +53,12 @@ public class RainbowYjzbController {
 			String result = rainbowYjzbService.kcscbl(startDate, endDate);
 			return new ResponseWrapper<>(result);
 		} catch (Exception e) {
+			e.printStackTrace();
 			return new ResponseWrapper<>("");
 		}
 	}
 
-	// 空仓时长比率
+	// 单机日销平均
 	@InterestLog
 	@GetMapping("/rainbow/djrxpj")
 	public ResponseWrapper<HashMap> djrxpj( @RequestParam(value = "startDate", required = false) String startDate,  @RequestParam(value = "endDate", required = false) String endDate) {

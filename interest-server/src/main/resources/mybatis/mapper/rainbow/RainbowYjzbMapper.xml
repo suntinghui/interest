@@ -13,79 +13,66 @@
 
 	<!--复合关机率 -->
 	<select id="fhgjl" resultType="String">
-		select sum(sum_device -
-		online_device_ED)/sum(sum_device) 复合关机率
+		select sum(sum_device - online_device_ED)/sum(sum_device) 复合关机率
+		from
+		(select in_motion.dt,sum_device,online_device_ED
 		from
 		(
-		select in_motion.dt,online_device_ED,
-		@csum := @csum + sum_shop_ED sum_device
-		from
-		(select @csum := 0) s,
-		(select sheet2.dt,ifnull(sum_shop,0) sum_shop_ED
-		from
-		(select dt,count(distinct(SHOP_Uid)) sum_shop
-		from
-		(
-		select b.device_no,d.SHOP_Uid,c.DDI_Type,date(min(a.created_at )) dt
-		from t_storage_checkout_packages_detail a join t_storage_checkout_packages
-		b
-		on a.package_no = b.package_no
-		left join t_device_device_info c
-		on b.device_no = c.DDI_No
-		left join t_shop_shop_info d
-		on c.DDI_SPUid = d.SHOP_Uid
+		select dt,count(b.DDI_No) as sum_device
+		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= '2019-08-13' group by dt ) t
+		left join (select DDI_No,SHOP_No,DSI_Anti,DSI_Try,ifnull(DSI_Withdraw,now()) DSI_Withdraw from study.t_device_sub_info ) b
+		on t.dt between date(DSI_Try) and date(DSI_Withdraw)
+		left join t_device_device_info a
+		on a.DDI_No = b.DDI_No
 		left join netfiance_db.t_shop_shop_info e
-		on e.SHOP_Uid = d.SHOP_Uid
-		left join netfiance_db.t_shop_agent_list f
-		on e.SHOP_AGUid = f.AGNT_Uid
-		left join netfiance_db.t_shop_agent_top g
-		on f.AGNT_ATUid = g.ATOP_Uid
-		where c.DDI_SPUid in (select SHOP_Uid from t_shop_shop_info where
-		SHOP_State = 1)
-		#and d.DDI_SPUid = {{选择网点id}}
-		#and c.device_no = {{选择设备编码}}
-		#and g.ATOP_Title = {{选择渠道}}
-		#and c.DDI_Type = {{选择设备类型}}
-		group by b.device_no
-		order by dt ) t
-		group by dt) sheet1
-
-		right join
-		(select date(a.CreateDate) dt from t_shop_order_info a where
-		date(a.CreateDate) &gt;= '2019-05-01' group by dt) sheet2
-		on sheet1.dt = sheet2.dt) in_motion
-
+		on b.SHOP_No = e.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON e.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join study.t_shop_sub_info d
+		on e.SHOP_No = d.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) l
+		on l.DICT_Value = e.SHOP_Class
+		where DSI_Anti is null
+		#and a.DDI_Type = '{{设备类型}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and l.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
+		group by dt           ) in_motion
 
 		left join
 
-
-		(select date(a.CreateDate) dt,count(distinct(a.DOL_DUid)) online_device_ED
+		(select date(a.CreateDate) dt,count(a.DOL_DUid) online_device_ED
 		from t_device_online_list a left join t_device_device_info b
 		on a.DOL_DUid = b.DDI_Uid
-		left join t_shop_shop_info c
-		on b.DDI_SPUid = c.SHOP_Uid
-		left join t_storage_checkout_packages g
-		on b.DDI_No = g.device_no
-		left join t_storage_checkout_packages_detail h
-		on h.package_no = g.package_no
+		left join study.t_device_sub_info c
+		on b.DDI_No = c.DDI_No
 		left join netfiance_db.t_shop_shop_info d
-		on d.SHOP_Uid = c.SHOP_Uid
+		on d.SHOP_No = c.SHOP_No
 		left join netfiance_db.t_shop_agent_list e
 		on d.SHOP_AGUid = e.AGNT_Uid
 		left join netfiance_db.t_shop_agent_top f
 		on e.AGNT_ATUid = f.ATOP_Uid
-		where date(a.CreateDate) &gt;= date(h.created_at)
+		left join study.t_shop_sub_info h
+		on d.SHOP_No = h.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = d.SHOP_Class
+
+		where a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
 		and DOL_Length &lt;> 0
-		and c.SHOP_State = 1
-		#and c.SHOP_Uid = {{选择网点id}}
-		#and b.device_no = {{选择设备编码}}
+		and c.DSI_Anti is null
 		#and f.ATOP_Title = {{选择渠道}}
 		#and b.DDI_Type = {{选择设备类型}}
+		#and h.SHOP_Area = '{{ 所属地区 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
 		group by dt ) online_device
-		on online_device.dt = in_motion.dt) o
+		on online_device.dt = in_motion.dt
 
-		#where o.dt &gt;= '2019-08-10' and o.dt &lt;= {{选择时段}}
-		#选择某个时间段（设备开机记录是从8月10日开始，之前无数据）
+		#where in_motion.dt >= '{{起始时间}}'  and in_motion.dt &lt;=  '{{截止时间}}'   #选择某个时间段（设备开机记录是从8月10日开始，之前无数据）
+
+		)  detail
+
 
 	</select>
 
@@ -143,6 +130,7 @@
 		on t.DICT_Value = d.SHOP_Class
 
 		where a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
+		and date(a.CreateDate) >= '2019-08-14'
 		and DOL_Length &lt;> 0
 		and c.DSI_Anti is null
 		#and date(a.CreateDate)>='{{起始时间}}' and date(a.CreateDate) &lt;='{{截止时间}}'
@@ -153,13 +141,15 @@
 		group by dt
 		) sheet2
 
-		on sheet1.dt = sheet2.dt) sheet
+		on sheet1.dt = sheet2.dt             ) sheet
+
 	</select>
 
 	<!-- 空仓时长比率  -->
 	<select id="kcscbl"  resultType="String">
 		select sum_empty_time/sum_online_time 空仓时长占比
 		from
+
 		(
 		select 'sheet',sum(last_hour) sum_online_time
 		from(
@@ -183,8 +173,8 @@
 
 		where DOL_Length &lt;> 0
 		and c.DSI_Anti is null
-		and a.CreateDate >= c.DSI_Try and (a.CreateDate&lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		and a.CreateDate >='#{startDate}' and a.CreateDate &lt;='#{endDate}'
+		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
+		and a.CreateDate >=#{startDate} and a.CreateDate &lt;=#{endDate}
 		#and b.DDI_Type = {{选择设备类型}}
 		#and f.ATOP_Title = {{选择渠道}}
 		#and g.SHOP_Area = '{{ 所属地区 }}'
@@ -197,7 +187,7 @@
 		from(
 
 
-		select DDI_No,SHOP_No,DSL_Note,空仓时间,ifnull(补票时间,'#{endDate}') 补票时间,timestampdiff(minute,空仓时间,ifnull(补票时间,'#{endDate}'))/60 empty_time
+		select DDI_No,SHOP_No,DSL_Note,空仓时间,ifnull(补票时间,#{endDate}) 补票时间,timestampdiff(minute,空仓时间,ifnull(补票时间,#{endDate}))/60 empty_time
 		from
 		(
 		select d.DDI_No,d.SHOP_No,b.DSL_Note,b.DSL_No,a.CreateDate 空仓时间,(select n.updated_at from t_storage_checkout_packages_detail m join t_storage_checkout_packages n on m.package_no = n.package_no where warehouse_id = a.DSLG_DSUid and n.updated_at > a.`CreateDate` order by n.updated_at asc limit 1) 补票时间,d.DSI_Withdraw
@@ -219,8 +209,8 @@
 		on t.DICT_Value = h.SHOP_Class
 		where DSLG_NewCount = 0 and dslg_mnuid = '8bf30bce2e914a8fa591635612e20641'
 		and d.DSI_Anti is null
-		and a.CreateDate >= d.DSI_Try and (a.CreateDate&lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
-		and a.CreateDate >= '#{startDate}' and a.CreateDate &lt;= '#{endDate}'
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and a.CreateDate >= #{startDate} and a.CreateDate &lt;= #{endDate}
 		#and f.ATOP_Title = {{选择渠道}}
 		#and c.DDI_Type = {{选择设备类型}}
 		#and g.SHOP_Area = '{{ 所属地区 }}'
@@ -256,18 +246,24 @@
 
 	<!-- 单机日销平均  替换日期  修改select字段 -->
 	<select id="djrxpj" resultType="java.util.HashMap" >
-		select avg(日均销售额) avg1,avg(开机日均销售额) avg2
-		from(
+		select avg(日均销售额) 在网设备日均销售额,avg(开机日均销售额) 开机在网设备日均单台销额
+		from
+		(
 		select sheet1.DDI_No 设备编号,sheet1.SHOP_No 网点编号,sheet1.启用时间,DDI_Type 设备类型,tol_money 销售总额,搜索时段内天数,sum_turn_on 搜索时段内开机天数,日均销售额,tol_money/sum_turn_on 开机日均销售额
 		from
+
 		(select *,tol_money/搜索时段内天数 日均销售额
 		from
 		(
 		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(sum(ODER_Money),0) tol_money,
-		case when first_sub.dt>='#{startDate}' then datediff('#{endDate}',first_sub.dt)+1
-		when first_sub.dt &lt;'#{startDate}' then datediff('#{endDate}','#{startDate}')+1 end as 搜索时段内天数
+		case when first_sub.dt>=#{startDate} and first_sub.draw_dt>=#{endDate} then datediff(#{endDate},first_sub.dt)+1
+		when first_sub.dt>=#{startDate} and first_sub.draw_dt &lt;#{endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
+		when first_sub.draw_dt &lt;#{startDate} then 0
+		when first_sub.dt &lt;#{startDate} and first_sub.draw_dt >= #{startDate} and first_sub.draw_dt &lt; #{endDate} then datediff(first_sub.draw_dt,#{startDate})+1
+		when first_sub.dt &lt;#{startDate} and first_sub.draw_dt >=#{endDate} then datediff(#{endDate},#{startDate})+1
+		when first_sub.dt>#{endDate} then 0 end as 搜索时段内天数     #需判断查询起始时间、截止时间，与设备开启时间、撤机时间之间的关系
 		from
-		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,b.DDI_Type
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
 		from study.t_device_sub_info a left join t_device_device_info b
 		on a.DDI_No = b.DDI_No
 		left join netfiance_db.t_shop_shop_info d
@@ -295,13 +291,13 @@
 		on e.ODER_DUid = b.DDI_Uid
 		left join study.t_device_sub_info a
 		on b.DDI_No = a.DDI_No
-		where date(e.CreateDate)>='#{startDate}' and date(e.CreateDate) &lt;= '#{endDate}'
+		where date(e.CreateDate)>=#{startDate} and date(e.CreateDate) &lt;=#{endDate}
 		and e.ODER_State = 0
 		and a.DSI_Anti is null
 		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
 		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
 
-		where first_sub.dt &lt;='#{endDate}'
+		where first_sub.dt &lt;=#{endDate}
 		group by DDI_No,SHOP_No,启用时间   )t
 		order by 日均销售额 desc     ) sheet1
 
@@ -309,7 +305,7 @@
 		left join
 
 
-		(select DDI_No,SHOP_No,启用时间,count(DDI_No) sum_turn_on
+		(select DDI_No,SHOP_No,启用时间,count(DDI_No) sum_turn_on   #一台机器在搜索时间段内开机几天
 		from
 		(select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,round(sum(a.DOL_Length)/60,1) last_hour
 		from t_device_online_list a left join t_device_device_info b
@@ -317,14 +313,13 @@
 		left join study.t_device_sub_info c
 		on b.DDI_No = c.DDI_No
 		where DOL_Length &lt;> 0
-		and date(DATE_ADD(a.CreateDate,interval 1 minute)) &lt;= '#{endDate}' and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= '#{startDate}'
+		and date(DATE_ADD(a.CreateDate,interval 1 minute)) &lt;= #{endDate} and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= #{startDate}
 		and c.DSI_Anti is null
 		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		group by DDI_No,SHOP_No,启用时间) t
+		group by DDI_No,SHOP_No,启用时间,dt) t
 		where last_hour &lt;> 0
 		group by DDI_No,SHOP_No,启用时间       )sheet2
-		on sheet1.DDI_No = sheet2.DDI_No and sheet1.SHOP_No = sheet2.SHOP_No and sheet1.启用时间 = sheet2.启用时间) tol
-
+		on sheet1.DDI_No = sheet2.DDI_No and sheet1.SHOP_No = sheet2.SHOP_No and sheet1.启用时间 = sheet2.启用时间    )tol_sheet
 
 	</select>
 

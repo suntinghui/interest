@@ -57,6 +57,10 @@
 			<Table border :columns="columns1" :data="data1" :height="350" :search="true"></Table>
 		</div>
 		
+		<div style="margin-top: 0.3125rem;text-align: right;">
+			备注：2019年8月14日前无数据
+		</div>
+		
 	</div>
 </template>
 
@@ -77,7 +81,7 @@
 				groupId: [],
 				/*表显示字段*/
 				columns1: [{
-						title: "标题",
+						title: "指标",
 						key: "title",
 						align: "center"
 					},
@@ -111,11 +115,6 @@
 					.then(
 						function(response) {
 							console.log(JSON.stringify(response))
-
-							var item = {
-								"title": "复合关机率",
-								"value": util.toPercent(response.data.data)
-							};
 
 							this.data1 = [{
 								"title": "复合关机率",

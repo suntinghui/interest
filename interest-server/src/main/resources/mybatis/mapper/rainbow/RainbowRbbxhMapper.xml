@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.dao.rainbow.RainbowRbbxhDao">
+
+	<!-- 即开票交易统计 -->
+	<select id="rbxhjkpjytj" resultType="java.util.HashMap">
+		select dt 日期,DDI_Type 设备类型,sum(日单设备订单数) 交易总笔数,max(日单设备订单数) 单台最大交易笔数,avg(日单设备订单数) 平均单台交易笔数,sum(日单设备退订单数) 退订数
+		from
+		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,count(distinct(a.ODER_Uid)) 日单设备订单数,count(distinct(c.FLRF_Uid)) 日单设备退订单数
+		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join netfiance_db.t_finance_bank_refund c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on d.SHOP_No = i.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = i.SHOP_Class
+		left join study.t_shop_sub_info j
+		on i.SHOP_No = j.SHOP_No
+		where d.DSI_Anti is null
+		and a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		#and d.DDI_No = '{{设备编码}}'
+		#and date(a.CreateDate) >= '{{ 起始时间 }}' and date(a.CreateDate) &lt;='{{ 截止时间 }}'
+		#and d.SHOP_No  = '{{门店编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and h.DDI_Type = '{{ 设备类型 }}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and j.SHOP_Area = '{{ 所属地区 }}'
+		group by 设备编号,网点编号,启用时间,dt) sheet
+		group by dt,DDI_Type
+	</select>
+
+	<!-- TOP50不用分页，控制好表格的就可以。  -->
+	<select id="rbxhjkpjy50" resultType="java.util.HashMap" >
+		select d.DDI_No 设备编号,d.SHOP_No 网点编号,i.SHOP_Address 设备位置
+		,date(d.DSI_Try) 启用时间,h.DDI_Type 设备类型,count(distinct(a.ODER_Uid)) 设备交易笔数,sum(a.ODER_Money) 交易额
+		,count(distinct(c.FLRF_Uid)) 设备退订笔数,sum(c.FLRF_RefundMoney) 设备退款额,count(distinct(c.FLRF_Uid))/count(distinct(a.ODER_Uid)) 订单退款率,sum(c.FLRF_RefundMoney)/sum(a.ODER_Money) 交易额退款率
+		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join netfiance_db.t_finance_bank_refund c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on d.SHOP_No = i.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = i.SHOP_Class
+		left join study.t_shop_sub_info j
+		on i.SHOP_No = j.SHOP_No
+		where d.DSI_Anti is null
+		and a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		#and d.DDI_No = '{{设备编码}}'
+		#and date(a.CreateDate) >= '{{ 起始时间 }}' and date(a.CreateDate) &lt;='{{ 截止时间 }}'
+		#and d.SHOP_No  = '{{门店编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and h.DDI_Type = '{{ 设备类型 }}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and j.SHOP_Area = '{{ 所属地区 }}'
+		group by 设备编号,网点编号,启用时间
+		order by 设备交易笔数 desc
+		limit 50
+	</select>
+
+	<select id="rbxhsbyxqk" resultType="java.util.HashMap">
+		select dt,a.DDI_Type,count(b.DDI_No) as 在网设备数量
+		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= '#{startDate}' and date(CreateDate) &lt;= '#{endDate}' group by dt ) t
+		left join (select DDI_No,SHOP_No,DSI_Anti,DSI_Try,ifnull(DSI_Withdraw,now()) DSI_Withdraw from study.t_device_sub_info ) b
+		on t.dt between date(DSI_Try) and date(DSI_Withdraw)
+		left join t_device_device_info a
+		on a.DDI_No = b.DDI_No
+		left join netfiance_db.t_shop_shop_info e
+		on b.SHOP_No = e.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON e.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join study.t_shop_sub_info d
+		on e.SHOP_No = d.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) l
+		on l.DICT_Value = e.SHOP_Class
+		where DSI_Anti is null
+		#and a.DDI_Type = '{{设备类型}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and l.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
+		group by dt,DDI_Type
+	</select>
+
+	<select id="rbxhmrxrwsl" resultType="java.util.HashMap" >
+		select date(c.DSI_Try) dt,a.DDI_Type,count(distinct(c.DDI_No)) 新入网设备数量
+		from study.t_device_sub_info c left join t_device_device_info a
+		on a.DDI_No = c.DDI_No
+		left join netfiance_db.t_shop_shop_info e
+		on c.SHOP_No = e.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON e.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join study.t_shop_sub_info d
+		on e.SHOP_No = d.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = e.SHOP_Class
+		where c.DSI_Anti is null
+		and date(c.DSI_Try) >= '#{startDate}' and date(c.DSI_Try) &lt;= '#{endDate}'
+		#and a.DDI_Type = '{{设备类型}}'
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and e.SHOP_No = '{{ 网点编号 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
+		group by dt,a.DDI_Type
+
+	</select>
+
+	<select id="rbxhmrwkjsl" resultType="java.util.HashMap" >
+		select dt,a.DDI_Type,count(b.DDI_No)-count(c.DOL_Length) 每日未开机设备数量
+		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= '#{startDate}' and date(CreateDate) &lt;= '#{endDate}' group by dt ) t
+		left join (select DDI_No,SHOP_No,DSI_Anti,DSI_Try,ifnull(DSI_Withdraw,now()) DSI_Withdraw from study.t_device_sub_info ) b
+		on t.dt between date(DSI_Try) and date(DSI_Withdraw)
+		left join t_device_device_info a
+		on a.DDI_No = b.DDI_No
+		left join t_device_online_list c
+		on date(c.CreateDate) = t.dt and a.DDI_Uid = c.DOL_DUid
+		left join netfiance_db.t_shop_shop_info e
+		on b.SHOP_No = e.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON e.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join study.t_shop_sub_info d
+		on e.SHOP_No = d.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) l
+		on l.DICT_Value = e.SHOP_Class
+		where DSI_Anti is null
+		#and a.DDI_Type = '{{设备类型}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and l.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
+		group by dt,DDI_Type
+
+	</select>
+
+	<select id="rbxhcjsbs" resultType="java.util.HashMap" >
+		select date(c.DSI_Withdraw) dt,a.DDI_Type,count(distinct(c.DDI_No)) 撤机设备数量
+		from study.t_device_sub_info c left join t_device_device_info a
+		on a.DDI_No = c.DDI_No
+		left join netfiance_db.t_shop_shop_info e
+		on c.SHOP_No = e.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON e.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join study.t_shop_sub_info d
+		on e.SHOP_No = d.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = e.SHOP_Class
+		where c.DSI_Anti is null
+		and c.DSI_Withdraw is not null
+		and date(c.DSI_Withdraw) >= '#{startDate}' and date(c.DSI_Withdraw) &lt;= '#{endDate}'
+		#and a.DDI_Type = '{{设备类型}}'
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and e.SHOP_No = '{{ 网点编号 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
+		group by dt,a.DDI_Type
+
+	</select>
+
+
+</mapper>

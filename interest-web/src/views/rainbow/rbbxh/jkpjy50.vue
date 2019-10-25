@@ -1,4 +1,4 @@
-<!-- 非关机无销量统计  -->
+<!-- 即开票交易Top50  -->
 <style>
 
 </style>
@@ -13,7 +13,7 @@
 				</Col>
 
 				<Col span="8">设备：
-				<Select v-model="deviceModel" filterable clearable style="width: 250px">
+				<Select v-model="deviceModel" filterable clearable style="width: 250px"> 
 					<Option v-for="item in this.$store.state.param.deviceTypeList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
 				</Select>
 				</Col>
@@ -57,10 +57,6 @@
 			<Table border :columns="columns1" :data="data1" :height="350" :search="true"></Table>
 		</div>
 		
-		<div style="margin-top: 0.3125rem;text-align: right;">
-			备注：2019年8月14日前无数据
-		</div>
-		
 	</div>
 </template>
 
@@ -81,15 +77,81 @@
 				groupId: [],
 				/*表显示字段*/
 				columns1: [{
-						title: "指标",
-						key: "title",
-						align: "center"
+						title: "设备编号",
+						key: "设备编号",
+						align: "center",
+						fixed: 'left',
+						sortable: true,
+						width:150
 					},
 					{
-						title: "数值",
-						key: "value",
-						align: "center"
-					}
+						title: "网点编号",
+						key: "网点编号",
+						align: "center",
+						sortable: true,
+						width:150
+					},
+					{
+						title: "设备位置",
+						key: "设备位置",
+						align: "center",
+						width:200
+					},
+					{
+						title: "启用时间",
+						key: "启用时间",
+						align: "center",
+						width:200
+					},
+					{
+						title: "设备类型",
+						key: "设备类型",
+						align: "center",
+						sortable: true,
+						width:150
+					},
+					{
+						title: "设备交易笔数",
+						key: "设备交易笔数",
+						align: "center",
+						sortable: true,
+						width:150
+					},
+					{
+						title: "交易额",
+						key: "交易额",
+						align: "center",
+						sortable: true,
+						width:150
+					},
+					{
+						title: "设备退订笔数",
+						key: "设备退订笔数",
+						align: "center",
+						sortable: true,
+						width:150
+					},
+					{
+						title: "设备退款额",
+						key: "设备退款额",
+						align: "center",
+						sortable: true,
+						width:150
+					},
+					{
+						title: "订单退款率",
+						key: "订单退款率",
+						align: "center",
+						sortable: true,
+						width:150
+					},
+					{
+						title: "交易额退款率",
+						key: "交易额退款率",
+						align: "center",
+						sortable: true,
+						width:150
+					},
 				],
 				data1: []
 			};
@@ -107,7 +169,7 @@
 
 				this.axios({
 						method: "get",
-						url: "/rainbow/tcgjxlbl",
+						url: "/rainbow/rbxhjkpjy50",
 						params: {
 
 						}
@@ -116,12 +178,7 @@
 						function(response) {
 							console.log(JSON.stringify(response))
 
-
-							this.data1 = [{
-								"title": "非关机无销量比率",
-								"value": util.toPercent(response.data.data)
-							}];
-							
+							this.data1 = response.data.data;
 						}.bind(this)
 					)
 					.catch(function(error) {

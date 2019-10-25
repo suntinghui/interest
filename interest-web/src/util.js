@@ -40,6 +40,14 @@ export default {
 		return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
 	},
 	
+	numFixed: function(num) {
+		try{
+			return num.toFixed(2)
+		}catch(e){
+			return 0.00;
+		}
+	}
+	
 	
 
 }
