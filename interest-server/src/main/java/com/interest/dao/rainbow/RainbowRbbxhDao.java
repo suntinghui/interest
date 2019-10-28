@@ -11,7 +11,8 @@ import java.util.List;
 @Mapper
 public interface RainbowRbbxhDao {
 	
-	List<HashMap> rbxhjkpjytj();
+	List<HashMap> rbxhjkpjytj(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	int rbxhjkpjytj_count(String startDate, String endDate, List deviceModel);
 
 	List<HashMap> rbxhjkpjy50();
 

@@ -28,7 +28,6 @@ public class RainbowYjzbServiceImpl implements RainbowYjzbService {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Override
-	@Transactional
 	public String fhgjl() {
 		return rainbowYjzbDao.fhgjl();
 	}

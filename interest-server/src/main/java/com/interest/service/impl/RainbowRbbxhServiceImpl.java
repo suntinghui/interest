@@ -30,9 +30,10 @@ public class RainbowRbbxhServiceImpl implements RainbowRbbxhService {
 
 
 	@Override
-	@Transactional
-	public List<HashMap> rbxhjkpjytj() {
-		return rainbowRbbxhDao.rbxhjkpjytj();
+	public PageResult rbxhjkpjytj(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel) {
+		List<HashMap> list =  rainbowRbbxhDao.rbxhjkpjytj(pageWrapper, startDate, endDate, deviceModel);
+		int size = rainbowRbbxhDao.rbxhjkpjytj_count(startDate, endDate, deviceModel);
+		return new PageResult<>(list, size);
 	}
 
 	@Override

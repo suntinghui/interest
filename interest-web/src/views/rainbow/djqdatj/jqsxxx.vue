@@ -76,10 +76,10 @@
 		<Spin size="large" fix v-if="showSpin"></Spin>
 
 		<div style="padding: 10px 0;">
-			<Table border :columns="columns0" :data="dataList" :height="350" @on-row-click="showDetailInfo"></Table>
+			<Table border :columns="columns0" :data="dataList" :height="350"></Table>
 		</div>
 		<div style="text-align: right;">
-			<Page :total="total" :page-size="pageInfo.pageSize" show-elevator show-total @on-change="e=>{pageSearch(e)}"></Page>
+			<Page :total="total" :page-size="pageInfo.pageSize" show-sizer show-total @on-page-size-change="e=>{pageSizeChange(e)}" @on-change="e=>{pageSearch(e)}"></Page>
 		</div>
 
 		<Modal closable scrollable :mask-closable="false" v-model="showDetailModel" width="60%" title="详情信息">
@@ -377,12 +377,14 @@
 					}.bind(this));
 
 			},
+			
 			search() {
 				this.initPageInfo();
 				this.getTable({
 					pageInfo: this.pageInfo
 				});
 			},
+			
 			/*分页点击事件*/
 			pageSearch(e) {
 				this.pageInfo.page = e - 1;
@@ -390,6 +392,16 @@
 					pageInfo: this.pageInfo
 				});
 			},
+			
+			// 改变每页显示条数时触发
+			pageSizeChange(e) {
+				this.pageInfo.pageSize = e;
+				this.pageInfo.page = 0;
+				this.getTable({
+					pageInfo: this.pageInfo
+				});
+			},
+			
 			showDetailInfo(rowData) {
 				this.tabCheck = "name1"; // 默认刚打开时保证总是显示第一个tab
 

@@ -6,6 +6,7 @@ import com.interest.model.utils.PageWrapper;
 import com.interest.model.utils.ResponseWrapper;
 import com.interest.service.RainbowDjqdatjService;
 import com.interest.service.RainbowRbbxhService;
+import com.interest.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -32,9 +33,14 @@ public class RainbowRbbxhController {
 	// 即开票交易统计
 	@InterestLog
 	@GetMapping("/rainbow/rbxhjkpjytj")
-	public ResponseWrapper<List<HashMap>> rbxhjkpjytj(@RequestParam(value = "searchContent", required = false) String searchContent) {
-		List<HashMap> list = rainbowRbbxhService.rbxhjkpjytj();
-		return new ResponseWrapper<>(list);
+	public ResponseWrapper<PageResult> rbxhjkpjytj(@RequestParam(value = "pageSize", required = false) int pageSize,
+												   @RequestParam(value = "page", required = false) int page,
+												   @RequestParam(value = "startDate", required = false) String startDate,
+												   @RequestParam(value = "endDate", required = false) String endDate,
+												   @RequestParam(value = "deviceModel", required = false) String deviceModel) {
+		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
+		PageResult pageResult = rainbowRbbxhService.rbxhjkpjytj(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		return new ResponseWrapper<>(pageResult);
 	}
 
 	// 即开票交易Top50

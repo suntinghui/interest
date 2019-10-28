@@ -43,7 +43,7 @@
 
 		left join
 
-		(select date(a.CreateDate) dt,count(a.DOL_DUid) online_device_ED
+		(select date(a.CreateDate) dt,count(distinct(a.DOL_DUid)) online_device_ED
 		from t_device_online_list a left join t_device_device_info b
 		on a.DOL_DUid = b.DDI_Uid
 		left join study.t_device_sub_info c
@@ -113,7 +113,7 @@
 
 
 		(
-		select date(a.CreateDate) dt,count(a.DOL_DUid) online_device_ED
+		select date(a.CreateDate) dt,count(distinct(a.DOL_DUid)) online_device_ED
 		from t_device_online_list a left join t_device_device_info b
 		on a.DOL_DUid = b.DDI_Uid
 		left join study.t_device_sub_info c
@@ -216,7 +216,7 @@
 		#and g.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
 		) t
-		where 补票时间 &lt; DSI_Withdraw                  )o   )sheet2
+		where 补票时间 &lt; DSI_Withdraw or DSI_Withdraw is null                  )o   )sheet2
 
 		on sheet1.sheet = sheet2.sheet
 

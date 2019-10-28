@@ -46,6 +46,10 @@ export default {
 		}catch(e){
 			return 0.00;
 		}
+	},
+	
+	arr2Str: function(arr) {
+		return JSON.stringify(arr).replace(/\[/g, "").replace(/]/g, "");
 	}
 	
 	

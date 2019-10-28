@@ -7,7 +7,7 @@ import java.util.Iterator;
 import com.interest.dao.master.RoleDao;
 import com.interest.dao.master.UserDao;
 import com.interest.model.entity.UserEntity;
-import com.interest.utils.MyStringUtil;
+import com.interest.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class MyUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
 		UserEntity userEntity = null;
 
-		if(MyStringUtil.isInteger(id)) {
+		if(StringUtil.isInteger(id)) {
 			userEntity = userDao.getUserEntityById(Integer.valueOf(id));
 		}else {
 			userEntity = userDao.getUserEntityByLoginName(id);

@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.interest.dao.rainbow.RainbowRbbxhDao">
 
-	<!-- 即开票交易统计 -->
-	<select id="rbxhjkpjytj" resultType="java.util.HashMap">
+	<!-- 即开票交易统计, 添加分页及 日期和设备类型控制 -->
+	<select id="rbxhjkpjytj" resultType="java.util.HashMap" >
 		select dt 日期,DDI_Type 设备类型,sum(日单设备订单数) 交易总笔数,max(日单设备订单数) 单台最大交易笔数,avg(日单设备订单数) 平均单台交易笔数,sum(日单设备退订单数) 退订数
 		from
 		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,count(distinct(a.ODER_Uid)) 日单设备订单数,count(distinct(c.FLRF_Uid)) 日单设备退订单数
@@ -28,8 +28,64 @@
 		where d.DSI_Anti is null
 		and a.ODER_State = 0
 		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and date(a.CreateDate) >= #{startDate} and date(a.CreateDate) &lt;= #{endDate}
+
+		<if test="null != deviceModel and deviceModel.size > 0">
+			and h.DDI_Type IN
+			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
+				#{ddi}
+			</foreach>
+		</if>
+
 		#and d.DDI_No = '{{设备编码}}'
-		#and date(a.CreateDate) >= '{{ 起始时间 }}' and date(a.CreateDate) &lt;='{{ 截止时间 }}'
+		#and d.SHOP_No  = '{{门店编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and j.SHOP_Area = '{{ 所属地区 }}'
+		group by 设备编号,网点编号,启用时间,dt) sheet
+		group by dt,DDI_Type
+
+		limit #{pageWrapper.start},#{pageWrapper.pageSize};
+	</select>
+
+	<!-- 查询总条数，在最外层加了个select count *  -->
+	<select id="rbxhjkpjytj_count" resultType="Integer">
+		select count(*) from
+		(
+		select dt 日期,DDI_Type 设备类型,sum(日单设备订单数) 交易总笔数,max(日单设备订单数) 单台最大交易笔数,avg(日单设备订单数) 平均单台交易笔数,sum(日单设备退订单数) 退订数
+		from
+		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,count(distinct(a.ODER_Uid)) 日单设备订单数,count(distinct(c.FLRF_Uid)) 日单设备退订单数
+		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join netfiance_db.t_finance_bank_refund c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on d.SHOP_No = i.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = i.SHOP_Class
+		left join study.t_shop_sub_info j
+		on i.SHOP_No = j.SHOP_No
+		where d.DSI_Anti is null
+		and a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and date(a.CreateDate) >= #{startDate} and date(a.CreateDate) &lt;= #{endDate}
+
+		<if test="null != deviceModel and deviceModel.size > 0">
+			and h.DDI_Type IN
+			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
+				#{ddi}
+			</foreach>
+		</if>
+
+		#and d.DDI_No = '{{设备编码}}'
 		#and d.SHOP_No  = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and h.DDI_Type = '{{ 设备类型 }}'
@@ -37,6 +93,7 @@
 		#and j.SHOP_Area = '{{ 所属地区 }}'
 		group by 设备编号,网点编号,启用时间,dt) sheet
 		group by dt,DDI_Type
+		) temp
 	</select>
 
 	<!-- TOP50不用分页，控制好表格的就可以。  -->

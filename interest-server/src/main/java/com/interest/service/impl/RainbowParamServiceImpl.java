@@ -24,31 +24,26 @@ public class RainbowParamServiceImpl implements RainbowParamService {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Override
-	@Transactional
 	public List<ParamEntity> areaList() {
 		return rainbowParamDao.areaList();
 	}
 
 	@Override
-	@Transactional
 	public List<ParamEntity> shopTypeList() {
 		return rainbowParamDao.shopTypeList();
 	}
 
-@Override
-	@Transactional
+	@Override
 	public List<ParamEntity> shopList() {
 		return rainbowParamDao.shopList();
 	}
 
 	@Override
-	@Transactional
 	public List<ParamEntity> deviceTypeList() {
 		return rainbowParamDao.deviceTypeList();
 	}
 
 	@Override
-	@Transactional
 	public List<ParamEntity> channelList() {
 		return rainbowParamDao.channelList();
 	}

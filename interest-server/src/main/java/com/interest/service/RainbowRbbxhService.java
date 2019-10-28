@@ -9,7 +9,7 @@ import java.util.List;
 public interface RainbowRbbxhService {
 	
 	// 即开票交易情况
-	List<HashMap> rbxhjkpjytj();
+	PageResult rbxhjkpjytj(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
 
 	// Top50
 	List<HashMap> rbxhjkpjy50();

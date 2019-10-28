@@ -37,6 +37,10 @@ export default {
 			this.dispatch("queryDeviceTypeList")
 			this.dispatch("queryChannelList")
 		},
+		
+		queryParam (type) {
+			this.dispatch(type);
+		},
 
 		queryAreaList(context) {
 			axios({

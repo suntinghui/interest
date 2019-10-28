@@ -8,8 +8,8 @@
 		<div>
 			<Row style="margin-bottom: 25px;">
 
-				<Col span="20">起止日期：
-					<Date-picker :value="dateValue"  @on-change='handleDateChange' type="daterange" editable="false" :options="dateOptions" placement="bottom-start" placeholder="选择日期" style="width: 240px"></Date-picker>
+				<Col span="20">起止日期时间：
+					<Date-picker :value="dateValue"  @on-change='handleDateChange' type="datetimerange" editable="false" :options="dateOptions" placement="bottom-start" placeholder="选择日期时间" style="width: 300px"></Date-picker>
 				</Col>
 				
 				<Col span="4"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
