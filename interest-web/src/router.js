@@ -317,6 +317,26 @@ const routers = [
 	    name: "rainbow/rbxhjkpjy50",
 	    component: resolve => require(["./views/rainbow/rbbxh/jkpjy50.vue"], resolve)
 	  },
+	  {
+	    path: "rainbow/mrzwsbsl", // 日报表细化 - 每日在网设备数量
+	    name: "rainbow/mrzwsbsl",
+	    component: resolve => require(["./views/rainbow/rbbxh/mrzwsbsl.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/mrxrwsbsl", // 日报表细化 - 每日新入网设备数量
+	    name: "rainbow/mrxrwsbsl",
+	    component: resolve => require(["./views/rainbow/rbbxh/mrxrwsbsl.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/mrwkjsl", // 日报表细化 - 每日未开机设备数量
+	    name: "rainbow/mrwkjsl",
+	    component: resolve => require(["./views/rainbow/rbbxh/mrwkjsl.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/cjsbs", // 日报表细化 - 撤机设备数
+	    name: "rainbow/cjsbs",
+	    component: resolve => require(["./views/rainbow/rbbxh/cjsbs.vue"], resolve)
+	  },
 	  
 	  
 	  

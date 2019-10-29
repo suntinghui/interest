@@ -165,32 +165,32 @@
 		},
 		methods: {
 			search() {
-				this.showSpin = true;
-
-				this.axios({
-						method: "get",
-						url: "/rainbow/rbxhjkpjy50",
-						params: {
-
-						}
-					})
-					.then(
-						function(response) {
-							console.log(JSON.stringify(response))
-
-							this.data1 = response.data.data;
-						}.bind(this)
-					)
-					.catch(function(error) {
-						alert(error);
-					})
-					.finally(function() {
-						this.showSpin = false;
-					}.bind(this));
-
-			},
+					this.showSpin = true;
 			
-
+					this.axios({
+							method: "get",
+							url: "/rainbow/rbxhjkpjy50",
+							params: {
+			
+							}
+						})
+						.then(
+							function(response) {
+								console.log(JSON.stringify(response))
+			
+								
+							}.bind(this)
+						)
+						.catch(function(error) {
+							alert(error);
+						})
+						.finally(function() {
+							this.showSpin = false;
+						}.bind(this));
+			
+				},
+				
+			
 		}
 	};
 </script>

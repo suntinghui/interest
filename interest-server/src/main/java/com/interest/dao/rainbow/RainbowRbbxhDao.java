@@ -16,13 +16,17 @@ public interface RainbowRbbxhDao {
 
 	List<HashMap> rbxhjkpjy50();
 
-	List<HashMap> rbxhsbyxqk();
+	List<HashMap> rbxhsbyxqk(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	int rbxhsbyxqk_count(String startDate, String endDate, List deviceModel);
 
-	List<HashMap> rbxhmrxrwsl();
+	List<HashMap> mrxrwsbsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	int mrxrwsbsl_count(String startDate, String endDate, List deviceModel);
 
-	List<HashMap> rbxhmrwkjsl();
+	List<HashMap> mrwkjsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	int mrwkjsl_count(String startDate, String endDate, List deviceModel);
 
-	List<HashMap> rbxhcjsbs();
+	List<HashMap> cjsbs(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	int cjsbs_count(String startDate, String endDate, List deviceModel);
 
 
 }

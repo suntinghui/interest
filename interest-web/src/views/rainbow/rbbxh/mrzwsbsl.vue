@@ -1,4 +1,4 @@
-<!-- 即开票交易统计  -->
+<!-- 每日在网设备数量  -->
 <style>
 
 </style>
@@ -62,37 +62,19 @@
 				/*表显示字段*/
 				columns1: [{
 						title: "日期",
-						key: "日期",
+						key: "dt",
 						align: "center",
 						sortable: true
 					},
 					{
 						title: "设备类型",
-						key: "设备类型",
+						key: "DDI_Type",
 						align: "center",
 						sortable: true
 					},
 					{
-						title: "交易总笔数",
-						key: "交易总笔数",
-						align: "center",
-						sortable: true
-					},
-					{
-						title: "单台最大交易笔数",
-						key: "单台最大交易笔数",
-						align: "center",
-						sortable: true
-					},
-					{
-						title: "平均单台交易笔数",
-						key: "平均单台交易笔数",
-						align: "center",
-						sortable: true
-					},
-					{
-						title: "退订数",
-						key: "退订数",
+						title: "在网设备数量",
+						key: "在网设备数量",
 						align: "center",
 						sortable: true
 					}
@@ -127,7 +109,7 @@
 				
 				this.axios({
 						method: "get",
-						url: "/rainbow/rbxhjkpjytj",
+						url: "/rainbow/mrzwsbsl",
 						params: {
 							page: e.pageInfo.page,
 							pageSize: e.pageInfo.pageSize,

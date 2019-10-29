@@ -1,11 +1,13 @@
 package com.interest.controller.rainbow;
 
+import com.alibaba.fastjson.JSON;
 import com.interest.annotation.InterestLog;
 import com.interest.model.utils.PageResult;
 import com.interest.model.utils.PageWrapper;
 import com.interest.model.utils.ResponseWrapper;
 import com.interest.service.RainbowDjqdatjService;
 import com.interest.service.RainbowRbbxhService;
+import com.interest.service.RainbowYjzbService;
 import com.interest.utils.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,13 +48,62 @@ public class RainbowRbbxhController {
 	// 即开票交易Top50
 	@InterestLog
 	@GetMapping("/rainbow/rbxhjkpjy50")
-	public ResponseWrapper<List<HashMap>> rbxhjkpjy50(@RequestParam(value = "searchContent", required = false) String searchContent) {
-		List<HashMap> list = rainbowRbbxhService.rbxhjkpjy50();
-		return new ResponseWrapper<>(list);
+	public ResponseWrapper<String> rbxhjkpjy50() {
+		List<HashMap<String, String>> list = rainbowRbbxhService.rbxhjkpjy50();
+		log.info(JSON.toJSONString(list));
+		return new ResponseWrapper<>("50");
 	}
 
+	// 每日在网设备数量
+	@InterestLog
+	@GetMapping("/rainbow/mrzwsbsl")
+	public ResponseWrapper<PageResult> mrzwsbsl(@RequestParam(value = "pageSize", required = false) int pageSize,
+												   @RequestParam(value = "page", required = false) int page,
+												   @RequestParam(value = "startDate", required = false) String startDate,
+												   @RequestParam(value = "endDate", required = false) String endDate,
+												   @RequestParam(value = "deviceModel", required = false) String deviceModel) {
+		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
+		PageResult pageResult = rainbowRbbxhService.mrzwsbsl(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		return new ResponseWrapper<>(pageResult);
+	}
 
+	// 每日新入网设备数量
+	@InterestLog
+	@GetMapping("/rainbow/mrxrwsbsl")
+	public ResponseWrapper<PageResult> mrxrwsbsl(@RequestParam(value = "pageSize", required = false) int pageSize,
+												@RequestParam(value = "page", required = false) int page,
+												@RequestParam(value = "startDate", required = false) String startDate,
+												@RequestParam(value = "endDate", required = false) String endDate,
+												@RequestParam(value = "deviceModel", required = false) String deviceModel) {
+		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
+		PageResult pageResult = rainbowRbbxhService.mrxrwsbsl(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		return new ResponseWrapper<>(pageResult);
+	}
 
+	// 每日未开机设备数量
+	@InterestLog
+	@GetMapping("/rainbow/mrwkjsl")
+	public ResponseWrapper<PageResult> mrwkjsl(@RequestParam(value = "pageSize", required = false) int pageSize,
+												 @RequestParam(value = "page", required = false) int page,
+												 @RequestParam(value = "startDate", required = false) String startDate,
+												 @RequestParam(value = "endDate", required = false) String endDate,
+												 @RequestParam(value = "deviceModel", required = false) String deviceModel) {
+		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
+		PageResult pageResult = rainbowRbbxhService.mrwkjsl(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		return new ResponseWrapper<>(pageResult);
+	}
 
+	// 撤机设备数
+	@InterestLog
+	@GetMapping("/rainbow/cjsbs")
+	public ResponseWrapper<PageResult> cjsbs(@RequestParam(value = "pageSize", required = false) int pageSize,
+											   @RequestParam(value = "page", required = false) int page,
+											   @RequestParam(value = "startDate", required = false) String startDate,
+											   @RequestParam(value = "endDate", required = false) String endDate,
+											   @RequestParam(value = "deviceModel", required = false) String deviceModel) {
+		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
+		PageResult pageResult = rainbowRbbxhService.cjsbs(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		return new ResponseWrapper<>(pageResult);
+	}
 
 }

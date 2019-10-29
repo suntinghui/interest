@@ -12,20 +12,18 @@ public interface RainbowRbbxhService {
 	PageResult rbxhjkpjytj(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
 
 	// Top50
-	List<HashMap> rbxhjkpjy50();
+	List<HashMap<String, String>> rbxhjkpjy50();
 
 	// 每日在网设备数量
-	List<HashMap> rbxhsbyxqk();
+	PageResult mrzwsbsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
 
 	// 每日新入网数量
-	List<HashMap> rbxhmrxrwsl();
+	PageResult mrxrwsbsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
 
 	// 每日未开机数量
-	List<HashMap> rbxhmrwkjsl();
+	PageResult mrwkjsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
 
 	// 撤机设备数
-	List<HashMap> rbxhcjsbs();
-
-
+	PageResult cjsbs(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
 
 }
