@@ -108,6 +108,7 @@
 				this.axios({
 						method: "get",
 						url: "/rainbow/fhgjl",
+						timeout: 1000 * 60 * 2,
 						params: {
 
 						}

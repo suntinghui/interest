@@ -337,7 +337,11 @@ const routers = [
 	    name: "rainbow/cjsbs",
 	    component: resolve => require(["./views/rainbow/rbbxh/cjsbs.vue"], resolve)
 	  },
-	  
+	  {
+	    path: "rainbow/rxse", // 日销售统计-日销售额
+	    name: "rainbow/rxse",
+	    component: resolve => require(["./views/rainbow/rxsetj/rxse.vue"], resolve)
+	  },
 	  
 	  
     ]

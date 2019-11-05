@@ -134,6 +134,7 @@
 				this.axios({
 						method: "get",
 						url: "/rainbow/sbda",
+						timeout: 1000 * 60 * 2,
 						params: {
 							searchContent: this.searchContent,
 							page: e.pageInfo.page,

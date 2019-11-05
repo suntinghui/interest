@@ -14,7 +14,7 @@ public interface RainbowRbbxhDao {
 	List<HashMap> rbxhjkpjytj(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
 	int rbxhjkpjytj_count(String startDate, String endDate, List deviceModel);
 
-	List<HashMap> rbxhjkpjy50();
+	List<HashMap> rbxhjkpjy50(String startDate, String endDate, List deviceModel);
 
 	List<HashMap> rbxhsbyxqk(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
 	int rbxhsbyxqk_count(String startDate, String endDate, List deviceModel);

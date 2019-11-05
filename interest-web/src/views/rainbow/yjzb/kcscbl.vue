@@ -101,6 +101,7 @@
 				this.axios({
 						method: "get",
 						url: "/rainbow/kcscbl",
+						timeout: 1000 * 60 * 2,
 						params: {
 							startDate: this.dateValue[0],
 							endDate: this.dateValue[1],

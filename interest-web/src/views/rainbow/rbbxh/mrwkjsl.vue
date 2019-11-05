@@ -110,6 +110,7 @@
 				this.axios({
 						method: "get",
 						url: "/rainbow/mrwkjsl",
+						timeout: 1000 * 60 * 2,
 						params: {
 							page: e.pageInfo.page,
 							pageSize: e.pageInfo.pageSize,

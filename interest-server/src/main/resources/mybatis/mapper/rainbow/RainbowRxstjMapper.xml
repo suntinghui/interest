@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.interest.dao.rainbow.RainbowRxstjDao">
+
+	<!-- 销售统计, 添加分页 -->
+	<select id="xstj" resultType="java.util.HashMap" >
+		select dt 日期,sum(单设备日销售额) 总销售额,sum(单设备日退款额) 总退款额,avg(单设备日销售额)平均单台销售额,max(单设备日销售额)单台最大销售额
+		from
+		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,sum(a.ODER_Money) 单设备日销售额,sum(c.FLRF_RefundMoney) 单设备日退款额
+		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join netfiance_db.t_finance_bank_refund c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on d.SHOP_No = i.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = i.SHOP_Class
+		left join study.t_shop_sub_info j
+		on i.SHOP_No = j.SHOP_No
+		where d.DSI_Anti is null
+		and a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		#and d.DDI_No = '{{设备编码}}'
+		and date(a.CreateDate) >= #{startDate} and date(a.CreateDate) &lt;=#{endDate}
+
+		#and d.SHOP_No  = '{{门店编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and h.DDI_Type = '{{ 设备类型 }}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and j.SHOP_Area = '{{ 所属地区 }}'
+		group by 设备编号,网点编号,启用时间,dt) sheet
+		group by dt
+
+		limit #{pageWrapper.start},#{pageWrapper.pageSize};
+	</select>
+
+	<!-- 销售统计，在最外层加了个select count *  -->
+	<select id="xstj_count" resultType="Integer">
+		select count(*) from
+		(
+		select dt 日期,sum(单设备日销售额) 总销售额,sum(单设备日退款额) 总退款额,avg(单设备日销售额)平均单台销售额,max(单设备日销售额)单台最大销售额
+		from
+		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,sum(a.ODER_Money) 单设备日销售额,sum(c.FLRF_RefundMoney) 单设备日退款额
+		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join netfiance_db.t_finance_bank_refund c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on d.SHOP_No = i.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = i.SHOP_Class
+		left join study.t_shop_sub_info j
+		on i.SHOP_No = j.SHOP_No
+		where d.DSI_Anti is null
+		and a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		#and d.DDI_No = '{{设备编码}}'
+		and date(a.CreateDate) >= #{startDate} and date(a.CreateDate) &lt;=#{endDate}
+
+		#and d.SHOP_No  = '{{门店编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and h.DDI_Type = '{{ 设备类型 }}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and j.SHOP_Area = '{{ 所属地区 }}'
+		group by 设备编号,网点编号,启用时间,dt) sheet
+		group by dt
+		) temp
+	</select>
+
+
+
+
+</mapper>

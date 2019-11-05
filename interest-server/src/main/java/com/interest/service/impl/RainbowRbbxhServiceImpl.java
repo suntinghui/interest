@@ -38,8 +38,8 @@ public class RainbowRbbxhServiceImpl implements RainbowRbbxhService {
 	}
 
 	@Override
-	public List<HashMap<String, String>> rbxhjkpjy50() {
-		return RainbowUtil.decodeList(rainbowRbbxhDao.rbxhjkpjy50());
+	public List<HashMap<String, String>> rbxhjkpjy50(String startDate, String endDate, List deviceModel) {
+		return RainbowUtil.decodeList(rainbowRbbxhDao.rbxhjkpjy50(startDate, endDate, deviceModel));
 	}
 
 	@Override

@@ -48,10 +48,12 @@ public class RainbowRbbxhController {
 	// 即开票交易Top50
 	@InterestLog
 	@GetMapping("/rainbow/rbxhjkpjy50")
-	public ResponseWrapper<String> rbxhjkpjy50() {
-		List<HashMap<String, String>> list = rainbowRbbxhService.rbxhjkpjy50();
+	public ResponseWrapper<List<HashMap<String, String>>> rbxhjkpjy50(@RequestParam(value = "startDate", required = false) String startDate,
+											   @RequestParam(value = "endDate", required = false) String endDate,
+											   @RequestParam(value = "deviceModel", required = false) String deviceModel) {
+		List<HashMap<String, String>> list = rainbowRbbxhService.rbxhjkpjy50(startDate, endDate, StringUtil.str2List(deviceModel));
 		log.info(JSON.toJSONString(list));
-		return new ResponseWrapper<>("50");
+		return new ResponseWrapper<>(list);
 	}
 
 	// 每日在网设备数量

@@ -91,8 +91,8 @@
 						sortable: true
 					},
 					{
-						title: "退订数",
-						key: "退订数",
+						title: "退订单数",
+						key: "退订单数",
 						align: "center",
 						sortable: true
 					}
@@ -128,6 +128,7 @@
 				this.axios({
 						method: "get",
 						url: "/rainbow/rbxhjkpjytj",
+						timeout: 1000 * 60 * 2,
 						params: {
 							page: e.pageInfo.page,
 							pageSize: e.pageInfo.pageSize,

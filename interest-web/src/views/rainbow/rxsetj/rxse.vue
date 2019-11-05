@@ -1,4 +1,4 @@
-<!-- 每日在网设备数量  -->
+<!-- 日销售额统计  -->
 <style>
 
 </style>
@@ -62,19 +62,31 @@
 				/*表显示字段*/
 				columns1: [{
 						title: "日期",
-						key: "dt",
+						key: "日期",
 						align: "center",
 						sortable: true
 					},
 					{
-						title: "设备类型",
-						key: "DDI_Type",
+						title: "总销售额",
+						key: "总销售额",
 						align: "center",
 						sortable: true
 					},
 					{
-						title: "在网设备数量",
-						key: "在网设备数量",
+						title: "总退款额",
+						key: "总退款额",
+						align: "center",
+						sortable: true
+					},
+					{
+						title: "平均单台销售额",
+						key: "平均单台销售额",
+						align: "center",
+						sortable: true
+					},
+					{
+						title: "单台最大销售额",
+						key: "单台最大销售额",
 						align: "center",
 						sortable: true
 					}
@@ -109,7 +121,7 @@
 				
 				this.axios({
 						method: "get",
-						url: "/rainbow/mrzwsbsl",
+						url: "/rainbow/xstj",
 						timeout: 1000 * 60 * 2,
 						params: {
 							page: e.pageInfo.page,
@@ -117,7 +129,7 @@
 							startDate: this.dateValue[0],
 							endDate: this.dateValue[1],
 							deviceModel: this.deviceModel.toString()
-						}
+						},
 					})
 					.then(
 						function(response) {
