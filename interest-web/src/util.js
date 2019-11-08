@@ -14,7 +14,31 @@ export default {
 		curDate.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
 		return curDate;
 	},
-	
+
+	lastMonth: function(curDate) {
+		var year = curDate.getFullYear();
+		var month = curDate.getMonth()+1;
+		
+		if (month == 1) {
+			year = year - 1;
+			month = 12;
+		} else {
+			month = month-1;
+		}
+		
+		if (month<10) {
+			return year+"-0"+month;
+		} else {
+			return year+"-"+month;
+		}
+	},
+
+	yestoday: function() {
+		var curDate = new Date();
+		curDate.setTime(curDate.getTime() - 3600 * 1000 * 24 * 1);
+		return curDate;
+	},
+
 	dateFormat: function(date) {
 		var year = date.getFullYear();
 		/* 在日期格式中，月份是从0开始的，因此要加0
@@ -39,19 +63,19 @@ export default {
 		// 拼接
 		return year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
 	},
-	
+
 	numFixed: function(num) {
-		try{
+		try {
 			return num.toFixed(2)
-		}catch(e){
+		} catch (e) {
 			return 0.00;
 		}
 	},
-	
+
 	arr2Str: function(arr) {
 		return JSON.stringify(arr).replace(/\[/g, "").replace(/]/g, "");
 	}
-	
-	
+
+
 
 }

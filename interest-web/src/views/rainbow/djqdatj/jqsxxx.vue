@@ -161,7 +161,8 @@
 						title: "网点编号",
 						key: "网点编号",
 						align: "center",
-						sortable: true
+						sortable: true,
+						width:150
 					},
 					{
 						title: "启用时间",
@@ -170,25 +171,22 @@
 						sortable: true
 					},
 					{
-						title: "设备位置",
-						key: "设备位置",
-						align: "center"
-					},
-					{
 						title: "设备类型",
 						key: "设备类型",
 						align: "center",
-						sortable: true
+						sortable: true,
+						width:120
 					},
 					{
-						title: "机器物联网卡",
-						key: "机器物联网卡",
+						title: "设备位置",
+						key: "设备位置",
 						align: "center"
 					},
 					{
 						title: "操作",
 						key: "Action",
 						align: "center",
+						width:150,
 						render: (h, params) => {
 							return h('Button', {
 								props: {

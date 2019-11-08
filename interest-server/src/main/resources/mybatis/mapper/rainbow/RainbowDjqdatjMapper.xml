@@ -4,7 +4,7 @@
 
 	<!-- 设备档案，添加分页 -->
 	<select id="getDeviceInfoList" resultType="java.util.HashMap">
-		select a.DDI_No 机器编号,a.SHOP_No 网点编号,a.DSI_Try 启用时间,c.SHOP_Address 设备位置,b.DDI_Type 设备类型,a.DSI_Mobilecard 机器物联网卡
+		select a.DDI_No 机器编号,a.SHOP_No 网点编号,a.DSI_Try 启用时间,c.SHOP_Address 设备位置,b.DDI_Type 设备类型
 		from study.t_device_sub_info a left join t_device_device_info b
 		on a.DDI_No = b.DDI_No
 		left join netfiance_db.t_shop_shop_info c

@@ -27,7 +27,7 @@ public class RainbowDjqdatjServiceImpl implements RainbowDjqdatjService {
 
 	@Override
 	public PageResult getDeviceInfoList(String searchContent, PageWrapper pageWrapper) {
-		List<HashMap<String, String>> list = RainbowUtil.decodeList(rainbowDjqdatjDao.getDeviceInfoList(searchContent, pageWrapper));
+		List<HashMap> list = RainbowUtil.decodeList(rainbowDjqdatjDao.getDeviceInfoList(searchContent, pageWrapper));
 		int size = rainbowDjqdatjDao.getDevieInfoSize(searchContent);
 		return new PageResult<>(list, size);
 	}

@@ -35,4 +35,38 @@ public class RainbowRxstjServiceImpl implements RainbowRxstjService {
 		return new PageResult<>(list, size);
 	}
 
+	@Override
+	public PageResult sblxtj(PageWrapper pageWrapper, String startDate, String endDate) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowRxstjDao.sblxtj(pageWrapper, startDate, endDate));
+		int size = rainbowRxstjDao.sblxtj_count(startDate, endDate);
+		return new PageResult<>(list, size);
+	}
+
+	@Override
+	public PageResult acztj(PageWrapper pageWrapper, String startDate, String endDate) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowRxstjDao.acztj(pageWrapper, startDate, endDate));
+		int size = rainbowRxstjDao.acztj_count(startDate, endDate);
+		return new PageResult<>(list, size);
+	}
+
+	@Override
+	public PageResult dtpjxstj(PageWrapper pageWrapper, String startDate, String endDate) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowRxstjDao.dtpjxstj(pageWrapper, startDate, endDate));
+		int size = rainbowRxstjDao.dtpjxstj_count(startDate, endDate);
+		return new PageResult<>(list, size);
+	}
+
+	@Override
+	public PageResult dtxlpm(PageWrapper pageWrapper, String startDate, String endDate) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowRxstjDao.dtxlpm(pageWrapper, startDate, endDate));
+		int size = rainbowRxstjDao.dtxlpm_count(startDate, endDate);
+		return new PageResult<>(list, size);
+	}
+
+	@Override
+	public HashMap lxlsbzbtj(String queryDate) {
+		 HashMap map = rainbowRxstjDao.lxlsbzbtj(queryDate);
+		 return map;
+	}
+
 }

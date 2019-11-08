@@ -83,6 +83,419 @@
 		) temp
 	</select>
 
+	<!-- 按设备类型统计, 添加分页 -->
+	<select id="sblxtj" resultType="java.util.HashMap" >
+		select ATOP_Title 渠道,DDI_Type 设备类型,dt 日期,sum(单设备日销售额) 总销售额,sum(单设备日退款额) 总退款额,avg(单设备日销售额)平均单台销售额,max(单设备日销售额)单台最大销售额
+		from
+		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,g.ATOP_Title,sum(a.ODER_Money) 单设备日销售额,sum(c.FLRF_RefundMoney) 单设备日退款额
+		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join netfiance_db.t_finance_bank_refund c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on d.SHOP_No = i.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = i.SHOP_Class
+		left join study.t_shop_sub_info j
+		on i.SHOP_No = j.SHOP_No
+		where d.DSI_Anti is null
+		and a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and date(a.CreateDate) >= #{startDate} and date(a.CreateDate) &lt;= #{endDate}
+
+		#and d.DDI_No = '{{设备编码}}'
+		#and d.SHOP_No  = '{{门店编码}}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and j.SHOP_Area = '{{ 所属地区 }}'
+		group by 设备编号,网点编号,启用时间,dt) sheet
+		group by ATOP_Title,DDI_Type,dt
+
+		limit #{pageWrapper.start},#{pageWrapper.pageSize};
+	</select>
+
+	<!-- 设备类型统计，在最外层加了个select count *  -->
+	<select id="sblxtj_count" resultType="Integer">
+		select count(*) from
+		(
+		select ATOP_Title 渠道,DDI_Type 设备类型,dt 日期,sum(单设备日销售额) 总销售额,sum(单设备日退款额) 总退款额,avg(单设备日销售额)平均单台销售额,max(单设备日销售额)单台最大销售额
+		from
+		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,g.ATOP_Title,sum(a.ODER_Money) 单设备日销售额,sum(c.FLRF_RefundMoney) 单设备日退款额
+		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join netfiance_db.t_finance_bank_refund c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on d.SHOP_No = i.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = i.SHOP_Class
+		left join study.t_shop_sub_info j
+		on i.SHOP_No = j.SHOP_No
+		where d.DSI_Anti is null
+		and a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and date(a.CreateDate) >= #{startDate} and date(a.CreateDate) &lt;= #{endDate}
+		#and d.DDI_No = '{{设备编码}}'
+		#and d.SHOP_No  = '{{门店编码}}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and j.SHOP_Area = '{{ 所属地区 }}'
+		group by 设备编号,网点编号,启用时间,dt) sheet
+		group by ATOP_Title,DDI_Type,dt
+		) temp
+	</select>
+
+	<!-- 按彩种统计, 添加分页 -->
+	<select id="acztj" resultType="java.util.HashMap" >
+		select g.ATOP_Title 渠道名称,o.COUP_Title as 票种名称,o.COUP_Money 票种单价,sum(m.ODDT_Count)  累计销售张数,sum(o.COUP_Money*m.ODDT_Count) 累计销售金额
+		from t_shop_order_detail m join t_shop_order_info n
+		on n.ODER_Uid = m.ODDT_ODUid
+		join t_customer_coupon_info o
+		on m.ODDT_LTUid=o.COUP_Uid
+		left join t_device_device_info a
+		on n.ODER_DUid = a.DDI_Uid
+		left join study.t_device_sub_info b
+		on a.DDI_No = b.DDI_No
+		left join netfiance_db.t_shop_shop_info e
+		on b.SHOP_No = e.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON e.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = e.SHOP_Class
+		left join study.t_shop_sub_info j
+		on e.SHOP_No = j.SHOP_No
+		where date(n.CreateDate) >= #{startDate} and date(n.CreateDate) &lt;= #{endDate}
+		and ODER_State = 0
+		and b.DSI_Anti is null
+		and n.CreateDate >= b.DSI_Try and (n.CreateDate &lt;= b.DSI_Withdraw or b.DSI_Withdraw is null)
+		#and a.DDI_No = '{{设备编码}}'
+		#and e.SHOP_No = '{{门店编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and a.DDI_Type = '{{ 设备类型 }}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and j.SHOP_Area = '{{ 所属地区 }}'
+		group by 渠道名称,票种名称
+
+		limit #{pageWrapper.start},#{pageWrapper.pageSize};
+	</select>
+
+	<!-- 按彩种统计，在最外层加了个select count *  -->
+	<select id="acztj_count" resultType="Integer">
+		select count(*) from
+		(
+		select g.ATOP_Title 渠道名称,o.COUP_Title as 票种名称,o.COUP_Money 票种单价,sum(m.ODDT_Count)  累计销售张数,sum(o.COUP_Money*m.ODDT_Count) 累计销售金额
+		from t_shop_order_detail m join t_shop_order_info n
+		on n.ODER_Uid = m.ODDT_ODUid
+		join t_customer_coupon_info o
+		on m.ODDT_LTUid=o.COUP_Uid
+		left join t_device_device_info a
+		on n.ODER_DUid = a.DDI_Uid
+		left join study.t_device_sub_info b
+		on a.DDI_No = b.DDI_No
+		left join netfiance_db.t_shop_shop_info e
+		on b.SHOP_No = e.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON e.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = e.SHOP_Class
+		left join study.t_shop_sub_info j
+		on e.SHOP_No = j.SHOP_No
+		where date(n.CreateDate) >= #{startDate} and date(n.CreateDate) &lt;= #{endDate}
+		and ODER_State = 0
+		and b.DSI_Anti is null
+		and n.CreateDate >= b.DSI_Try and (n.CreateDate &lt;= b.DSI_Withdraw or b.DSI_Withdraw is null)
+		#and a.DDI_No = '{{设备编码}}'
+		#and e.SHOP_No = '{{门店编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and a.DDI_Type = '{{ 设备类型 }}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and j.SHOP_Area = '{{ 所属地区 }}'
+		group by 渠道名称,票种名称
+		) temp
+	</select>
+
+	<!-- 单台平均销售统计， 添加分页 -->
+	<select id="dtpjxstj" resultType="java.util.HashMap">
+		select 设备类型,avg(日均销售额) 在网设备日均销售额,avg(开机日均销售额) 开机在网设备日均销量
+		from
+		(
+		select sheet1.DDI_No 设备编号,sheet1.SHOP_No 网点编号,sheet1.启用时间,DDI_Type 设备类型,tol_money 销售总额,搜索时段内天数,sum_turn_on 搜索时段内开机天数,日均销售额,tol_money/sum_turn_on 开机日均销售额
+		from
+
+		(select *,tol_money/搜索时段内天数 日均销售额
+		from
+		(
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(sum(ODER_Money),0) tol_money,
+		case when first_sub.dt>=#{startDate} and first_sub.draw_dt>=#{endDate} then datediff(#{endDate},first_sub.dt)+1
+		when first_sub.dt>=#{startDate} and first_sub.draw_dt &lt;#{endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
+		when first_sub.draw_dt &lt;#{startDate} then 0
+		when first_sub.dt &lt;#{startDate} and first_sub.draw_dt >= #{startDate} and first_sub.draw_dt  &lt; #{endDate} then datediff(first_sub.draw_dt,#{startDate})+1
+		when first_sub.dt &lt;#{startDate} and first_sub.draw_dt >=#{endDate} then datediff(#{endDate},#{startDate})+1
+		when first_sub.dt>#{endDate} then 0 end as 搜索时段内天数     #需判断查询起始时间、截止时间，与设备开启时间、撤机时间之间的关系
+		from
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
+		from study.t_device_sub_info a left join t_device_device_info b
+		on a.DDI_No = b.DDI_No
+		left join netfiance_db.t_shop_shop_info d
+		on d.SHOP_No = a.SHOP_No
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on a.SHOP_No = g.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = d.SHOP_Class
+		where a.DSI_Anti is null
+		#and b.DDI_Type = '{{设备类型}}'
+		#and f.ATOP_Title = {{选择渠道}}
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.SHOP_Area = '{{ 所属地区 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		order by dt) first_sub             #每台机器在网点真实开启时间
+
+		left join
+
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_Money
+		from t_shop_order_info e left join t_device_device_info b
+		on e.ODER_DUid = b.DDI_Uid
+		left join study.t_device_sub_info a
+		on b.DDI_No = a.DDI_No
+		where date(e.CreateDate)>=#{startDate} and date(e.CreateDate) &lt;=#{endDate}
+		and e.ODER_State = 0
+		and a.DSI_Anti is null
+		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
+		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
+
+		where first_sub.dt &lt;=#{endDate}
+		group by DDI_No,SHOP_No,启用时间   )t
+		order by 日均销售额 desc     ) sheet1
+
+
+		left join
+
+
+		(select DDI_No,SHOP_No,启用时间,count(DDI_No) sum_turn_on   #一台机器在搜索时间段内开机几天
+		from
+		(select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,round(sum(a.DOL_Length)/60,1) last_hour
+		from t_device_online_list a left join t_device_device_info b
+		on a.DOL_DUid = b.DDI_Uid
+		left join study.t_device_sub_info c
+		on b.DDI_No = c.DDI_No
+		where DOL_Length &lt;> 0
+		and date(DATE_ADD(a.CreateDate,interval 1 minute)) &lt;= #{endDate} and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= #{startDate}
+		and c.DSI_Anti is null
+		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
+		group by DDI_No,SHOP_No,启用时间) t
+		where last_hour &lt;> 0
+		group by DDI_No,SHOP_No,启用时间       )sheet2
+		on sheet1.DDI_No = sheet2.DDI_No and sheet1.SHOP_No = sheet2.SHOP_No and sheet1.启用时间 = sheet2.启用时间    )tol_sheet
+		group by 设备类型
+
+		limit #{pageWrapper.start},#{pageWrapper.pageSize};
+	</select>
+
+	<!-- 单台平均销售统计，在最外层加了个select count *  -->
+	<select id="dtpjxstj_count" resultType="Integer">
+		select count(*) from
+		(
+		select 设备类型,avg(日均销售额) 在网设备日均销售额,avg(开机日均销售额) 开机在网设备日均销量
+		from
+		(
+		select sheet1.DDI_No 设备编号,sheet1.SHOP_No 网点编号,sheet1.启用时间,DDI_Type 设备类型,tol_money 销售总额,搜索时段内天数,sum_turn_on 搜索时段内开机天数,日均销售额,tol_money/sum_turn_on 开机日均销售额
+		from
+
+		(select *,tol_money/搜索时段内天数 日均销售额
+		from
+		(
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(sum(ODER_Money),0) tol_money,
+		case when first_sub.dt>=#{startDate} and first_sub.draw_dt>=#{endDate} then datediff(#{endDate},first_sub.dt)+1
+		when first_sub.dt>=#{startDate} and first_sub.draw_dt &lt;#{endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
+		when first_sub.draw_dt &lt;#{startDate} then 0
+		when first_sub.dt &lt;#{startDate} and first_sub.draw_dt >= #{startDate} and first_sub.draw_dt  &lt; #{endDate} then datediff(first_sub.draw_dt,#{startDate})+1
+		when first_sub.dt &lt;#{startDate} and first_sub.draw_dt >=#{endDate} then datediff(#{endDate},#{startDate})+1
+		when first_sub.dt>#{endDate} then 0 end as 搜索时段内天数     #需判断查询起始时间、截止时间，与设备开启时间、撤机时间之间的关系
+		from
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
+		from study.t_device_sub_info a left join t_device_device_info b
+		on a.DDI_No = b.DDI_No
+		left join netfiance_db.t_shop_shop_info d
+		on d.SHOP_No = a.SHOP_No
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on a.SHOP_No = g.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = d.SHOP_Class
+		where a.DSI_Anti is null
+		#and b.DDI_Type = '{{设备类型}}'
+		#and f.ATOP_Title = {{选择渠道}}
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.SHOP_Area = '{{ 所属地区 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		order by dt) first_sub             #每台机器在网点真实开启时间
+
+		left join
+
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_Money
+		from t_shop_order_info e left join t_device_device_info b
+		on e.ODER_DUid = b.DDI_Uid
+		left join study.t_device_sub_info a
+		on b.DDI_No = a.DDI_No
+		where date(e.CreateDate)>=#{startDate} and date(e.CreateDate) &lt;=#{endDate}
+		and e.ODER_State = 0
+		and a.DSI_Anti is null
+		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
+		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
+
+		where first_sub.dt &lt;=#{endDate}
+		group by DDI_No,SHOP_No,启用时间   )t
+		order by 日均销售额 desc     ) sheet1
+
+
+		left join
+
+
+		(select DDI_No,SHOP_No,启用时间,count(DDI_No) sum_turn_on   #一台机器在搜索时间段内开机几天
+		from
+		(select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,round(sum(a.DOL_Length)/60,1) last_hour
+		from t_device_online_list a left join t_device_device_info b
+		on a.DOL_DUid = b.DDI_Uid
+		left join study.t_device_sub_info c
+		on b.DDI_No = c.DDI_No
+		where DOL_Length &lt;> 0
+		and date(DATE_ADD(a.CreateDate,interval 1 minute)) &lt;= #{endDate} and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= #{startDate}
+		and c.DSI_Anti is null
+		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
+		group by DDI_No,SHOP_No,启用时间) t
+		where last_hour &lt;> 0
+		group by DDI_No,SHOP_No,启用时间       )sheet2
+		on sheet1.DDI_No = sheet2.DDI_No and sheet1.SHOP_No = sheet2.SHOP_No and sheet1.启用时间 = sheet2.启用时间    )tol_sheet
+		group by 设备类型
+		) temp
+	</select>
+
+	<!-- 单台销量排名 -->
+	<select id="dtxlpm" resultType="java.util.HashMap" >
+		select @num := @num +1 排名,dt 日期,网点编号,设备编号,启用时间,网点名称,合作模式,设备类型,销售额
+		from
+		(select @num :=0 ) s,
+		(select date(a.CreateDate) dt,b.SHOP_No 网点编号,c.DDI_No 设备编号,d.DSI_Try 启用时间,b.SHOP_Title 网点名称,t.DICT_Name 合作模式,c.DDI_Type 设备类型,sum(a.ODER_Money) 销售额
+		from t_shop_order_info a left join netfiance_db.t_shop_shop_info b
+		on a.ODER_SPUid =b.SHOP_Uid
+		left join t_device_device_info c
+		on a.ODER_DUid = c.DDI_Uid
+		left join study.t_device_sub_info d
+		on c.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_agent_list e
+		on b.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on b.SHOP_No = g.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_type') t
+		on t.DICT_Value = b.SHOP_Type
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = b.SHOP_Class
+		where a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and ODER_State = 0
+		and d.DSI_Anti is null
+		and date(a.CreateDate) >= #{startDate} and date(a.CreateDate) &lt;= #{endDate}
+		#and f.ATOP_Title = '{{ 渠道名称 }}'
+		#and c.DDI_Type = '{{ 设备类型 }}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and g.SHOP_Area= '{{ 所属地区 }}'
+		group by dt,网点编号,设备编号,启用时间
+		order by 销售额 desc) t
+
+		limit #{pageWrapper.start},#{pageWrapper.pageSize};
+	</select>
+
+	<!-- 单台销量排名，在最外层加了个select count *  -->
+	<select id="dtxlpm_count" resultType="Integer">
+		select count(*) from
+		(
+		select @num := @num +1 排名,dt 日期,网点编号,设备编号,启用时间,网点名称,合作模式,设备类型,销售额
+		from
+		(select @num :=0 ) s,
+		(select date(a.CreateDate) dt,b.SHOP_No 网点编号,c.DDI_No 设备编号,d.DSI_Try 启用时间,b.SHOP_Title 网点名称,t.DICT_Name 合作模式,c.DDI_Type 设备类型,sum(a.ODER_Money) 销售额
+		from t_shop_order_info a left join netfiance_db.t_shop_shop_info b
+		on a.ODER_SPUid =b.SHOP_Uid
+		left join t_device_device_info c
+		on a.ODER_DUid = c.DDI_Uid
+		left join study.t_device_sub_info d
+		on c.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_agent_list e
+		on b.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on b.SHOP_No = g.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_type') t
+		on t.DICT_Value = b.SHOP_Type
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
+		on p.DICT_Value = b.SHOP_Class
+		where a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and ODER_State = 0
+		and d.DSI_Anti is null
+		and date(a.CreateDate) >= #{startDate} and date(a.CreateDate) &lt;= #{endDate}
+		#and f.ATOP_Title = '{{ 渠道名称 }}'
+		#and c.DDI_Type = '{{ 设备类型 }}'
+		#and p.DICT_Name = '{{ 网点类型 }}'
+		#and g.SHOP_Area= '{{ 所属地区 }}'
+		group by dt,网点编号,设备编号,启用时间
+		order by 销售额 desc) t
+		) temp
+	</select>
+
+	<!-- 零销量设备占比统计 -->
+	<select id="lxlsbzbtj" resultType="java.util.HashMap" >
+		select count(a.DDI_No) 在网设备总数,count(t.DOL_DUid) 在网开机设备总数,count(a.DDI_No)-count(p.sum_money) 在网总体零销量设备数,count(t.DOL_DUid)-count(p.sum_money) 在网开机零销量设备数,
+		CONCAT(ROUND((count(a.DDI_No)-count(p.sum_money))*100/count(a.DDI_No), 2), '%') 零销量设备占比, CONCAT(ROUND((count(t.DOL_DUid)-count(p.sum_money))*100/count(t.DOL_DUid), 2), '%') 零销量设备开机数占比
+		from study.t_device_sub_info a left join t_device_device_info c
+		on a.DDI_No = c.DDI_No
+		left join netfiance_db.t_shop_shop_info d
+		on d.SHOP_No = a.SHOP_No
+		left join (select b.DOL_DUid from  t_device_online_list b where date(b.CreateDate) = #{queryDate} and DOL_Length &lt;> 0) t
+		on c.DDI_Uid = t.DOL_DUid
+		left join (select ODER_SPUid,ODER_DUid,sum(ODER_Money) sum_money from t_shop_order_info where date(CreateDate)  = #{queryDate} and ODER_State = 0 group by ODER_SPUid,ODER_DUid) p
+		on p.ODER_SPUid = d.SHOP_Uid and p.ODER_DUid = c.DDI_Uid
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on d.SHOP_No = g.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) k
+		on k.DICT_Value = d.SHOP_Class
+		where #{queryDate} >= a.DSI_Try and (#{queryDate} &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null)
+		and a.DSI_Anti is null
+		#and c.DDI_Type = {{选择设备类型}}
+		#and f.ATOP_Title = {{选择渠道}}
+		#and g.SHOP_Area = '{{ 所属地区 }}'
+		#and k.DICT_Name = '{{ 网点类型 }}'
+
+	</select>
 
 
 

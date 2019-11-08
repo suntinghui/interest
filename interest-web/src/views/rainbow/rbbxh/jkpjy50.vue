@@ -119,10 +119,12 @@
 						align: "center",
 						width: 150,
 						sortable: true,
+						/**
 						sortMethod: function(a, b, type) {
 							console.log(a+"--"+b+"--"+type)
 							return type === 'asc' ?  (parseInt(a) > parseInt(b) ? 1 : -1) : (parseInt(a) < parseInt(b) ? 1 : -1);
-						}
+						},
+						**/
 					},
 					{
 						title: "交易额",

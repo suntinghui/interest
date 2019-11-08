@@ -12,8 +12,8 @@ public class RainbowUtil {
      * @param map
      * @return
      */
-    public static HashMap<String, String> decodeMap(HashMap<String, Object> map) {
-        HashMap<String, String> resultMap = new HashMap<>();
+    public static HashMap decodeMap(HashMap<String, Object> map) {
+        HashMap resultMap = new HashMap<>();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof byte[]) {
                 try {
@@ -22,15 +22,15 @@ public class RainbowUtil {
                     resultMap.put(entry.getKey(), "");
                 }
             } else {
-                resultMap.put(entry.getKey(), entry.getValue().toString());
+                resultMap.put(entry.getKey(), entry.getValue());
             }
         }
 
         return resultMap;
     }
 
-    public static List<HashMap<String, String>> decodeList(List<HashMap> list) {
-        List<HashMap<String, String>> resultList = new ArrayList<>();
+    public static List<HashMap> decodeList(List<HashMap> list) {
+        List<HashMap> resultList = new ArrayList<>();
         for (HashMap map : list) {
             resultList.add(RainbowUtil.decodeMap(map));
         }

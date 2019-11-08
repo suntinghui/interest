@@ -12,7 +12,7 @@ public interface RainbowRbbxhService {
 	PageResult rbxhjkpjytj(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
 
 	// Top50
-	List<HashMap<String, String>> rbxhjkpjy50(String startDate, String endDate, List deviceModel);
+	List<HashMap> rbxhjkpjy50(String startDate, String endDate, List deviceModel);
 
 	// 每日在网设备数量
 	PageResult mrzwsbsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);

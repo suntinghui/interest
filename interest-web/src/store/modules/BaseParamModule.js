@@ -38,7 +38,7 @@ export default {
 			this.dispatch("queryChannelList")
 		},
 		
-		queryParam (type) {
+		queryParam (context, type) {
 			this.dispatch(type);
 		},
 

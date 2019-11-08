@@ -342,6 +342,98 @@ const routers = [
 	    name: "rainbow/rxse",
 	    component: resolve => require(["./views/rainbow/rxsetj/rxse.vue"], resolve)
 	  },
+	  {
+	    path: "rainbow/sblxtj", // 日销售统计-按设备类型统计
+	    name: "rainbow/sblxtj",
+	    component: resolve => require(["./views/rainbow/rxsetj/sblxtj.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/acztj", // 日销售统计-按彩种统计
+	    name: "rainbow/acztj",
+	    component: resolve => require(["./views/rainbow/rxsetj/acztj.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/dtpjxstj", // 日销售统计-单台平均销售统计
+	    name: "rainbow/dtpjxstj",
+	    component: resolve => require(["./views/rainbow/rxsetj/dtpjxstj.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/dtxlpm", // 日销售统计-单台销量排名
+	    name: "rainbow/dtxlpm",
+	    component: resolve => require(["./views/rainbow/rxsetj/dtxlpm.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/lxlsbzbtj", // 日销售统计-零销量设备占比统计
+	    name: "rainbow/lxlsbzbtj",
+	    component: resolve => require(["./views/rainbow/rxsetj/lxlsbzbtj.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/jkppsgk", // 即开票配送概况
+	    name: "rainbow/jkppsgk",
+	    component: resolve => require(["./views/rainbow/kcqktj/jkppsgk.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/jkppsmx", // 即开票配送明细
+	    name: "rainbow/jkppsmx",
+	    component: resolve => require(["./views/rainbow/kcqktj/jkppsmx.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/ckbgs", // 出库包裹数
+	    name: "rainbow/ckbgs",
+	    component: resolve => require(["./views/rainbow/kcqktj/ckbgs.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/ztbgs", // 在途包裹数
+	    name: "rainbow/ztbgs",
+	    component: resolve => require(["./views/rainbow/kcqktj/ztbgs.vue"], resolve)
+	  },
+	  
+	  {
+	    path: "rainbow/xsetjy", // 销售额情况统计（按月）
+	    name: "rainbow/xsetjy",
+	    component: resolve => require(["./views/rainbow/srtj/xsetjy.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/srtjr", // 收入情况统计（按日）
+	    name: "rainbow/srtjr",
+	    component: resolve => require(["./views/rainbow/srtj/srtjr.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/fqdsbsl", // 分渠道设备数量
+	    name: "rainbow/fqdsbsl",
+	    component: resolve => require(["./views/rainbow/srtj/fqdsbsl.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/mdfcjer", // 门店分成金额
+	    name: "rainbow/mdfcjer",
+	    component: resolve => require(["./views/rainbow/srtj/mdfcjer.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/qdfcjer", // 渠道分成金额（按日）
+	    name: "rainbow/qdfcjer",
+	    component: resolve => require(["./views/rainbow/srtj/qdfcjer.vue"], resolve)
+	  }, 
+	  {
+	    path: "rainbow/qdfcbl", // 渠道分成比例
+	    name: "rainbow/qdfcbl",
+	    component: resolve => require(["./views/rainbow/srtj/qdfcbl.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/tkqktjhj", // 退款合计
+	    name: "rainbow/tkqktjhj",
+	    component: resolve => require(["./views/rainbow/srtj/tkqktjhj.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/tkqktjy", // 退款情况统计（按月）
+	    name: "rainbow/tkqktjy",
+	    component: resolve => require(["./views/rainbow/srtj/tkqktjy.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/tkqktjr", // 退款情况统计（按日）
+	    name: "rainbow/tkqktjr",
+	    component: resolve => require(["./views/rainbow/srtj/tkqktjr.vue"], resolve)
+	  },
+	  
 	  
 	  
     ]
