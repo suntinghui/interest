@@ -295,12 +295,12 @@ const routers = [
 	  {
 	    path: "rainbow/zhkjsc",
 	    name: "rainbow/zhkjsc",
-	    component: resolve => require(["./views/rainbow/zhkjsc.vue"], resolve),
+	    component: resolve => require(["./views/rainbow/yjzb/zhkjsc.vue"], resolve),
 	  },
 	  {
 	    path: "rainbow/sbda",
 	    name: "rainbow/sbda",
-	    component: resolve => require(["./views/rainbow/sbda.vue"], resolve),
+	    component: resolve => require(["./views/rainbow/yjzb/sbda.vue"], resolve),
 	  },
 	  {
 	    path: "rainbow/jqsxxx", // 单机器档案统计 - 机器属性信息
@@ -386,6 +386,26 @@ const routers = [
 	    path: "rainbow/ztbgs", // 在途包裹数
 	    name: "rainbow/ztbgs",
 	    component: resolve => require(["./views/rainbow/kcqktj/ztbgs.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/jkpydcgzjz", // 即开票月度采购总价值
+	    name: "rainbow/jkpydcgzjz",
+	    component: resolve => require(["./views/rainbow/kcqktj/jkpydcgzjz.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/jkpydcgpzmx", // 即开票月度采购票种明细
+	    name: "rainbow/jkpydcgpzmx",
+	    component: resolve => require(["./views/rainbow/kcqktj/jkpydcgpzmx.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/jkpkcs", // 即开票库存数(截止24时)
+	    name: "rainbow/jkpkcs",
+	    component: resolve => require(["./views/rainbow/kcqktj/jkpkcs.vue"], resolve)
+	  },
+	  {
+	    path: "rainbow/jkpkcsmx", // 即开票库存数明细(截止24时)
+	    name: "rainbow/jkpkcsmx",
+	    component: resolve => require(["./views/rainbow/kcqktj/jkpkcsmx.vue"], resolve)
 	  },
 	  
 	  {

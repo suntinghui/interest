@@ -94,7 +94,7 @@
 					<strong></strong>
 				</div>
 			</div>
-			<Menu active-name="1-2" theme="dark" width="auto" :open-names="['1']" @on-select="m=>{select(m)}">
+			<Menu active-name="1-2" accordion="true" theme="dark" width="auto" :open-names="['1']" @on-select="m=>{select(m)}">
 				<Submenu v-for="pmenu in menuList" :name="pmenu.id" :key="pmenu.id">
 					<template slot="title">
 						<Icon :type="pmenu.icon"></Icon>
@@ -109,7 +109,7 @@
 			</Col>
 			<Col span="20">
 			<div class="layout-header">
-				<Menu mode="horizontal" theme="light" :style="{height:'65px',width:'100%'}" @on-select="m=>{menuSelect(m)}">
+				<Menu mode="horizontal" accordion="true" theme="light" :style="{height:'65px',width:'100%'}" @on-select="m=>{menuSelect(m)}">
 					<div style="width: 95%;margin: 0 auto">
 						<div class="layout-nav">
 							<MenuItem name="2">

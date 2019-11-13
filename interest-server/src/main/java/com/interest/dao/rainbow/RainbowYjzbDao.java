@@ -15,7 +15,7 @@ import com.interest.model.utils.PageWrapper;
 @Mapper
 public interface RainbowYjzbDao {
 	
-	String fhgjl();
+	String fhgjl(String startDate, String endDate);
 
 	String tcgjxlbl();
 
@@ -25,7 +25,7 @@ public interface RainbowYjzbDao {
 
 	String jtkcpd();
 	
-	String zhkjsc();
+	String zhkjsc(String startDate, String endDate);
 	
 	// 设备档案
 	List<RainbowDeviceDocEntity> getDeviceDocList(@Param("searchContent") String searchContent, @Param("pageWrapper") PageWrapper pageWrapper);

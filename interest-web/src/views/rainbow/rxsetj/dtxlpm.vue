@@ -91,13 +91,14 @@
 						key: "启用时间",
 						align: "center",
 						sortable: true,
-						width: 180
+						width: 150
 					},
 					{
 						title: "网点名称",
 						key: "网点名称",
 						align: "center",
 						sortable: true,
+						width: 200
 					},
 					{
 						title: "合作模式",

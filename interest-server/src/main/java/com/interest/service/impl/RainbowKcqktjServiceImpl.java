@@ -51,4 +51,29 @@ public class RainbowKcqktjServiceImpl implements RainbowKcqktjService {
 		List<HashMap> list =  rainbowKcqktjDao.ztbgs(queryDate);
 		return list;
 	}
+
+	@Override
+	public List<HashMap> jkpydcgzjz(String startMonth, String endMonth) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpydcgzjz(startMonth, endMonth));
+		return list;
+	}
+
+	@Override
+	public List<HashMap> jkpydcgpzmx(String startMonth, String endMonth) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpydcgpzmx(startMonth, endMonth));
+		return list;
+	}
+
+	@Override
+	public List<HashMap> jkpkcs(String queryMonth) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpkcs(queryMonth));
+		return list;
+	}
+
+	@Override
+	public List<HashMap> jkpkcsmx(String queryMonth) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpkcsmx(queryMonth));
+		return list;
+	}
+
 }

@@ -19,4 +19,13 @@ public interface RainbowKcqktjDao {
 
 	List<HashMap> ztbgs(String queryDate);
 
+	List<HashMap> jkpydcgzjz(String startMonth, String endMonth);
+
+	List<HashMap> jkpydcgpzmx(String startMonth, String endMonth);
+
+	List<HashMap> jkpkcs(String queryDate);
+
+	List<HashMap> jkpkcsmx(String queryDate);
+
+
 }

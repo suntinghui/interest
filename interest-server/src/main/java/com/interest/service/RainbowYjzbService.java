@@ -8,7 +8,7 @@ import java.util.HashMap;
 public interface RainbowYjzbService {
 	
 	// 复合关机率
-	String fhgjl();
+	String fhgjl(String startDate, String endDate);
 
 	// 剔除关机0销量比率
 	String tcgjxlbl();
@@ -23,7 +23,7 @@ public interface RainbowYjzbService {
 	String jtkcpd();
 	
 	// 综合开机时长
-	String zhkjsc();
+	String zhkjsc(String startDate, String endDate);
 	
 	// 设备档案
 	PageResult getDeviceDocList(String searchContent, PageWrapper pageWrapper);

@@ -400,7 +400,7 @@
 		select @num := @num +1 排名,dt 日期,网点编号,设备编号,启用时间,网点名称,合作模式,设备类型,销售额
 		from
 		(select @num :=0 ) s,
-		(select date(a.CreateDate) dt,b.SHOP_No 网点编号,c.DDI_No 设备编号,d.DSI_Try 启用时间,b.SHOP_Title 网点名称,t.DICT_Name 合作模式,c.DDI_Type 设备类型,sum(a.ODER_Money) 销售额
+		(select date(a.CreateDate) dt,b.SHOP_No 网点编号,c.DDI_No 设备编号,DATE_FORMAT(d.DSI_Try, '%Y-%m-%d') 启用时间,b.SHOP_Title 网点名称,t.DICT_Name 合作模式,c.DDI_Type 设备类型,sum(a.ODER_Money) 销售额
 		from t_shop_order_info a left join netfiance_db.t_shop_shop_info b
 		on a.ODER_SPUid =b.SHOP_Uid
 		left join t_device_device_info c

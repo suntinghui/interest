@@ -30,7 +30,7 @@
 			<Row style="margin-bottom: 25px;">
 
 				<Col span="8">日期：
-				<DatePicker v-model="dateModel" type="date" placeholder="选择日期" style="width: 250px"></DatePicker>
+				<Date-picker :value="dateValue"  @on-change='handleDateChange' type="daterange" editable="false" :options="dateOptions" placement="bottom-start" placeholder="选择日期" style="width: 250px"></Date-picker>
 				</Col>
 
 				<Col span="8">设备：
@@ -131,6 +131,8 @@
 
 
 <script>
+	import util from '../../../util.js'
+	import data from '../../../data.js'
 	// for axios add finally
 	import promiseFinally from 'promise.prototype.finally';
 	promiseFinally.shim();
@@ -138,6 +140,8 @@
 	export default {
 		data() {
 			return {
+				dateValue: [util.dateFormat(util.lastWeek(new Date())), util.dateFormat(new Date())],
+				
 				showDetailModel: false, // 控制是否显示详情
 				detailInfo: {}, // 某条数据下的所有的详情信息
 				tabCheck: "name1",
@@ -155,7 +159,8 @@
 				columns0: [{
 						title: "机器编号",
 						key: "机器编号",
-						align: "center"
+						align: "center",
+						width:200
 					},
 					{
 						title: "网点编号",
@@ -168,7 +173,8 @@
 						title: "启用时间",
 						key: "启用时间",
 						align: "center",
-						sortable: true
+						sortable: true,
+						width:180
 					},
 					{
 						title: "设备类型",
@@ -351,12 +357,13 @@
 
 				this.axios({
 						method: "get",
-						url: "/rainbow/jqsxxx",
+						url: "/rainbow/jqsxxx_list",
 						timeout: 1000 * 60 * 2,
 						params: {
-							searchContent: this.searchContent,
 							page: e.pageInfo.page,
-							pageSize: e.pageInfo.pageSize
+							pageSize: e.pageInfo.pageSize,
+							startDate: this.dateValue[0],
+							endDate: this.dateValue[1]
 						}
 					})
 					.then(
@@ -408,15 +415,19 @@
 
 				this.showDetailModel = true;
 
-				this.queryDetailInfo(rowData.shopNo);
+				this.queryDetailInfo(rowData['机器编号'], rowData['网点编号']);
 
 			},
-			queryDetailInfo(currentShopNo) {
+			
+			queryDetailInfo(ddiNo, shopNo) {
 				this.axios({
 						method: "get",
-						url: "/rainbow/mdsxxx",
+						url: "/rainbow/jqsxxx_detail",
 						params: {
-							shopNo: currentShopNo
+							ddiNo: ddiNo,
+							shopNo: shopNo,
+							startDate: this.dateValue[0],
+							endDate: this.dateValue[1]
 						}
 					})
 					.then(
@@ -458,6 +469,10 @@
 						})
 					}
 				})
+			},
+			
+			handleDateChange(daterange) {
+				this.dateValue = daterange;
 			}
 
 		}

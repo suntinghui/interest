@@ -28,8 +28,8 @@ public class RainbowYjzbServiceImpl implements RainbowYjzbService {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Override
-	public String fhgjl() {
-		return rainbowYjzbDao.fhgjl();
+	public String fhgjl(String startDate, String endDate) {
+		return rainbowYjzbDao.fhgjl(startDate, endDate);
 	}
 
 	@Override
@@ -53,8 +53,8 @@ public class RainbowYjzbServiceImpl implements RainbowYjzbService {
 	}
 
 	@Override
-	public String zhkjsc() {
-		return rainbowYjzbDao.zhkjsc();
+	public String zhkjsc(String startDate, String endDate) {
+		return rainbowYjzbDao.zhkjsc(startDate, endDate);
 	}
 
 	@Override

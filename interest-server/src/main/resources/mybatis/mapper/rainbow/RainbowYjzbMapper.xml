@@ -69,7 +69,7 @@
 		group by dt ) online_device
 		on online_device.dt = in_motion.dt
 
-		#where in_motion.dt >= '{{起始时间}}'  and in_motion.dt &lt;=  '{{截止时间}}'   #选择某个时间段（设备开机记录是从8月10日开始，之前无数据）
+		where in_motion.dt >= #{startDate}  and in_motion.dt &lt;= #{endDate}   #选择某个时间段（设备开机记录是从8月10日开始，之前无数据）
 
 		)  detail
 
@@ -342,6 +342,7 @@
 		left join netfiance_db.t_shop_agent_top g
 		on f.AGNT_ATUid = g.ATOP_Uid
 		where DOL_Length &lt;&gt; 0
+        and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= #{startDate} and date(DATE_ADD(a.CreateDate,interval 1 minute)) &gt;= #{endDate}
 		and c.SHOP_State = 1
 		group by SHOP_Title,b.DDI_No,dt) t
 		where last_hour &lt;&gt; 0 )o

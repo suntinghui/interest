@@ -31,9 +31,9 @@ public class RainbowKcqktjController {
     @InterestLog
     @GetMapping("/rainbow/jkppsgk")
     public ResponseWrapper<PageResult> jkppsgk(@RequestParam(value = "pageSize", required = false) int pageSize,
-                                            @RequestParam(value = "page", required = false) int page,
-                                            @RequestParam(value = "startDate", required = false) String startDate,
-                                            @RequestParam(value = "endDate", required = false) String endDate) {
+                                               @RequestParam(value = "page", required = false) int page,
+                                               @RequestParam(value = "startDate", required = false) String startDate,
+                                               @RequestParam(value = "endDate", required = false) String endDate) {
         PageWrapper pageWrapper = new PageWrapper(pageSize, page);
         PageResult pageResult = rainbowKcqktjService.jkppsgk(pageWrapper, startDate, endDate);
         return new ResponseWrapper<>(pageResult);
@@ -43,9 +43,9 @@ public class RainbowKcqktjController {
     @InterestLog
     @GetMapping("/rainbow/jkppsmx")
     public ResponseWrapper<PageResult> jkppsmx(@RequestParam(value = "pageSize", required = false) int pageSize,
-                                            @RequestParam(value = "page", required = false) int page,
-                                            @RequestParam(value = "startDate", required = false) String startDate,
-                                            @RequestParam(value = "endDate", required = false) String endDate) {
+                                               @RequestParam(value = "page", required = false) int page,
+                                               @RequestParam(value = "startDate", required = false) String startDate,
+                                               @RequestParam(value = "endDate", required = false) String endDate) {
         PageWrapper pageWrapper = new PageWrapper(pageSize, page);
         PageResult pageResult = rainbowKcqktjService.jkppsmx(pageWrapper, startDate, endDate);
         return new ResponseWrapper<>(pageResult);
@@ -55,7 +55,7 @@ public class RainbowKcqktjController {
     @InterestLog
     @GetMapping("/rainbow/ckbgs")
     public ResponseWrapper<List<HashMap>> ckbgs(@RequestParam(value = "startDate", required = false) String startDate,
-                                          @RequestParam(value = "endDate", required = false) String endDate) {
+                                                @RequestParam(value = "endDate", required = false) String endDate) {
         List<HashMap> list = rainbowKcqktjService.ckbgs(startDate, endDate);
         return new ResponseWrapper<>(list);
     }
@@ -65,6 +65,40 @@ public class RainbowKcqktjController {
     @GetMapping("/rainbow/ztbgs")
     public ResponseWrapper<List<HashMap>> ztbgs(@RequestParam(value = "queryDate", required = false) String queryDate) {
         List<HashMap> list = rainbowKcqktjService.ztbgs(queryDate);
+        return new ResponseWrapper<>(list);
+    }
+
+    // 即开票月度采购总价值
+    @InterestLog
+    @GetMapping("/rainbow/jkpydcgzjz")
+    public ResponseWrapper<List<HashMap>> jkpydcgzjz(@RequestParam(value = "startMonth", required = false) String startMonth,
+                                                     @RequestParam(value = "endMonth", required = false) String endMonth) {
+        List<HashMap> list = rainbowKcqktjService.jkpydcgzjz(startMonth, endMonth);
+        return new ResponseWrapper<>(list);
+    }
+
+    // 即开票月度采购票种明细
+    @InterestLog
+    @GetMapping("/rainbow/jkpydcgpzmx")
+    public ResponseWrapper<List<HashMap>> jkpydcgpzmx(@RequestParam(value = "startMonth", required = false) String startMonth,
+                                                      @RequestParam(value = "endMonth", required = false) String endMonth) {
+        List<HashMap> list = rainbowKcqktjService.jkpydcgpzmx(startMonth, endMonth);
+        return new ResponseWrapper<>(list);
+    }
+
+    // 即开票库存数(截止24时)
+    @InterestLog
+    @GetMapping("/rainbow/jkpkcs")
+    public ResponseWrapper<List<HashMap>> jkpkcs(@RequestParam(value = "queryMonth", required = false) String queryMonth) {
+        List<HashMap> list = rainbowKcqktjService.jkpkcs(queryMonth);
+        return new ResponseWrapper<>(list);
+    }
+
+    // 即开票库存数明细(截止24时)
+    @InterestLog
+    @GetMapping("/rainbow/jkpkcsmx")
+    public ResponseWrapper<List<HashMap>> jkpkcsmx(@RequestParam(value = "queryMonth", required = false) String queryMonth) {
+        List<HashMap> list = rainbowKcqktjService.jkpkcsmx(queryMonth);
         return new ResponseWrapper<>(list);
     }
 

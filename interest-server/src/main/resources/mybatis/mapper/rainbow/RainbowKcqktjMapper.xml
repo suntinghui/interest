@@ -209,6 +209,56 @@
 
 	</select>
 
+	<select id="jkpydcgzjz" resultType="java.util.HashMap">
+		select date_format(a.created_at,'%Y%m') 月份,count(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
+		from t_storage_checkin_list a left join t_customer_coupon_sub_info b
+		on left(a.lottery_start_id,5) = b.COUPS_Prefix
+		left join t_customer_coupon_info c
+		on c.COUP_Uid = b.COUPS_CPUid
+		where date(a.created_at) >= #{startMonth} and date(a.created_at) &lt;= #{endMonth}
+		group by 月份
+	</select>
+
+	<select id="jkpydcgpzmx" resultType="java.util.HashMap">
+		select date_format(a.created_at,'%Y%m') 月份,c.COUP_Title 票种,c.COUP_Money 面值,count(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
+		from t_storage_checkin_list a left join t_customer_coupon_sub_info b
+		on left(a.lottery_start_id,5) = b.COUPS_Prefix
+		left join t_customer_coupon_info c
+		on c.COUP_Uid = b.COUPS_CPUid
+		where date(a.created_at) >= #{startMonth} and date(a.created_at) &lt;= #{endMonth}
+		group by 月份,票种
+	</select>
+
+	<select id="jkpkcs" resultType="java.util.HashMap">
+		SELECT SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量
+		FROM
+		(SELECT c.COUP_Title 票种,c.COUP_Money 面值,a.lottery_count 数量,case when d.package_no IS NOT NULL then 1 ELSE 0 END AS 出库标记
+		FROM t_storage_checkin_list a JOIN t_customer_coupon_sub_info b
+		ON left(a.lottery_start_id,5) = b.COUPS_Prefix
+		LEFT JOIN t_customer_coupon_info c
+		ON b.COUPS_CPUid = c.COUP_Uid
+		LEFT JOIN t_storage_checkout_packages_detail d
+		ON a.lottery_start_id = d.lottery_start_id
+		WHERE date(a.created_at) &lt;= #{queryMonth}    )　sheet1
+	</select>
+
+	<select id="jkpkcsmx" resultType="java.util.HashMap">
+		SELECT 票种,面值,SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量
+		FROM
+		(SELECT c.COUP_Title 票种,c.COUP_Money 面值,a.lottery_count 数量,case when d.package_no IS NOT NULL then 1 ELSE 0 END AS 出库标记
+		FROM t_storage_checkin_list a JOIN t_customer_coupon_sub_info b
+		ON left(a.lottery_start_id,5) = b.COUPS_Prefix
+		LEFT JOIN t_customer_coupon_info c
+		ON b.COUPS_CPUid = c.COUP_Uid
+		LEFT JOIN t_storage_checkout_packages_detail d
+		ON a.lottery_start_id = d.lottery_start_id
+		WHERE date(a.created_at) &lt;= #{queryMonth}  )　sheet1
+		GROUP BY 票种
+
+	</select>
+
+
+
 
 
 

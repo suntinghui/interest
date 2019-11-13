@@ -30,8 +30,8 @@ public class RainbowYjzbController {
 	// 复合关机率
 	@InterestLog
 	@GetMapping("/rainbow/fhgjl")
-	public ResponseWrapper<String> fhgjl() {
-		String result = rainbowYjzbService.fhgjl();
+	public ResponseWrapper<String> fhgjl( @RequestParam(value = "startDate", required = false) String startDate,  @RequestParam(value = "endDate", required = false) String endDate) {
+		String result = rainbowYjzbService.fhgjl(startDate, endDate);
 		log.info(result);
 		return new ResponseWrapper<>(result);
 	}
@@ -70,10 +70,11 @@ public class RainbowYjzbController {
 		}
 	}
 
+	// 综合开机时长
 	@InterestLog
 	@GetMapping("/rainbow/zhkjsc")
-	public ResponseWrapper<String> zhkjsc() {
-		String result = rainbowYjzbService.zhkjsc();
+	public ResponseWrapper<String> zhkjsc(@RequestParam(value = "startDate", required = false) String startDate,  @RequestParam(value = "endDate", required = false) String endDate) {
+		String result = rainbowYjzbService.zhkjsc(startDate, endDate);
 		log.info(result);
 		return new ResponseWrapper<>(result);
 	}

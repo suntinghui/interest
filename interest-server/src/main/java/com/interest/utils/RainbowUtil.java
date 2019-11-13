@@ -14,6 +14,10 @@ public class RainbowUtil {
      */
     public static HashMap decodeMap(HashMap<String, Object> map) {
         HashMap resultMap = new HashMap<>();
+
+        if (null == map)
+            return resultMap;
+
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof byte[]) {
                 try {

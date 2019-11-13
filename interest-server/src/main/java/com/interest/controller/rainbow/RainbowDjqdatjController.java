@@ -26,40 +26,31 @@ import java.util.Map;
 @RestController
 public class RainbowDjqdatjController {
 
-	private Logger log = LoggerFactory.getLogger(RainbowDjqdatjController.class);
+    private Logger log = LoggerFactory.getLogger(RainbowDjqdatjController.class);
 
-	@Resource(name = "rainbowDjqdatjServiceImpl")
-	private RainbowDjqdatjService rainbowDjqdatjService;
+    @Resource(name = "rainbowDjqdatjServiceImpl")
+    private RainbowDjqdatjService rainbowDjqdatjService;
 
-	// 机器属性信息
-	@InterestLog
-	@GetMapping("/rainbow/jqsxxx")
-	public ResponseWrapper<PageResult> jqsxxx(@RequestParam(value = "searchContent", required = false) String searchContent, @RequestParam("pageSize") int pageSize, @RequestParam("page") int page) {
-		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-		PageResult pageResult = rainbowDjqdatjService.getDeviceInfoList(searchContent, pageWrapper);
-		return new ResponseWrapper<>(pageResult);
-	}
+    // 机器属性信息
+    @InterestLog
+    @GetMapping("/rainbow/jqsxxx_list")
+    public ResponseWrapper<PageResult> jqsxxx(@RequestParam("pageSize") int pageSize, @RequestParam("page") int page,
+                                              @RequestParam(value = "startDate") String startDate,
+                                              @RequestParam(value = "endDate") String endDate) {
+        PageWrapper pageWrapper = new PageWrapper(pageSize, page);
+        PageResult pageResult = rainbowDjqdatjService.jqsxxx_list(pageWrapper, startDate, endDate);
+        return new ResponseWrapper<>(pageResult);
+    }
 
-	// 详情信息
-	@InterestLog
-	@GetMapping("/rainbow/mdsxxx")
-	public ResponseWrapper<HashMap> mdsxxx(@RequestParam(value = "shopNo", required = false) String shopNo) {
-		HashMap<String, HashMap<String, String>> resultMap = new HashMap<>();
-
-		if (!StringUtils.isEmpty(shopNo)) {
-			HashMap<String, String> deviceInfoMap = rainbowDjqdatjService.getDeviceInfo(shopNo);
-			resultMap.put("deviceInfo", deviceInfoMap);
-
-			HashMap<String, String> shopInfoMap = rainbowDjqdatjService.getShopInfo(shopNo);
-			resultMap.put("shopInfo", shopInfoMap);
-
-
-		} else {
-			resultMap.put("deviceInfo", new HashMap<>());
-			resultMap.put("shopInfo", new HashMap<>());
-		}
-
-		return new ResponseWrapper<>(resultMap);
-	}
+    // 详情信息
+    @InterestLog
+    @GetMapping("/rainbow/jqsxxx_detail")
+    public ResponseWrapper<HashMap> jqsxxx_detail(@RequestParam(value = "startDate") String startDate,
+                                                  @RequestParam(value = "endDate") String endDate,
+                                                  @RequestParam(value = "ddiNo", required = false) String ddiNo,
+                                                  @RequestParam(value = "shopNo", required = false) String shopNo) {
+        HashMap<String, List<HashMap>> resultMap = rainbowDjqdatjService.jqsxxx_detail(startDate, endDate, ddiNo, shopNo);
+        return new ResponseWrapper<>(resultMap);
+    }
 
 }

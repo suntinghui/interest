@@ -9,13 +9,8 @@ import java.util.List;
 
 public interface RainbowDjqdatjService {
 
-	// 机器属性信息
-	PageResult getDeviceInfoList(String searchContent, PageWrapper pageWrapper);
+	PageResult jqsxxx_list(PageWrapper pageWrapper,String startDate, String endDate);
 
-	// 单机器属性
-	HashMap<String, String> getDeviceInfo(String shopNo);
-
-	// 门店属性
-	HashMap<String, String> getShopInfo(String shopNo);
+	HashMap<String, List<HashMap>> jqsxxx_detail(String startDate, String endDate, String ddiNo, String shopNo);
 
 }
