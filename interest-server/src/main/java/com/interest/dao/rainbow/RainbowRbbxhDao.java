@@ -11,22 +11,22 @@ import java.util.List;
 @Mapper
 public interface RainbowRbbxhDao {
 	
-	List<HashMap> rbxhjkpjytj(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
-	int rbxhjkpjytj_count(String startDate, String endDate, List deviceModel);
+	List<HashMap> rbxhjkpjytj(@Param("pageWrapper") PageWrapper pageWrapper, @Param("filterMap") HashMap filterMap);
+	int rbxhjkpjytj_count(@Param("filterMap") HashMap filterMap);
 
-	List<HashMap> rbxhjkpjy50(String startDate, String endDate, List deviceModel);
+	List<HashMap> rbxhjkpjy50(@Param("filterMap") HashMap filterMap);
 
-	List<HashMap> rbxhsbyxqk(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
-	int rbxhsbyxqk_count(String startDate, String endDate, List deviceModel);
+	List<HashMap> rbxhsbyxqk(@Param("pageWrapper") PageWrapper pageWrapper, @Param("filterMap") HashMap filterMap);
+	int rbxhsbyxqk_count(@Param("filterMap") HashMap filterMap);
 
-	List<HashMap> mrxrwsbsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
-	int mrxrwsbsl_count(String startDate, String endDate, List deviceModel);
+	List<HashMap> mrxrwsbsl(@Param("pageWrapper") PageWrapper pageWrapper, @Param("filterMap") HashMap filterMap);
+	int mrxrwsbsl_count(@Param("filterMap") HashMap filterMap);
 
-	List<HashMap> mrwkjsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
-	int mrwkjsl_count(String startDate, String endDate, List deviceModel);
+	List<HashMap> mrwkjsl(@Param("pageWrapper") PageWrapper pageWrapper, @Param("filterMap") HashMap filterMap);
+	int mrwkjsl_count(@Param("filterMap") HashMap filterMap);
 
-	List<HashMap> cjsbs(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
-	int cjsbs_count(String startDate, String endDate, List deviceModel);
+	List<HashMap> cjsbs(@Param("pageWrapper") PageWrapper pageWrapper, @Param("filterMap") HashMap filterMap);
+	int cjsbs_count(@Param("filterMap") HashMap filterMap);
 
 
 }

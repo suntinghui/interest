@@ -9,21 +9,21 @@ import java.util.List;
 public interface RainbowRbbxhService {
 	
 	// 即开票交易情况
-	PageResult rbxhjkpjytj(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	PageResult rbxhjkpjytj(PageWrapper pageWrapper, HashMap filterMap);
 
 	// Top50
-	List<HashMap> rbxhjkpjy50(String startDate, String endDate, List deviceModel);
+	List<HashMap> rbxhjkpjy50(HashMap filterMap);
 
 	// 每日在网设备数量
-	PageResult mrzwsbsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	PageResult mrzwsbsl(PageWrapper pageWrapper, HashMap filterMap);
 
 	// 每日新入网数量
-	PageResult mrxrwsbsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	PageResult mrxrwsbsl(PageWrapper pageWrapper, HashMap filterMap);
 
 	// 每日未开机数量
-	PageResult mrwkjsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	PageResult mrwkjsl(PageWrapper pageWrapper, HashMap filterMap);
 
 	// 撤机设备数
-	PageResult cjsbs(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel);
+	PageResult cjsbs(PageWrapper pageWrapper, HashMap filterMap);
 
 }

@@ -1,5 +1,6 @@
 package com.interest.controller.rainbow;
 
+import com.alibaba.fastjson.JSON;
 import com.interest.annotation.InterestLog;
 import com.interest.model.utils.PageResult;
 import com.interest.model.utils.PageWrapper;
@@ -35,10 +36,9 @@ public class RainbowDjqdatjController {
     @InterestLog
     @GetMapping("/rainbow/jqsxxx_list")
     public ResponseWrapper<PageResult> jqsxxx(@RequestParam("pageSize") int pageSize, @RequestParam("page") int page,
-                                              @RequestParam(value = "startDate") String startDate,
-                                              @RequestParam(value = "endDate") String endDate) {
+                                              @RequestParam(value = "filterMap", required = false) String filterMap) {
         PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-        PageResult pageResult = rainbowDjqdatjService.jqsxxx_list(pageWrapper, startDate, endDate);
+        PageResult pageResult = rainbowDjqdatjService.jqsxxx_list(pageWrapper, JSON.parseObject(filterMap, HashMap.class));
         return new ResponseWrapper<>(pageResult);
     }
 

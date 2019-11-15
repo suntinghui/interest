@@ -31,42 +31,42 @@ public class RainbowRbbxhServiceImpl implements RainbowRbbxhService {
 
 
 	@Override
-	public PageResult rbxhjkpjytj(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel) {
-		List<HashMap> list =  rainbowRbbxhDao.rbxhjkpjytj(pageWrapper, startDate, endDate, deviceModel);
-		int size = rainbowRbbxhDao.rbxhjkpjytj_count(startDate, endDate, deviceModel);
+	public PageResult rbxhjkpjytj(PageWrapper pageWrapper, HashMap filterMap) {
+		List<HashMap> list =  rainbowRbbxhDao.rbxhjkpjytj(pageWrapper, filterMap);
+		int size = rainbowRbbxhDao.rbxhjkpjytj_count(filterMap);
 		return new PageResult<>(list, size);
 	}
 
 	@Override
-	public List<HashMap> rbxhjkpjy50(String startDate, String endDate, List deviceModel) {
-		return RainbowUtil.decodeList(rainbowRbbxhDao.rbxhjkpjy50(startDate, endDate, deviceModel));
+	public List<HashMap> rbxhjkpjy50(HashMap filterMap) {
+		return RainbowUtil.decodeList(rainbowRbbxhDao.rbxhjkpjy50(filterMap));
 	}
 
 	@Override
-	public PageResult mrzwsbsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel) {
-		List<HashMap> list =  rainbowRbbxhDao.rbxhsbyxqk(pageWrapper, startDate, endDate, deviceModel);
-		int size = rainbowRbbxhDao.rbxhsbyxqk_count(startDate, endDate, deviceModel);
+	public PageResult mrzwsbsl(PageWrapper pageWrapper, HashMap filterMap) {
+		List<HashMap> list =  rainbowRbbxhDao.rbxhsbyxqk(pageWrapper, filterMap);
+		int size = rainbowRbbxhDao.rbxhsbyxqk_count(filterMap);
 		return new PageResult<>(list, size);
 	}
 
 	@Override
-	public PageResult mrxrwsbsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel) {
-		List<HashMap> list =  rainbowRbbxhDao.mrxrwsbsl(pageWrapper, startDate, endDate, deviceModel);
-		int size = rainbowRbbxhDao.mrxrwsbsl_count(startDate, endDate, deviceModel);
+	public PageResult mrxrwsbsl(PageWrapper pageWrapper, HashMap filterMap) {
+		List<HashMap> list =  rainbowRbbxhDao.mrxrwsbsl(pageWrapper, filterMap);
+		int size = rainbowRbbxhDao.mrxrwsbsl_count(filterMap);
 		return new PageResult<>(list, size);
 	}
 
 	@Override
-	public PageResult mrwkjsl(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel) {
-		List<HashMap> list =  rainbowRbbxhDao.mrwkjsl(pageWrapper, startDate, endDate, deviceModel);
-		int size = rainbowRbbxhDao.mrwkjsl_count(startDate, endDate, deviceModel);
+	public PageResult mrwkjsl(PageWrapper pageWrapper, HashMap filterMap) {
+		List<HashMap> list =  rainbowRbbxhDao.mrwkjsl(pageWrapper, filterMap);
+		int size = rainbowRbbxhDao.mrwkjsl_count(filterMap);
 		return new PageResult<>(list, size);
 	}
 
 	@Override
-	public PageResult cjsbs(PageWrapper pageWrapper, String startDate, String endDate, List deviceModel) {
-		List<HashMap> list =  rainbowRbbxhDao.cjsbs(pageWrapper, startDate, endDate, deviceModel);
-		int size = rainbowRbbxhDao.cjsbs_count(startDate, endDate, deviceModel);
+	public PageResult cjsbs(PageWrapper pageWrapper, HashMap filterMap) {
+		List<HashMap> list =  rainbowRbbxhDao.cjsbs(pageWrapper, filterMap);
+		int size = rainbowRbbxhDao.cjsbs_count(filterMap);
 		return new PageResult<>(list, size);
 	}
 }

@@ -15,13 +15,13 @@ import com.interest.model.utils.PageWrapper;
 @Mapper
 public interface RainbowYjzbDao {
 	
-	String fhgjl(String startDate, String endDate);
+	String fhgjl(@Param("filterMap") HashMap filterMap);
 
-	String tcgjxlbl();
+	String tcgjxlbl(@Param("filterMap") HashMap filterMap);
 
-	String kcscbl(String startDate, String endDate);
+	String kcscbl(@Param("filterMap") HashMap filterMap);
 
-	HashMap djrxpj(String startDate, String endDate);
+	HashMap djrxpj(@Param("filterMap") HashMap filterMap);
 
 	String jtkcpd();
 	

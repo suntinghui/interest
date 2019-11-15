@@ -2,6 +2,7 @@ package com.interest.dao.rainbow;
 
 import com.interest.model.utils.PageWrapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,10 +10,9 @@ import java.util.List;
 @Mapper
 public interface RainbowSrtjDao {
 
-	List<HashMap> xsetjy(String startMonth, String endMonth);
+	List<HashMap> xsetjy(@Param("filterMap") HashMap filterMap);
 
-	List<HashMap> srtjr(PageWrapper pageWrapper, String queryMonth);
-	int srtjr_count(String queryMonth);
+	List<HashMap> srtjr(@Param("filterMap") HashMap filterMap);
 
 	List<HashMap> fqdsbsl(String startDate, String endDate);
 
@@ -25,13 +25,11 @@ public interface RainbowSrtjDao {
 	List<HashMap> qdfcbl(PageWrapper pageWrapper , String queryMonth);
 	int qdfcbl_count(String queryMonth);
 
-	List<HashMap> tkqktjhj(String startMonth, String endMonth);
+	List<HashMap> tkqktjhj(@Param("filterMap") HashMap filterMap);
 
-	List<HashMap> tkqktjy(PageWrapper pageWrapper, String startMonth, String endMonth);
-	int tkqktjy_count(String startMonth, String endMonth);
+	List<HashMap> tkqktjy(@Param("filterMap") HashMap filterMap);
 
-	List<HashMap> tkqktjr(PageWrapper pageWrapper, String queryMonth);
-	int tkqktjr_count(String queryMonth);
+	List<HashMap> tkqktjr(@Param("filterMap") HashMap filterMap);
 
 
 }

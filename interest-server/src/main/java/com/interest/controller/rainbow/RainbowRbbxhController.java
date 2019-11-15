@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -37,21 +38,17 @@ public class RainbowRbbxhController {
 	@GetMapping("/rainbow/rbxhjkpjytj")
 	public ResponseWrapper<PageResult> rbxhjkpjytj(@RequestParam(value = "pageSize", required = false) int pageSize,
 												   @RequestParam(value = "page", required = false) int page,
-												   @RequestParam(value = "startDate", required = false) String startDate,
-												   @RequestParam(value = "endDate", required = false) String endDate,
-												   @RequestParam(value = "deviceModel", required = false) String deviceModel) {
+												   @RequestParam(value = "filterMap", required = false) String filterMap) {
 		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-		PageResult pageResult = rainbowRbbxhService.rbxhjkpjytj(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		PageResult pageResult = rainbowRbbxhService.rbxhjkpjytj(pageWrapper, JSON.parseObject(filterMap, HashMap.class));
 		return new ResponseWrapper<>(pageResult);
 	}
 
 	// 即开票交易Top50
 	@InterestLog
 	@GetMapping("/rainbow/rbxhjkpjy50")
-	public ResponseWrapper<List<HashMap>> rbxhjkpjy50(@RequestParam(value = "startDate", required = false) String startDate,
-											   @RequestParam(value = "endDate", required = false) String endDate,
-											   @RequestParam(value = "deviceModel", required = false) String deviceModel) {
-		List<HashMap> list = rainbowRbbxhService.rbxhjkpjy50(startDate, endDate, StringUtil.str2List(deviceModel));
+	public ResponseWrapper<List<HashMap>> rbxhjkpjy50(@RequestParam(value = "filterMap", required = false) String filterMap) {
+		List<HashMap> list = rainbowRbbxhService.rbxhjkpjy50(JSON.parseObject(filterMap, HashMap.class));
 		log.info(JSON.toJSONString(list));
 		return new ResponseWrapper<>(list);
 	}
@@ -60,12 +57,10 @@ public class RainbowRbbxhController {
 	@InterestLog
 	@GetMapping("/rainbow/mrzwsbsl")
 	public ResponseWrapper<PageResult> mrzwsbsl(@RequestParam(value = "pageSize", required = false) int pageSize,
-												   @RequestParam(value = "page", required = false) int page,
-												   @RequestParam(value = "startDate", required = false) String startDate,
-												   @RequestParam(value = "endDate", required = false) String endDate,
-												   @RequestParam(value = "deviceModel", required = false) String deviceModel) {
+												@RequestParam(value = "page", required = false) int page,
+												@RequestParam(value = "filterMap", required = false) String filterMap) {
 		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-		PageResult pageResult = rainbowRbbxhService.mrzwsbsl(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		PageResult pageResult = rainbowRbbxhService.mrzwsbsl(pageWrapper, JSON.parseObject(filterMap, HashMap.class));
 		return new ResponseWrapper<>(pageResult);
 	}
 
@@ -73,12 +68,10 @@ public class RainbowRbbxhController {
 	@InterestLog
 	@GetMapping("/rainbow/mrxrwsbsl")
 	public ResponseWrapper<PageResult> mrxrwsbsl(@RequestParam(value = "pageSize", required = false) int pageSize,
-												@RequestParam(value = "page", required = false) int page,
-												@RequestParam(value = "startDate", required = false) String startDate,
-												@RequestParam(value = "endDate", required = false) String endDate,
-												@RequestParam(value = "deviceModel", required = false) String deviceModel) {
+												 @RequestParam(value = "page", required = false) int page,
+												 @RequestParam(value = "filterMap", required = false) String filterMap) {
 		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-		PageResult pageResult = rainbowRbbxhService.mrxrwsbsl(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		PageResult pageResult = rainbowRbbxhService.mrxrwsbsl(pageWrapper, JSON.parseObject(filterMap, HashMap.class));
 		return new ResponseWrapper<>(pageResult);
 	}
 
@@ -86,12 +79,10 @@ public class RainbowRbbxhController {
 	@InterestLog
 	@GetMapping("/rainbow/mrwkjsl")
 	public ResponseWrapper<PageResult> mrwkjsl(@RequestParam(value = "pageSize", required = false) int pageSize,
-												 @RequestParam(value = "page", required = false) int page,
-												 @RequestParam(value = "startDate", required = false) String startDate,
-												 @RequestParam(value = "endDate", required = false) String endDate,
-												 @RequestParam(value = "deviceModel", required = false) String deviceModel) {
+											   @RequestParam(value = "page", required = false) int page,
+											   @RequestParam(value = "filterMap", required = false) String filterMap) {
 		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-		PageResult pageResult = rainbowRbbxhService.mrwkjsl(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		PageResult pageResult = rainbowRbbxhService.mrwkjsl(pageWrapper, JSON.parseObject(filterMap, HashMap.class));
 		return new ResponseWrapper<>(pageResult);
 	}
 
@@ -99,12 +90,10 @@ public class RainbowRbbxhController {
 	@InterestLog
 	@GetMapping("/rainbow/cjsbs")
 	public ResponseWrapper<PageResult> cjsbs(@RequestParam(value = "pageSize", required = false) int pageSize,
-											   @RequestParam(value = "page", required = false) int page,
-											   @RequestParam(value = "startDate", required = false) String startDate,
-											   @RequestParam(value = "endDate", required = false) String endDate,
-											   @RequestParam(value = "deviceModel", required = false) String deviceModel) {
+											 @RequestParam(value = "page", required = false) int page,
+											 @RequestParam(value = "filterMap", required = false) String filterMap) {
 		PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-		PageResult pageResult = rainbowRbbxhService.cjsbs(pageWrapper, startDate, endDate, StringUtil.str2List(deviceModel));
+		PageResult pageResult = rainbowRbbxhService.cjsbs(pageWrapper, JSON.parseObject(filterMap, HashMap.class));
 		return new ResponseWrapper<>(pageResult);
 	}
 

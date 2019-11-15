@@ -3,7 +3,7 @@
 <mapper namespace="com.interest.dao.rainbow.RainbowDjqdatjDao">
 
 	<!-- 机器属性信息，添加分页 -->
-	<select id="jqsxxx_list" resultType="java.util.HashMap">
+	<select id="jqsxxx_list"  resultType="java.util.HashMap">
 		select a.DDI_No 机器编号,a.SHOP_No 网点编号, DATE_FORMAT(a.DSI_Try, '%Y-%m-%d') 启用时间,c.SHOP_Address 设备位置,b.DDI_Type 设备类型
 		from study.t_device_sub_info a left join t_device_device_info b
 		on a.DDI_No = b.DDI_No
@@ -17,19 +17,33 @@
 		on c.SHOP_Uid = d.SHOP_Uid
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = c.SHOP_Class
-		where date(a.DSI_Try) >= #{startDate} and date(a.DSI_Try) &lt;= #{endDate}
-		#and a.DDI_No = '{{设备编码}}'
-		#and g.ATOP_Title = '{{ 渠道名称 }}'
-		#and b.DDI_Type = '{{ 设备类型 }}'
-		#and a.SHOP_No = '{{ 网点编号 }}'
-		#and t.DICT_Name = '{{ 网点类型 }}'
-		#and d.SHOP_Area = '{{ 所属地区 }}'
+
+		where 1=1
+
+		<if test="null != filterMap.startDate">
+			and date(a.DSI_Try) >= #{filterMap.startDate}
+		</if>
+		<if test="null != filterMap.endDate">
+			and date(a.DSI_Try) &lt;= #{filterMap.endDate}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and a.SHOP_No = #{filterMap.shopValue}
+		</if>
 
 		limit #{pageWrapper.start},#{pageWrapper.pageSize};
 	</select>
 
 	<!-- 有改动，添加count -->
-	<select id="jqsxxx_list_count" parameterType="String" resultType = "Integer">
+	<select id="jqsxxx_list_count" resultType = "Integer">
 		select count(a.DDI_No)
 		from study.t_device_sub_info a left join t_device_device_info b
 		on a.DDI_No = b.DDI_No
@@ -44,7 +58,27 @@
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = c.SHOP_Class
 
-		where date(a.DSI_Try) >= #{startDate} and date(a.DSI_Try) &lt;= #{endDate}
+		where 1=1
+
+		<if test="null != filterMap.startDate">
+			and date(a.DSI_Try) >= #{filterMap.startDate}
+		</if>
+		<if test="null != filterMap.endDate">
+			and date(a.DSI_Try) &lt;= #{filterMap.endDate}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and a.SHOP_No = #{filterMap.shopValue}
+		</if>
+
 		#and a.DDI_No = '{{设备编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and b.DDI_Type = '{{ 设备类型 }}'
@@ -95,18 +129,11 @@
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = a.SHOP_Class
 		where a.SHOP_No = #{shopNo}
-		#and SHOP_No = '{{门店编码}}'
-		#and g.ATOP_Title = '{{ 渠道名称 }}'
-		#and d.DDI_Type = '{{ 设备类型 }}'
-		#and a.SHOP_No = '{{ 网点编号 }}'
-		and date(a.CreateDate) >= #{startDate} and date(a.CreateDate) &lt;= #{endDate}
-		#and t.DICT_Name = '{{ 网点类型 }}'
-		#and c.SHOP_Area  = '{{ 所属地区 }}'
 	</select>
 
 	<!-- 运营状态信息-1 -->
 	<select id="yyzt1" resultType="java.util.HashMap">
-		select a.DDI_No 设备编号,a.SHOP_No 网点编号,a.DSI_Try 设备启用时间,d.SHOP_Apply 网点申请时间,a.DSI_Withdraw 设备撤出时间,
+		select a.DDI_No 设备编号,a.SHOP_No 网点编号,DATE_FORMAT(a.DSI_Try, '%Y-%m-%d') 设备启用时间,d.SHOP_Apply 网点申请时间,a.DSI_Withdraw 设备撤出时间,
 		m.DICT_Name 设备目前状态,t.DICT_Name '目前门店状态',g.ATOP_Title 所属渠道,q.DICT_Name 合作类型
 		from study.t_device_sub_info a left join netfiance_db.t_shop_shop_info b
 		on a.SHOP_No = b.SHOP_No
@@ -139,7 +166,7 @@
 
 	<!-- 运营状态信息-2 -->
 	<select id="yyzt2" resultType="java.util.HashMap">
-		select b.DDI_No,c.SHOP_No,date(e.DSI_Try) 启用时间,round(sum(a.DOL_Length)/60,1) last_hour,count(distinct(date(a.DOL_Start))) '累计开机天数',round(sum(a.DOL_Length)/60/count(distinct(date(a.DOL_Start))),1) '日均开机时长（小时）',
+		select b.DDI_No 机器编号,c.SHOP_No 网点编号,date(e.DSI_Try) 启用时间,round(sum(a.DOL_Length)/60,1) last_hour 设备累计开机时间（时）,count(distinct(date(a.DOL_Start))) '累计开机天数',round(sum(a.DOL_Length)/60/count(distinct(date(a.DOL_Start))),1) '日均开机时长（小时）',
 		timestampdiff(day,date(e.DSI_Try),curdate())+1-count(distinct(date(a.DOL_Start))) '累计关机天数',(timestampdiff(day,date(e.DSI_Try),curdate())+1-count(distinct(date(a.DOL_Start))))/(timestampdiff(month,date(e.DSI_Try),curdate())+1) '月均关机天数'
 		from t_device_online_list a left join t_device_device_info b
 		on a.DOL_DUid = b.DDI_Uid
@@ -205,7 +232,7 @@
 
 	<!-- 运营状态信息-3   机器日均购彩人数 -->
 	<select id="yyzt3_jqrjgcrs" resultType="java.util.HashMap">
-		select DDI_No,SHOP_No,启用时间,sum(每日购彩用户数) 累计购彩人数,查询时段内运营天数,sum(每日购彩用户数)/查询时段内运营天数 '机器日均购彩人数'
+		select DDI_No 机器编号,SHOP_No 网点编号,启用时间,sum(每日购彩用户数) 累计购彩人数,查询时段内运营天数,sum(每日购彩用户数)/查询时段内运营天数 '机器日均购彩人数'
 		from
 		(
 		select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,count(distinct(a.ODER_USUid)) 每日购彩用户数,
@@ -241,7 +268,7 @@
 
 	<!-- 运营状态信息-3   机器日均新购彩人数 -->
 	<select id="yyzt3_jqrjxgcrs" resultType="java.util.HashMap">
-		select DDI_No,SHOP_No,启用时间,sum(每日购彩用户数) 累计购彩人数,查询时段内运营天数,sum(每日购彩用户数)/查询时段内运营天数 '机器日均购彩人数'
+		select DDI_No 机器编号,SHOP_No 网点编号,启用时间,sum(每日购彩用户数) 累计购彩人数,查询时段内运营天数,sum(每日购彩用户数)/查询时段内运营天数 '机器日均购彩人数'
 		from
 		(
 		select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,count(distinct(a.ODER_USUid)) 每日购彩用户数,
@@ -267,9 +294,7 @@
 		and a.ODER_State = 0
 		and c.DSI_Anti is null
 		and a.CreateDate &lt;= h.CreateDate
-		and and b.DDI_No = #{ddiNo}
-		and date(a.CreateDate)>= #{startDate}  and date(a.CreateDate) &lt;= #{endDate}
-		#and d.SHOP_No = '{{门店编码}}'
+		and c.SHOP_No = #{shopNo}
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and b.DDI_Type = '{{ 设备类型 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
@@ -281,7 +306,7 @@
 
 	<!-- 运营状态信息-3   机器日均复购人数 -->
 	<select id="yyzt3_jqrjfgrs" resultType="java.util.HashMap">
-		select DDI_No,SHOP_No,启用时间,sum(每日购彩用户数) 累计购彩人数,查询时段内运营天数,sum(每日购彩用户数)/查询时段内运营天数 '机器日均购彩人数'
+		select DDI_No 机器编号,SHOP_No 网点编号,启用时间,sum(每日购彩用户数) 累计购彩人数,查询时段内运营天数,sum(每日购彩用户数)/查询时段内运营天数 '机器日均购彩人数'
 		from
 		(
 		select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,count(distinct(a.ODER_USUid)) 每日购彩用户数,
@@ -308,7 +333,7 @@
 		and c.DSI_Anti is null
 		and a.CreateDate > h.CreateDate
 		and b.DDI_No = #{ddiNo}
-		and dt>= #{startDate}  and dt &lt;= #{endDate}
+		and date(a.CreateDate) >= #{startDate}  and date(a.CreateDate) &lt;= #{endDate}
 		#and d.SHOP_No = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and b.DDI_Type = '{{ 设备类型 }}'
@@ -320,7 +345,7 @@
 
 	<!-- 设备维护统计3 -->
 	<select id="sbwhtj3" resultType="java.util.HashMap">
-		select a.updated_at 加仓时间, a.created_at as 出库日期, k.DDI_No as 设备,k.SHOP_No,date(k.DSI_Try) 启用时间,a.package_no as 出库包裹号,e.COUP_Title 彩票名称,e.COUP_Money*b.lottery_count*count(a.package_no) 加票额度（元）
+		select DATE_FORMAT(a.updated_at, '%Y-%m-%d %H:%i:%s') 加仓时间, DATE_FORMAT(a.created_at, '%Y-%m-%d %H:%i:%s') as 出库日期, k.DDI_No as 设备,k.SHOP_No 网点编号,date(k.DSI_Try) 启用时间,a.package_no as 出库包裹号,e.COUP_Title 彩票名称,e.COUP_Money*b.lottery_count*count(a.package_no) 加票额度（元）
 		,e.COUP_Money 票种面额（元）, b.lottery_count*count(a.package_no) as 加票张数, c.user_nickname as 姓名
 		from t_storage_checkout_packages a join t_storage_checkout_packages_detail b
 		on a.package_no = b.package_no

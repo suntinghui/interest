@@ -28,16 +28,15 @@ public class RainbowSrtjServiceImpl implements RainbowSrtjService {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Override
-	public List<HashMap> xsetjy(String startMonth, String endMonth) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.xsetjy(startMonth, endMonth));
+	public List<HashMap> xsetjy(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.xsetjy(filterMap));
 		return list;
 	}
 
 	@Override
-	public PageResult srtjr(PageWrapper pageWrapper, String queryMonth) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.srtjr(pageWrapper, queryMonth));
-		int size = rainbowSrtjDao.srtjr_count(queryMonth);
-		return new PageResult<>(list, size);
+	public List<HashMap> srtjr(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.srtjr(filterMap));
+		return list;
 	}
 
 	@Override
@@ -68,23 +67,21 @@ public class RainbowSrtjServiceImpl implements RainbowSrtjService {
 	}
 
 	@Override
-	public List<HashMap> tkqktjhj(String startMonth, String endMonth) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.tkqktjhj(startMonth, endMonth));
+	public List<HashMap> tkqktjhj(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.tkqktjhj(filterMap));
 		return list;
 	}
 
 	@Override
-	public PageResult tkqktjy(PageWrapper pageWrapper, String startMonth, String endMonth) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.tkqktjy(pageWrapper, startMonth, endMonth));
-		int size = rainbowSrtjDao.tkqktjy_count(startMonth, endMonth);
-		return new PageResult<>(list, size);
+	public List<HashMap> tkqktjy(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.tkqktjy(filterMap));
+		return list;
 	}
 
 	@Override
-	public PageResult tkqktjr(PageWrapper pageWrapper, String queryMonth) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.tkqktjr(pageWrapper, queryMonth));
-		int size = rainbowSrtjDao.tkqktjr_count(queryMonth);
-		return new PageResult<>(list, size);
+	public List<HashMap> tkqktjr(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.tkqktjr(filterMap));
+		return list;
 	}
 
 }

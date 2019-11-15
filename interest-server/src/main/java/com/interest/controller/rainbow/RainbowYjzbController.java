@@ -2,6 +2,7 @@ package com.interest.controller.rainbow;
 
 import javax.annotation.Resource;
 
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +31,8 @@ public class RainbowYjzbController {
 	// 复合关机率
 	@InterestLog
 	@GetMapping("/rainbow/fhgjl")
-	public ResponseWrapper<String> fhgjl( @RequestParam(value = "startDate", required = false) String startDate,  @RequestParam(value = "endDate", required = false) String endDate) {
-		String result = rainbowYjzbService.fhgjl(startDate, endDate);
+	public ResponseWrapper<String> fhgjl( @RequestParam(value = "filterMap", required = false) String filterMap) {
+		String result = rainbowYjzbService.fhgjl(JSON.parseObject(filterMap, HashMap.class));
 		log.info(result);
 		return new ResponseWrapper<>(result);
 	}
@@ -39,8 +40,8 @@ public class RainbowYjzbController {
 	// 剔除关机0销量比率
 	@InterestLog
 	@GetMapping("/rainbow/tcgjxlbl")
-	public ResponseWrapper<String> tcgjxlbl() {
-		String result = rainbowYjzbService.tcgjxlbl();
+	public ResponseWrapper<String> tcgjxlbl(@RequestParam(value = "filterMap", required = false) String filterMap) {
+		String result = rainbowYjzbService.tcgjxlbl(JSON.parseObject(filterMap, HashMap.class));
 		log.info(result);
 		return new ResponseWrapper<>(result);
 	}
@@ -48,9 +49,9 @@ public class RainbowYjzbController {
 	// 空仓时长比率
 	@InterestLog
 	@GetMapping("/rainbow/kcscbl")
-	public ResponseWrapper<String> kcscbl( @RequestParam(value = "startDate", required = false) String startDate,  @RequestParam(value = "endDate", required = false) String endDate) {
+	public ResponseWrapper<String> kcscbl(@RequestParam(value = "filterMap", required = false) String filterMap) {
 		try{
-			String result = rainbowYjzbService.kcscbl(startDate, endDate);
+			String result = rainbowYjzbService.kcscbl(JSON.parseObject(filterMap, HashMap.class));
 			return new ResponseWrapper<>(result);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,9 +62,9 @@ public class RainbowYjzbController {
 	// 单机日销平均
 	@InterestLog
 	@GetMapping("/rainbow/djrxpj")
-	public ResponseWrapper<HashMap> djrxpj( @RequestParam(value = "startDate", required = false) String startDate,  @RequestParam(value = "endDate", required = false) String endDate) {
+	public ResponseWrapper<HashMap> djrxpj(@RequestParam(value = "filterMap", required = false) String filterMap) {
 		try{
-			HashMap result = rainbowYjzbService.djrxpj(startDate, endDate);
+			HashMap result = rainbowYjzbService.djrxpj(JSON.parseObject(filterMap, HashMap.class));
 			return new ResponseWrapper<>(result);
 		} catch (Exception e) {
 			return new ResponseWrapper<>(new HashMap());

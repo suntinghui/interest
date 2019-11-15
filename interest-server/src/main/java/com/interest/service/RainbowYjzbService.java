@@ -8,16 +8,16 @@ import java.util.HashMap;
 public interface RainbowYjzbService {
 	
 	// 复合关机率
-	String fhgjl(String startDate, String endDate);
+	String fhgjl(HashMap filterMap);
 
 	// 剔除关机0销量比率
-	String tcgjxlbl();
+	String tcgjxlbl(HashMap filterMap);
 
 	// 空仓时长比率
-	String kcscbl(String startDate, String endDate);
+	String kcscbl(HashMap filterMap);
 
 	// 单机日销平均
-    HashMap djrxpj(String startDate, String endDate);
+    HashMap djrxpj(HashMap filterMap);
 
 	// 机头空仓频度
 	String jtkcpd();

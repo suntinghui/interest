@@ -1,5 +1,6 @@
 package com.interest.controller.rainbow;
 
+import com.alibaba.fastjson.JSON;
 import com.interest.annotation.InterestLog;
 import com.interest.model.utils.PageResult;
 import com.interest.model.utils.PageWrapper;
@@ -31,21 +32,17 @@ public class RainbowSrtjController {
     // 销售额情况统计（按月）
     @InterestLog
     @GetMapping("/rainbow/xsetjy")
-    public ResponseWrapper<List<HashMap>> xsetjy(@RequestParam(value = "startMonth", required = false) String startMonth,
-                                                 @RequestParam(value = "endMonth", required = false) String endMonth) {
-        List<HashMap> list = rainbowSrtjService.xsetjy(startMonth, endMonth);
+    public ResponseWrapper<List<HashMap>> xsetjy(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowSrtjService.xsetjy(JSON.parseObject(filterMap, HashMap.class));
         return new ResponseWrapper<>(list);
     }
 
     // 收入情况统计（按日）
     @InterestLog
     @GetMapping("/rainbow/srtjr")
-    public ResponseWrapper<PageResult> srtjr(@RequestParam(value = "pageSize", required = false) int pageSize,
-                                             @RequestParam(value = "page", required = false) int page,
-                                             @RequestParam(value = "queryMonth", required = false) String queryMonth) {
-        PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-        PageResult pageResult = rainbowSrtjService.srtjr(pageWrapper, queryMonth);
-        return new ResponseWrapper<>(pageResult);
+    public ResponseWrapper<List<HashMap>> srtjr(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowSrtjService.srtjr(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
     }
 
     // 分渠道设备数量
@@ -93,33 +90,25 @@ public class RainbowSrtjController {
     // 退款情况统计（合计）
     @InterestLog
     @GetMapping("/rainbow/tkqktjhj")
-    public ResponseWrapper<List<HashMap>> tkqktjhj(@RequestParam(value = "startMonth", required = false) String startMonth,
-                                                  @RequestParam(value = "endMonth", required = false) String endMonth) {
-        List<HashMap> list = rainbowSrtjService.tkqktjhj(startMonth, endMonth);
+    public ResponseWrapper<List<HashMap>> tkqktjhj(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowSrtjService.tkqktjhj(JSON.parseObject(filterMap, HashMap.class));
         return new ResponseWrapper<>(list);
     }
 
     // 退款情况统计（按月）
     @InterestLog
     @GetMapping("/rainbow/tkqktjy")
-    public ResponseWrapper<PageResult> tkqktjy(@RequestParam(value = "pageSize", required = false) int pageSize,
-                                                  @RequestParam(value = "page", required = false) int page,
-                                                  @RequestParam(value = "startMonth", required = false) String startMonth,
-                                                  @RequestParam(value = "endMonth", required = false) String endMonth) {
-        PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-        PageResult pageResult = rainbowSrtjService.tkqktjy(pageWrapper, startMonth, endMonth);
-        return new ResponseWrapper<>(pageResult);
+    public ResponseWrapper<List<HashMap>> tkqktjy(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowSrtjService.tkqktjy(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
     }
 
     // 退款情况统计（按日）
     @InterestLog
     @GetMapping("/rainbow/tkqktjr")
-    public ResponseWrapper<PageResult> tkqktjr(@RequestParam(value = "pageSize", required = false) int pageSize,
-                                               @RequestParam(value = "page", required = false) int page,
-                                               @RequestParam(value = "queryMonth", required = false) String queryMonth) {
-        PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-        PageResult pageResult = rainbowSrtjService.tkqktjr(pageWrapper, queryMonth);
-        return new ResponseWrapper<>(pageResult);
+    public ResponseWrapper<List<HashMap>> tkqktjr(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowSrtjService.tkqktjr(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
     }
 
 }

@@ -6,15 +6,29 @@
 	<select id="rbxhjkpjytj" resultType="java.util.HashMap" >
 		select date(a.enable_date) 日期,a.device_type 设备类型,sum(a.order_ct) 交易总笔数,max(a.order_ct) 单台最大交易笔数,avg(a.order_ct) 平均单台交易笔数,sum(a.refund_ct) 退订单数
 		from study.f_device_summary a
-		where date(a.enable_date) >= #{startDate} and date(a.enable_date) &lt;= #{endDate}
+		where 1=1
 
-		<!-- 设备类型 -->
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.device_type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.startDate">
+			and date(a.enable_date) >= #{filterMap.startDate}
 		</if>
+		<if test="null != filterMap.endDate">
+			and date(a.enable_date) &lt;= #{filterMap.endDate}
+		</if>
+
+		<if test="null != filterMap.deviceTypeValue">
+			and a.device_type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and a.agent_title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and a.shop_area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and a.shop_type = #{filterMap.shopTypeValue}
+		</if>
+
+		#and a.device_type = '{{设备类型}}'
 		#and a.device_no = '{{设备编码}}'
 		#and a.shop_no = '{{门店编码}}'
 		#and a.shop_area = '{{ 所属地区 }}'
@@ -32,15 +46,30 @@
 		(
 		select date(a.enable_date) 日期,a.device_type 设备类型,sum(a.order_ct) 交易总笔数,max(a.order_ct) 单台最大交易笔数,avg(a.order_ct) 平均单台交易笔数,sum(a.refund_ct) 退订单数
 		from study.f_device_summary a
-		where date(a.enable_date) >= #{startDate} and date(a.enable_date) &lt;= #{endDate}
 
-		<!-- 设备类型 -->
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.device_type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		where 1=1
+
+		<if test="null != filterMap.startDate">
+			and date(a.enable_date) >= #{filterMap.startDate}
 		</if>
+		<if test="null != filterMap.endDate">
+			and date(a.enable_date) &lt;= #{filterMap.endDate}
+		</if>
+
+		<if test="null != filterMap.deviceTypeValue">
+			and a.device_type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and a.agent_title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and a.shop_area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and a.shop_type = #{filterMap.shopTypeValue}
+		</if>
+
+		#and a.device_type = '{{设备类型}}'
 		#and a.device_no = '{{设备编码}}'
 		#and a.shop_no = '{{门店编码}}'
 		#and a.shop_area = '{{ 所属地区 }}'
@@ -54,17 +83,30 @@
 	<!-- TOP50不用分页，控制好表格的就可以。  -->
 	<select id="rbxhjkpjy50" resultType="java.util.HashMap" >
 		select a.device_no 设备编号,a.shop_no 网点编号,a.shop_address 设备位置,date(a.enable_time) 启用时间,a.device_type 设备类型
-		,sum(a.order_ct) 设备交易笔数,sum(a.order_amount) 交易额,sum(a.refund_ct) 产生退订单数,sum(a.refund_amount) 产生退款金额
-		,sum(a.refund_ct)/sum(a.order_ct) 订单退款率,sum(a.refund_amount)/sum(a.order_amount) 交易额退款率
+		,sum(a.order_ct) 设备交易笔数,sum(a.order_amount) 交易额,sum(a.refund_ct) 产生退订单数,sum(a.refund_amount) 产生退款金额,
+		concat(round(sum(a.refund_ct)*100/sum(a.order_ct), 2), '%') 订单退款率,
+		concat(round(sum(a.refund_amount)*100/sum(a.order_amount), 2), '%') 交易额退款率
 		from study.f_device_summary a
-		where date(a.enable_date) >= #{startDate} and date(a.enable_date) &lt;= #{endDate}
+		where 1=1
 
-		<!-- 设备类型 -->
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.device_type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.startDate">
+			and date(a.enable_date) >= #{filterMap.startDate}
+		</if>
+		<if test="null != filterMap.endDate">
+			and date(a.enable_date) &lt;= #{filterMap.endDate}
+		</if>
+
+		<if test="null != filterMap.deviceTypeValue">
+			and a.device_type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and a.agent_title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and a.shop_area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and a.shop_type = #{filterMap.shopTypeValue}
 		</if>
 
 		#and a.device_no = '{{设备编码}}'
@@ -72,6 +114,7 @@
 		#and a.shop_area = '{{ 所属地区 }}'
 		#and a.agent_title = '{{ 渠道名称 }}'
 		#and a.shop_type = '{{ 网点类型 }}'
+
 		group by 设备编号,网点编号,启用时间
 		order by 设备交易笔数 desc
 		limit 50
@@ -80,7 +123,7 @@
 	<!-- 每日在网设备数量统计, 添加分页及 日期和设备类型控制 -->
 	<select id="rbxhsbyxqk" resultType="java.util.HashMap" >
 		select dt ,a.DDI_Type ,count(b.DDI_No) as 在网设备数量
-		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= #{startDate} and date(CreateDate) &lt;= #{endDate} group by dt ) t
+		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= #{filterMap.startDate} and date(CreateDate) &lt;= #{filterMap.endDate} group by dt ) t
 		left join (select DDI_No,SHOP_No,DSI_Anti,DSI_Try,ifnull(DSI_Withdraw,now()) DSI_Withdraw from study.t_device_sub_info ) b
 		on t.dt between date(DSI_Try) and date(DSI_Withdraw)
 		left join t_device_device_info a
@@ -97,12 +140,23 @@
 		on l.DICT_Value = e.SHOP_Class
 		where DSI_Anti is null
 
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.DDI_Type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
 		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and l.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and a.DDI_Type = '{{设备类型}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and l.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
 
 		group by dt,DDI_Type
 
@@ -113,8 +167,8 @@
 	<select id="rbxhsbyxqk_count" resultType="Integer">
 		select count(*) from
 		(
-		select dt,a.DDI_Type,count(b.DDI_No) as 在网设备数量
-		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= #{startDate} and date(CreateDate) &lt;= #{endDate} group by dt ) t
+		select dt ,a.DDI_Type ,count(b.DDI_No) as 在网设备数量
+		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= #{filterMap.startDate} and date(CreateDate) &lt;= #{filterMap.endDate} group by dt ) t
 		left join (select DDI_No,SHOP_No,DSI_Anti,DSI_Try,ifnull(DSI_Withdraw,now()) DSI_Withdraw from study.t_device_sub_info ) b
 		on t.dt between date(DSI_Try) and date(DSI_Withdraw)
 		left join t_device_device_info a
@@ -131,19 +185,30 @@
 		on l.DICT_Value = e.SHOP_Class
 		where DSI_Anti is null
 
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.DDI_Type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
 		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and l.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and a.DDI_Type = '{{设备类型}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and l.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
 
 		group by dt,DDI_Type
 		) temp
 	</select>
 
 
-	<!-- 每日在网设备数量统计, 添加分页及 日期和设备类型控制 -->
+	<!-- 每日新入网设备数量统计, 添加分页及 日期和设备类型控制 -->
 	<select id="mrxrwsbsl" resultType="java.util.HashMap" >
 		select date(c.DSI_Try) dt,a.DDI_Type,count(distinct(c.DDI_No)) 新入网设备数量
 		from study.t_device_sub_info c left join t_device_device_info a
@@ -159,14 +224,33 @@
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = e.SHOP_Class
 		where c.DSI_Anti is null
-		and date(c.DSI_Try) >= #{startDate} and date(c.DSI_Try) &lt;= #{endDate}
 
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.DDI_Type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.startDate">
+			and date(c.DSI_Try) >= #{filterMap.startDate}
 		</if>
+		<if test="null != filterMap.endDate">
+			and date(c.DSI_Try) &lt;= #{filterMap.endDate}
+		</if>
+
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and a.DDI_Type = '{{设备类型}}'
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and e.SHOP_No = '{{ 网点编号 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
 
 		group by dt,a.DDI_Type
 
@@ -191,14 +275,33 @@
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = e.SHOP_Class
 		where c.DSI_Anti is null
-		and date(c.DSI_Try) >= #{startDate} and date(c.DSI_Try) &lt;= #{endDate}
 
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.DDI_Type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.startDate">
+			and date(c.DSI_Try) >= #{filterMap.startDate}
 		</if>
+		<if test="null != filterMap.endDate">
+			and date(c.DSI_Try) &lt;= #{filterMap.endDate}
+		</if>
+
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and a.DDI_Type = '{{设备类型}}'
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and e.SHOP_No = '{{ 网点编号 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
 
 		group by dt,a.DDI_Type
 		) temp
@@ -207,7 +310,7 @@
 	<!-- 每日未开机入网设备数量统计, 添加分页及 日期和设备类型控制 -->
 	<select id="mrwkjsl" resultType="java.util.HashMap" >
 		select dt,a.DDI_Type,count(b.DDI_No)-count(c.DOL_Length) 每日未开机设备数量
-		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= #{startDate} and date(CreateDate) &lt;= #{endDate} group by dt ) t
+		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= #{filterMap.startDate} and date(CreateDate) &lt;= #{filterMap.endDate} group by dt ) t
 		left join (select DDI_No,SHOP_No,DSI_Anti,DSI_Try,ifnull(DSI_Withdraw,now()) DSI_Withdraw from study.t_device_sub_info ) b
 		on t.dt between date(DSI_Try) and date(DSI_Withdraw)
 		left join t_device_device_info a
@@ -226,12 +329,24 @@
 		on l.DICT_Value = e.SHOP_Class
 		where DSI_Anti is null
 
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.DDI_Type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
 		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and l.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and a.DDI_Type = '{{设备类型}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and l.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
+
 
 		group by dt,DDI_Type
 
@@ -243,7 +358,7 @@
 		select count(*) from
 		(
 		select dt,a.DDI_Type,count(b.DDI_No)-count(c.DOL_Length) 每日未开机设备数量
-		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= #{startDate} and date(CreateDate) &lt;= #{endDate} group by dt ) t
+		from (select date(CreateDate) dt from t_shop_order_info where date(CreateDate) >= #{filterMap.startDate} and date(CreateDate) &lt;= #{filterMap.endDate} group by dt ) t
 		left join (select DDI_No,SHOP_No,DSI_Anti,DSI_Try,ifnull(DSI_Withdraw,now()) DSI_Withdraw from study.t_device_sub_info ) b
 		on t.dt between date(DSI_Try) and date(DSI_Withdraw)
 		left join t_device_device_info a
@@ -262,12 +377,24 @@
 		on l.DICT_Value = e.SHOP_Class
 		where DSI_Anti is null
 
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.DDI_Type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
 		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and l.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and a.DDI_Type = '{{设备类型}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and l.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
+
 
 		group by dt,DDI_Type
 		) temp
@@ -290,21 +417,39 @@
 		on t.DICT_Value = e.SHOP_Class
 		where c.DSI_Anti is null
 		and c.DSI_Withdraw is not null
-		and date(c.DSI_Withdraw) >= #{startDate} and date(c.DSI_Withdraw) &lt;= #{endDate}
 
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.DDI_Type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.startDate">
+			and date(c.DSI_Withdraw) >= #{filterMap.startDate}
 		</if>
+		<if test="null != filterMap.endDate">
+			and date(c.DSI_Withdraw) &lt;= #{filterMap.endDate}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and a.DDI_Type = '{{设备类型}}'
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and e.SHOP_No = '{{ 网点编号 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		#and d.SHOP_Area = '{{ 所属地区 }}'
 
 		group by dt,a.DDI_Type
 
 		limit #{pageWrapper.start},#{pageWrapper.pageSize};
 	</select>
 
-	<!-- 每日未开机设备数量统计 统计数量，在最外层加了个select count *  -->
+	<!-- 撤机设备数 统计数量，在最外层加了个select count *  -->
 	<select id="cjsbs_count" resultType="Integer">
 		select count(*) from
 		(
@@ -323,13 +468,24 @@
 		on t.DICT_Value = e.SHOP_Class
 		where c.DSI_Anti is null
 		and c.DSI_Withdraw is not null
-		and date(c.DSI_Withdraw) >= #{startDate} and date(c.DSI_Withdraw) &lt;= #{endDate}
 
-		<if test="null != deviceModel and deviceModel.size > 0">
-			and a.DDI_Type IN
-			<foreach collection="deviceModel" item="ddi" index="index" open="(" close=")" separator=",">
-				#{ddi}
-			</foreach>
+		<if test="null != filterMap.startDate">
+			and date(c.DSI_Withdraw) >= #{filterMap.startDate}
+		</if>
+		<if test="null != filterMap.endDate">
+			and date(c.DSI_Withdraw) &lt;= #{filterMap.endDate}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
 		</if>
 
 		group by dt,a.DDI_Type

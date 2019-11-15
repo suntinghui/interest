@@ -28,23 +28,23 @@ public class RainbowYjzbServiceImpl implements RainbowYjzbService {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Override
-	public String fhgjl(String startDate, String endDate) {
-		return rainbowYjzbDao.fhgjl(startDate, endDate);
+	public String fhgjl(HashMap filterMap) {
+		return rainbowYjzbDao.fhgjl(filterMap);
 	}
 
 	@Override
-	public String tcgjxlbl() {
-		return rainbowYjzbDao.tcgjxlbl();
+	public String tcgjxlbl(HashMap filterMap) {
+		return rainbowYjzbDao.tcgjxlbl(filterMap);
 	}
 
 	@Override
-	public String kcscbl(String startDate, String endDate) {
-		return rainbowYjzbDao.kcscbl(startDate, endDate);
+	public String kcscbl(HashMap filterMap) {
+		return rainbowYjzbDao.kcscbl(filterMap);
 	}
 
 	@Override
-	public HashMap djrxpj(String startDate, String endDate) {
-		return rainbowYjzbDao.djrxpj(startDate, endDate);
+	public HashMap djrxpj(HashMap filterMap) {
+		return rainbowYjzbDao.djrxpj(filterMap);
 	}
 
 	@Override

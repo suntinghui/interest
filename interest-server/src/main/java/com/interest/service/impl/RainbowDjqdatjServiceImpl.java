@@ -26,9 +26,9 @@ public class RainbowDjqdatjServiceImpl implements RainbowDjqdatjService {
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
 	@Override
-	public PageResult jqsxxx_list(PageWrapper pageWrapper ,String startDate, String endDate) {
-		List<HashMap> list = RainbowUtil.decodeList(rainbowDjqdatjDao.jqsxxx_list(pageWrapper, startDate, endDate));
-		int size = rainbowDjqdatjDao.jqsxxx_list_count(startDate, endDate);
+	public PageResult jqsxxx_list(PageWrapper pageWrapper ,HashMap filterMap) {
+		List<HashMap> list = RainbowUtil.decodeList(rainbowDjqdatjDao.jqsxxx_list(pageWrapper,filterMap));
+		int size = rainbowDjqdatjDao.jqsxxx_list_count(filterMap);
 		return new PageResult<>(list, size);
 	}
 
@@ -41,9 +41,9 @@ public class RainbowDjqdatjServiceImpl implements RainbowDjqdatjService {
 		map.put("yyzt1", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt1(ddiNo, startDate, endDate)));
 		map.put("yyzt2", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt2(ddiNo, startDate, endDate)));
 		map.put("yyzt3_jqhkzrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqhkzrs(ddiNo, startDate, endDate)));
-//		map.put("yyzt3_jqrjgcrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjgcrs(ddiNo, startDate, endDate)));
-//		map.put("yyzt3_jqrjxgcrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjxgcrs(ddiNo, startDate, endDate)));
-//		map.put("yyzt3_jqrjfgrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjfgrs(ddiNo, startDate, endDate)));
+		map.put("yyzt3_jqrjgcrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjgcrs(ddiNo, startDate, endDate)));
+		map.put("yyzt3_jqrjxgcrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjxgcrs(ddiNo, startDate, endDate, shopNo)));
+		map.put("yyzt3_jqrjfgrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjfgrs(ddiNo, startDate, endDate)));
 		map.put("sbwhtj3", RainbowUtil.decodeList(rainbowDjqdatjDao.sbwhtj3(ddiNo, startDate, endDate)));
 		map.put("sbwhtj4", RainbowUtil.decodeList(rainbowDjqdatjDao.sbwhtj4(ddiNo, startDate, endDate)));
 		map.put("sbwhtj5", RainbowUtil.decodeList(rainbowDjqdatjDao.sbwhtj5(ddiNo, startDate, endDate)));

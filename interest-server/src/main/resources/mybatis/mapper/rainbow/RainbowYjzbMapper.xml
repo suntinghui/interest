@@ -35,10 +35,26 @@
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) l
 		on l.DICT_Value = e.SHOP_Class
 		where DSI_Anti is null
+
+
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and l.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+
 		#and a.DDI_Type = '{{设备类型}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and l.DICT_Name = '{{ 网点类型 }}'
 		#and d.SHOP_Area = '{{ 所属地区 }}'
+
 		group by dt           ) in_motion
 
 		left join
@@ -62,17 +78,31 @@
 		where a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
 		and DOL_Length &lt;> 0
 		and c.DSI_Anti is null
+
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and h.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
 		#and f.ATOP_Title = {{选择渠道}}
 		#and b.DDI_Type = {{选择设备类型}}
 		#and h.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
+
+
 		group by dt ) online_device
 		on online_device.dt = in_motion.dt
 
-		where in_motion.dt >= #{startDate}  and in_motion.dt &lt;= #{endDate}   #选择某个时间段（设备开机记录是从8月10日开始，之前无数据）
-
+		where in_motion.dt >= #{filterMap.startDate}  and in_motion.dt &lt;= #{filterMap.endDate}   #选择某个时间段（设备开机记录是从8月10日开始，之前无数据）
 		)  detail
-
 
 	</select>
 
@@ -103,10 +133,26 @@
 		where ODER_State = 0
 		and c.DSI_Anti is null
 		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
+
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and h.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
 		#and f.ATOP_Title = {{选择渠道}}
 		#and b.DDI_Type = {{选择设备类型}}
 		#and h.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
+
+
 		group by dt) sheet1
 
 		right join
@@ -133,11 +179,33 @@
 		and date(a.CreateDate) >= '2019-08-14'
 		and DOL_Length &lt;> 0
 		and c.DSI_Anti is null
+
+		<if test="null != filterMap.startDate">
+			and date(a.CreateDate) >= #{filterMap.startDate}
+		</if>
+		<if test="null != filterMap.endDate">
+			and date(a.CreateDate) &lt;= #{filterMap.endDate}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and g.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
 		#and date(a.CreateDate)>='{{起始时间}}' and date(a.CreateDate) &lt;='{{截止时间}}'
 		#and f.ATOP_Title = {{选择渠道}}
 		#and b.DDI_Type = {{选择设备类型}}
 		#and g.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
+
+
 		group by dt
 		) sheet2
 
@@ -174,11 +242,31 @@
 		where DOL_Length &lt;> 0
 		and c.DSI_Anti is null
 		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		and a.CreateDate >=#{startDate} and a.CreateDate &lt;=#{endDate}
-		#and b.DDI_Type = {{选择设备类型}}
+
+		<if test="null != filterMap.startDate">
+			and a.CreateDate >= #{filterMap.startDate}
+		</if>
+		<if test="null != filterMap.endDate">
+			and a.CreateDate &lt;= #{filterMap.endDate}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and g.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
 		#and f.ATOP_Title = {{选择渠道}}
+		#and b.DDI_Type = {{选择设备类型}}
 		#and g.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
+
 		group by b.DDI_No,SHOP_No,启用时间,m.DSL_Note,dt  ) t )sheet1
 
 		left join
@@ -187,7 +275,7 @@
 		from(
 
 
-		select DDI_No,SHOP_No,DSL_Note,空仓时间,ifnull(补票时间,#{endDate}) 补票时间,timestampdiff(minute,空仓时间,ifnull(补票时间,#{endDate}))/60 empty_time
+		select DDI_No,SHOP_No,DSL_Note,空仓时间,ifnull(补票时间,#{filterMap.endDate}) 补票时间,timestampdiff(minute,空仓时间,ifnull(补票时间,#{filterMap.endDate}))/60 empty_time
 		from
 		(
 		select d.DDI_No,d.SHOP_No,b.DSL_Note,b.DSL_No,a.CreateDate 空仓时间,(select n.updated_at from t_storage_checkout_packages_detail m join t_storage_checkout_packages n on m.package_no = n.package_no where warehouse_id = a.DSLG_DSUid and n.updated_at > a.`CreateDate` order by n.updated_at asc limit 1) 补票时间,d.DSI_Withdraw
@@ -210,15 +298,132 @@
 		where DSLG_NewCount = 0 and dslg_mnuid = '8bf30bce2e914a8fa591635612e20641'
 		and d.DSI_Anti is null
 		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
-		and a.CreateDate >= #{startDate} and a.CreateDate &lt;= #{endDate}
+
+		<if test="null != filterMap.startDate">
+			and a.CreateDate >= #{filterMap.startDate}
+		</if>
+		<if test="null != filterMap.endDate">
+			and a.CreateDate &lt;= #{filterMap.endDate}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and c.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and g.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+
+		#and a.CreateDate >= '{{起始时间}}' and a.CreateDate &lt;= '{{截止时间}}'
 		#and f.ATOP_Title = {{选择渠道}}
 		#and c.DDI_Type = {{选择设备类型}}
 		#and g.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
+
 		) t
 		where 补票时间 &lt; DSI_Withdraw or DSI_Withdraw is null                  )o   )sheet2
 
 		on sheet1.sheet = sheet2.sheet
+
+	</select>
+
+	<!-- 单机日销平均  替换日期  修改select字段 -->
+	<select id="djrxpj" resultType="java.util.HashMap" >
+		select avg(日均销售额) 在网设备日均销售额,avg(开机日均销售额) 开机在网设备日均单台销额
+		from
+		(
+		select sheet1.DDI_No 设备编号,sheet1.SHOP_No 网点编号,sheet1.启用时间,DDI_Type 设备类型,tol_money 销售总额,搜索时段内天数,sum_turn_on 搜索时段内开机天数,日均销售额,tol_money/sum_turn_on 开机日均销售额
+		from
+
+		(select *,tol_money/搜索时段内天数 日均销售额
+		from
+		(
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(sum(ODER_Money),0) tol_money,
+		case when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt>=#{filterMap.endDate} then datediff(#{filterMap.endDate},first_sub.dt)+1
+		when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt &lt;#{filterMap.endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
+		when first_sub.draw_dt &lt;#{filterMap.startDate} then 0
+		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >= #{filterMap.startDate} and first_sub.draw_dt &lt; #{filterMap.endDate} then datediff(first_sub.draw_dt,#{filterMap.startDate})+1
+		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >=#{filterMap.endDate} then datediff(#{filterMap.endDate},#{filterMap.startDate})+1
+		when first_sub.dt>#{filterMap.endDate} then 0 end as 搜索时段内天数     #需判断查询起始时间、截止时间，与设备开启时间、撤机时间之间的关系
+		from
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
+		from study.t_device_sub_info a left join t_device_device_info b
+		on a.DDI_No = b.DDI_No
+		left join netfiance_db.t_shop_shop_info d
+		on d.SHOP_No = a.SHOP_No
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on a.SHOP_No = g.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = d.SHOP_Class
+		where a.DSI_Anti is null
+
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and g.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and f.ATOP_Title = {{选择渠道}}
+		#and b.DDI_Type = '{{设备类型}}'
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.SHOP_Area = '{{ 所属地区 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+
+
+		order by dt) first_sub             #每台机器在网点真实开启时间
+
+		left join
+
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_Money
+		from t_shop_order_info e left join t_device_device_info b
+		on e.ODER_DUid = b.DDI_Uid
+		left join study.t_device_sub_info a
+		on b.DDI_No = a.DDI_No
+		where date(e.CreateDate)>=#{filterMap.startDate} and date(e.CreateDate) &lt;=#{filterMap.endDate}
+		and e.ODER_State = 0
+		and a.DSI_Anti is null
+		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
+		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
+
+		where first_sub.dt &lt;=#{filterMap.endDate}
+		group by DDI_No,SHOP_No,启用时间   )t
+		order by 日均销售额 desc     ) sheet1
+
+
+		left join
+
+
+		(select DDI_No,SHOP_No,启用时间,count(DDI_No) sum_turn_on   #一台机器在搜索时间段内开机几天
+		from
+		(select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,round(sum(a.DOL_Length)/60,1) last_hour
+		from t_device_online_list a left join t_device_device_info b
+		on a.DOL_DUid = b.DDI_Uid
+		left join study.t_device_sub_info c
+		on b.DDI_No = c.DDI_No
+		where DOL_Length &lt;> 0
+		and date(DATE_ADD(a.CreateDate,interval 1 minute)) &lt;= #{filterMap.endDate} and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= #{filterMap.startDate}
+		and c.DSI_Anti is null
+		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
+		group by DDI_No,SHOP_No,启用时间,dt) t
+		where last_hour &lt;> 0
+		group by DDI_No,SHOP_No,启用时间       )sheet2
+		on sheet1.DDI_No = sheet2.DDI_No and sheet1.SHOP_No = sheet2.SHOP_No and sheet1.启用时间 = sheet2.启用时间    )tol_sheet
 
 	</select>
 
@@ -244,109 +449,9 @@
 		) o
 	</select>
 
-	<!-- 单机日销平均  替换日期  修改select字段 -->
-	<select id="djrxpj" resultType="java.util.HashMap" >
-		select avg(日均销售额) 在网设备日均销售额,avg(开机日均销售额) 开机在网设备日均单台销额
-		from
-		(
-		select sheet1.DDI_No 设备编号,sheet1.SHOP_No 网点编号,sheet1.启用时间,DDI_Type 设备类型,tol_money 销售总额,搜索时段内天数,sum_turn_on 搜索时段内开机天数,日均销售额,tol_money/sum_turn_on 开机日均销售额
-		from
-
-		(select *,tol_money/搜索时段内天数 日均销售额
-		from
-		(
-		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(sum(ODER_Money),0) tol_money,
-		case when first_sub.dt>=#{startDate} and first_sub.draw_dt>=#{endDate} then datediff(#{endDate},first_sub.dt)+1
-		when first_sub.dt>=#{startDate} and first_sub.draw_dt &lt;#{endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
-		when first_sub.draw_dt &lt;#{startDate} then 0
-		when first_sub.dt &lt;#{startDate} and first_sub.draw_dt >= #{startDate} and first_sub.draw_dt &lt; #{endDate} then datediff(first_sub.draw_dt,#{startDate})+1
-		when first_sub.dt &lt;#{startDate} and first_sub.draw_dt >=#{endDate} then datediff(#{endDate},#{startDate})+1
-		when first_sub.dt>#{endDate} then 0 end as 搜索时段内天数     #需判断查询起始时间、截止时间，与设备开启时间、撤机时间之间的关系
-		from
-		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
-		from study.t_device_sub_info a left join t_device_device_info b
-		on a.DDI_No = b.DDI_No
-		left join netfiance_db.t_shop_shop_info d
-		on d.SHOP_No = a.SHOP_No
-		left join netfiance_db.t_shop_agent_list e
-		on d.SHOP_AGUid = e.AGNT_Uid
-		left join netfiance_db.t_shop_agent_top f
-		on e.AGNT_ATUid = f.ATOP_Uid
-		left join study.t_shop_sub_info g
-		on a.SHOP_No = g.SHOP_No
-		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
-		on t.DICT_Value = d.SHOP_Class
-		where a.DSI_Anti is null
-		#and b.DDI_Type = '{{设备类型}}'
-		#and f.ATOP_Title = {{选择渠道}}
-		#and a.DDI_No = '{{设备编码}}'
-		#and g.SHOP_Area = '{{ 所属地区 }}'
-		#and t.DICT_Name = '{{ 网点类型 }}'
-		order by dt) first_sub             #每台机器在网点真实开启时间
-
-		left join
-
-		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_Money
-		from t_shop_order_info e left join t_device_device_info b
-		on e.ODER_DUid = b.DDI_Uid
-		left join study.t_device_sub_info a
-		on b.DDI_No = a.DDI_No
-		where date(e.CreateDate)>=#{startDate} and date(e.CreateDate) &lt;=#{endDate}
-		and e.ODER_State = 0
-		and a.DSI_Anti is null
-		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
-		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
-
-		where first_sub.dt &lt;=#{endDate}
-		group by DDI_No,SHOP_No,启用时间   )t
-		order by 日均销售额 desc     ) sheet1
 
 
-		left join
 
-
-		(select DDI_No,SHOP_No,启用时间,count(DDI_No) sum_turn_on   #一台机器在搜索时间段内开机几天
-		from
-		(select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,round(sum(a.DOL_Length)/60,1) last_hour
-		from t_device_online_list a left join t_device_device_info b
-		on a.DOL_DUid = b.DDI_Uid
-		left join study.t_device_sub_info c
-		on b.DDI_No = c.DDI_No
-		where DOL_Length &lt;> 0
-		and date(DATE_ADD(a.CreateDate,interval 1 minute)) &lt;= #{endDate} and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= #{startDate}
-		and c.DSI_Anti is null
-		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		group by DDI_No,SHOP_No,启用时间,dt) t
-		where last_hour &lt;> 0
-		group by DDI_No,SHOP_No,启用时间       )sheet2
-		on sheet1.DDI_No = sheet2.DDI_No and sheet1.SHOP_No = sheet2.SHOP_No and sheet1.启用时间 = sheet2.启用时间    )tol_sheet
-
-	</select>
-
-	<!-- 综合开机时长 -->
-	<select id="zhkjsc" resultType="String">
-		select sum(last_hour) sum_last_hour
-		from(
-		select SHOP_Title,DDI_No,dt,last_hour
-		from
-		(select c.SHOP_Title,b.DDI_No,date(a.CreateDate)
-		dt,round(sum(a.DOL_Length)/60,1) last_hour
-		from t_device_online_list a left join t_device_device_info b
-		on a.DOL_DUid = b.DDI_Uid
-		left join t_shop_shop_info c
-		on b.DDI_SPUid = c.SHOP_Uid
-		left join netfiance_db.t_shop_shop_info e
-		on e.SHOP_Uid = c.SHOP_Uid
-		left join netfiance_db.t_shop_agent_list f
-		on e.SHOP_AGUid = f.AGNT_Uid
-		left join netfiance_db.t_shop_agent_top g
-		on f.AGNT_ATUid = g.ATOP_Uid
-		where DOL_Length &lt;&gt; 0
-        and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= #{startDate} and date(DATE_ADD(a.CreateDate,interval 1 minute)) &gt;= #{endDate}
-		and c.SHOP_State = 1
-		group by SHOP_Title,b.DDI_No,dt) t
-		where last_hour &lt;&gt; 0 )o
-	</select>
 
 	<!-- 设备档案，有改动，标题、添加分页 -->
 	<select id="getDeviceDocList" resultMap="deviceDocResponse">
@@ -458,6 +563,38 @@
 
 		order by 关联网点 desc,已装票开启 desc ;
 
+	</select>
+
+	<!-- 综合开机时长  delete -->
+	<select id="zhkjsc" resultType="String">
+		select sum(last_hour) sum_last_hour
+		from(
+		select SHOP_Title,DDI_No,dt,last_hour
+		from
+		(select c.SHOP_Title,b.DDI_No,date(a.CreateDate)
+		dt,round(sum(a.DOL_Length)/60,1) last_hour
+		from t_device_online_list a left join t_device_device_info b
+		on a.DOL_DUid = b.DDI_Uid
+		left join t_shop_shop_info c
+		on b.DDI_SPUid = c.SHOP_Uid
+		left join netfiance_db.t_shop_shop_info e
+		on e.SHOP_Uid = c.SHOP_Uid
+		left join netfiance_db.t_shop_agent_list f
+		on e.SHOP_AGUid = f.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top g
+		on f.AGNT_ATUid = g.ATOP_Uid
+		where DOL_Length &lt;&gt; 0
+		and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= #{startDate} and date(DATE_ADD(a.CreateDate,interval 1 minute)) &gt;= #{endDate}
+
+		#and c.SHOP_Uid = '{{选择网点id}}'
+		#and b.DDI_No = '{{选择设备编码}'
+		#and g.ATOP_Title = '{{选择渠道}}'
+		#and b.DDI_Type = {{选择设备类型}}
+
+
+		and c.SHOP_State = 1
+		group by SHOP_Title,b.DDI_No,dt) t
+		where last_hour &lt;&gt; 0 )o
 	</select>
 
 

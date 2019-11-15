@@ -7,47 +7,46 @@
 	<div style="margin: 40px;">
 		<div>
 			<Row style="margin-bottom: 25px;">
-
+		
 				<Col span="8">日期：
-				<DatePicker :value="queryDate" @on-change="handleDateChange" type="date" placeholder="选择日期" style="width: 250px"></DatePicker>
+					<DatePicker :value="queryDate" @on-change="handleDateChange" type="date" placeholder="选择日期" style="width: 250px"></DatePicker>
 				</Col>
-
-				<Col span="8">设备：
-				<Select v-model="deviceModel" filterable clearable style="width: 250px">
-					<Option v-for="item in this.$store.state.param.deviceTypeList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
-				</Select>
-				</Col>
-
+		
 				<Col span="8">所属地区：
-				<Select v-model="areaModel" filterable clearable style="width: 250px">
+				<Select v-model="selectValue.areaValue" filterable clearable style="width: 250px">
 					<Option v-for="item in this.$store.state.param.areaList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
 				</Select>
 				</Col>
-
+		
+				<Col span="8">设备：
+				<Select v-model="selectValue.deviceTypeValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.deviceTypeList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
+				</Select>
+				</Col>
+		
 			</Row>
 			<Row style="margin-bottom: 25px;">
-
+		
 				<Col span="8">渠道：
-				<Select v-model="channelModel"  filterable clearable style="width: 250px">
-					<Option v-for="item in this.$store.state.param.channelList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
+				<Select v-model="selectValue.channelValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.channelList" :value="item.paramValue" :key="item.paramValue">{{ item.paramValue }}</Option>
 				</Select>
 				</Col>
-
-				<Col span="8">网点：
-				<Select v-model="shopModel" filterable clearable style="width: 250px">
-					<Option v-for="item in this.$store.state.param.shopList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }} ({{item.paramKey}})</Option>
+		
+				<Col span="8" style="display: none;">网点：
+				<Select v-model="selectValue.shopValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.shopList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}
+						({{item.paramKey}})</Option>
 				</Select>
 				</Col>
-
+		
 				<Col span="8">网点类型：
-				<Select v-model="shopTypeModel" filterable clearable style="width: 250px">
-					<Option v-for="item in this.$store.state.param.shopTypeList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
+				<Select v-model="selectValue.shopTypeValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.shopTypeList" :value="item.paramValue" :key="item.paramValue">{{ item.paramValue }}</Option>
 				</Select>
 				</Col>
-			</Row>
-
-			<Row style="margin-bottom: 25px; text-align: right;">
-				<Col span="22"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
+		
+				<Col span="8" style="text-align: left;"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
 			</Row>
 		</div>
 		
@@ -72,12 +71,17 @@
 		data() {
 			return {
 				queryDate: util.dateFormat(util.yestoday()),
+				selectValue:{},
 				showSpin: false,
 				date: null,
 				searchContent: null,
 				groupId: [],
 				/*表显示字段*/
 				columns1: [{
+						title: "设备类型",
+						key: "设备类型",
+						align: "center"
+					},{
 						title: "在网设备总数",
 						key: "在网设备总数",
 						align: "center"
@@ -127,15 +131,21 @@
 						url: "/rainbow/lxlsbzbtj",
 						timeout: 1000 * 60 * 2,
 						params: {
-							queryDate: this.queryDate
+							filterMap: {
+								queryDate: this.queryDate,
+								deviceTypeValue: this.selectValue.deviceTypeValue,
+								areaValue: this.selectValue.areaValue,
+								channelValue: this.selectValue.channelValue,
+								shopValue: this.selectValue.shopValue,
+								shopTypeValue: this.selectValue.shopTypeValue
+							}
 						}
 					})
 					.then(
 						function(response) {
 							console.log(JSON.stringify(response))
 
-							this.data1 = [];
-							this.data1.push(response.data.data)
+							this.data1 = response.data.data;
 							
 						}.bind(this)
 					)

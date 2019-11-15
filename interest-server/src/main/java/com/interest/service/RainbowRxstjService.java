@@ -9,21 +9,21 @@ import java.util.List;
 public interface RainbowRxstjService {
 	
 	// 销售情况
-	PageResult xstj(PageWrapper pageWrapper, String startDate, String endDate);
+	PageResult xstj(PageWrapper pageWrapper, HashMap filterMap);
 
 	// 按设备类型统计
-	PageResult sblxtj(PageWrapper pageWrapper, String startDate, String endDate);
+	PageResult sblxtj(PageWrapper pageWrapper, HashMap filterMap);
 
 	// 按彩种统计
-	PageResult acztj(PageWrapper pageWrapper, String startDate, String endDate);
+	PageResult acztj(PageWrapper pageWrapper, HashMap filterMap);
 
 	// 单台平均销售统计
-	PageResult dtpjxstj(PageWrapper pageWrapper, String startDate, String endDate);
+	PageResult dtpjxstj(PageWrapper pageWrapper, HashMap filterMap);
 
 	// 单台销量排名
-	PageResult dtxlpm(PageWrapper pageWrapper, String startDate, String endDate);
+	PageResult dtxlpm(PageWrapper pageWrapper, HashMap filterMap);
 
 	// 零销量设备占比统计
-	HashMap lxlsbzbtj(String queryDate);
+	List<HashMap> lxlsbzbtj(HashMap filterMap);
 
 }

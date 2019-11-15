@@ -7,12 +7,47 @@
 	<div style="margin: 40px;">
 		<div>
 			<Row style="margin-bottom: 25px;">
-
-				<Col span="20">起止日期：
-					<Date-picker :value="dateValue"  @on-change='handleDateChange' type="daterange" editable="false" :options="dateOptions" placement="bottom-start" placeholder="选择日期" style="width: 240px"></Date-picker>
+		
+				<Col span="8">日期：
+				<Date-picker :value="dateValue" @on-change='handleDateChange' type="daterange" editable="false" :options="dateOptions"
+				 placement="bottom-start" placeholder="选择日期" style="width: 250px"></Date-picker>
 				</Col>
 				
-				<Col span="4"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
+				<Col span="8">所属地区：
+				<Select v-model="selectValue.areaValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.areaList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
+				</Select>
+				</Col>
+		
+				<Col span="8">设备：
+				<Select v-model="selectValue.deviceTypeValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.deviceTypeList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
+				</Select>
+				</Col>
+		
+			</Row>
+			<Row style="margin-bottom: 25px;">
+		
+				<Col span="8">渠道：
+				<Select v-model="selectValue.channelValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.channelList" :value="item.paramValue" :key="item.paramValue">{{ item.paramValue }}</Option>
+				</Select>
+				</Col>
+		
+				<Col span="8" style="display: none;">网点：
+				<Select v-model="selectValue.shopValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.shopList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}
+						({{item.paramKey}})</Option>
+				</Select>
+				</Col>
+		
+				<Col span="8" >网点类型：
+				<Select v-model="selectValue.shopTypeValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.shopTypeList" :value="item.paramValue" :key="item.paramValue">{{ item.paramValue }}</Option>
+				</Select>
+				</Col>
+				
+				<Col span="8" style="text-align: left;"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
 			</Row>
 		</div>
 
@@ -41,6 +76,7 @@
 		data() {
 			return {
 				dateValue: [util.dateFormat(util.lastWeek(new Date())), util.dateFormat(new Date())],
+				selectValue:{},
 				
 				showSpin: false,
 				searchContent: null,
@@ -91,6 +127,9 @@
 			};
 		},
 		mounted() {
+			// 查询所有的参数
+			this.$store.dispatch('queryAllParam');
+			
 			/*页面初始化调用方法*/
 			this.search();
 		},
@@ -103,21 +142,38 @@
 						url: "/rainbow/djrxpj",
 						timeout: 1000 * 60 * 2,
 						params: {
-							startDate: this.dateValue[0],
-							endDate: this.dateValue[1],
+							filterMap: {
+								startDate: this.dateValue[0],
+								endDate: this.dateValue[1],
+								deviceTypeValue: this.selectValue.deviceTypeValue,
+								areaValue: this.selectValue.areaValue,
+								channelValue: this.selectValue.channelValue,
+								shopValue: this.selectValue.shopValue,
+								shopTypeValue: this.selectValue.shopTypeValue
+							}
 						}
 					})
 					.then(
 						function(response) {
 							console.log(JSON.stringify(response))
-
-							this.data1 = [{
-								"title": "日均销售额",
-								"value": util.numFixed(response.data.data['在网设备日均销售额'])
-							},{
-								"title": "开机日均销售额",
-								"value": util.numFixed(response.data.data['开机在网设备日均单台销额'])
-							}];
+							
+							if (response.data.data != null) {
+								this.data1 = [{
+									"title": "日均销售额",
+									"value": util.numFixed(response.data.data['在网设备日均销售额'])
+								},{
+									"title": "开机日均销售额",
+									"value": util.numFixed(response.data.data['开机在网设备日均单台销额'])
+								}];
+							} else {
+								this.data1 = [{
+									"title": "日均销售额",
+									"value": "0.00"
+								},{
+									"title": "开机日均销售额",
+									"value": "0.00"
+								}];
+							}
 							
 						}.bind(this)
 					)

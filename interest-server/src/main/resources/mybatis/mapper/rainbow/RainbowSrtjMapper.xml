@@ -4,7 +4,7 @@
 
 	<!-- 销售额情况统计（按月） -->
 	<select id="xsetjy" resultType="java.util.HashMap" >
-		select g.ATOP_Title 顶级渠道,date_format(a.CreateDate,'%Y%m') 月份,sum(a.ODER_Money) 销售额
+		select g.ATOP_Title 顶级渠道,date_format(a.CreateDate,'%Y-%m') 月份,sum(a.ODER_Money) 销售额
 		from t_shop_order_info a left join t_device_device_info h
 		on a.ODER_DUid = h.DDI_Uid
 		left join study.t_device_sub_info d
@@ -18,7 +18,10 @@
 		where a.ODER_State = 0
 		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
 		and d.DSI_Anti is null
-		and date_format(a.CreateDate,'%Y-%m') >= #{startMonth} and date_format(a.CreateDate,'%Y-%m') &lt;= #{endMonth}
+		and date_format(a.CreateDate,'%Y-%m') >= #{filterMap.startMonth} and date_format(a.CreateDate,'%Y-%m') &lt;= #{filterMap.endMonth}
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
 		group by 顶级渠道,月份
 	</select>
 	
@@ -37,31 +40,9 @@
 		where a.ODER_State = 0
 		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
 		and d.DSI_Anti is null
-		and date_format(a.CreateDate,'%Y-%m') = #{queryMonth}
+		and date_format(a.CreateDate,'%Y-%m') = #{filterMap.queryMonth}
+		and g.ATOP_Title = #{filterMap.channelValue}
 		group by 顶级渠道,日期
-
-		limit #{pageWrapper.start},#{pageWrapper.pageSize};
-	</select>
-
-	<select id="srtjr_count" resultType="Integer">
-		select count(*) from (
-		select g.ATOP_Title 顶级渠道 ,date(a.CreateDate) 日期,dayname(a.CreateDate) 星期 ,sum(a.ODER_Money) 销售额
-		from t_shop_order_info a left join t_device_device_info h
-		on a.ODER_DUid = h.DDI_Uid
-		left join study.t_device_sub_info d
-		on h.DDI_No = d.DDI_No
-		left join netfiance_db.t_shop_shop_info i
-		on a.ODER_SPUid = i.SHOP_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_list f
-		ON i.SHOP_AGUid = f.AGNT_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_top g
-		ON f.AGNT_ATUid = g.ATOP_Uid
-		where a.ODER_State = 0
-		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
-		and d.DSI_Anti is null
-		and date_format(a.CreateDate,'%Y-%m') = #{queryMonth}
-		group by 顶级渠道,日期
-		) temp
 	</select>
 
 	<select id="fqdsbsl" resultType="java.util.HashMap">
@@ -204,7 +185,7 @@
 
 	<!-- 退款情况统计（合计） -->
 	<select id="tkqktjhj" resultType="java.util.HashMap">
-		select date_format(a.CreateDate,'%Y%m') 月份,ifnull(sum(c.FLRF_RefundMoney),0) 退款
+		select date_format(a.CreateDate,'%Y-%m') 月份,ifnull(sum(c.FLRF_RefundMoney),0) 退款
 		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
 		on a.ODER_Note = b.FLOW_OrderId
 		left join netfiance_db.t_finance_bank_refund c
@@ -216,13 +197,13 @@
 		where a.ODER_State = 0
 		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
 		and d.DSI_Anti is null
-		and date_format(a.CreateDate,'%Y-%m') >= #{startMonth} and date_format(a.CreateDate,'%Y-%m') &lt;= #{endMonth}
+		and date_format(a.CreateDate,'%Y-%m') >= #{filterMap.startMonth} and date_format(a.CreateDate,'%Y-%m') &lt;= #{filterMap.endMonth}
 		group by 月份;
 	</select>
 
 	<!-- 退款情况统计（按月） -->
 	<select id="tkqktjy" resultType="java.util.HashMap">
-		select g.ATOP_Title 顶级渠道,date_format(a.CreateDate,'%Y%m') 月份,ifnull(sum(c.FLRF_RefundMoney),0) 退款
+		select g.ATOP_Title 顶级渠道,date_format(a.CreateDate,'%Y-%m') 月份,ifnull(sum(c.FLRF_RefundMoney),0) 退款
 		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
 		on a.ODER_Note = b.FLOW_OrderId
 		left join netfiance_db.t_finance_bank_refund c
@@ -240,36 +221,9 @@
 		where a.ODER_State = 0
 		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
 		and d.DSI_Anti is null
-		and date_format(a.CreateDate,'%Y-%m') >= #{startMonth} and date_format(a.CreateDate,'%Y-%m') &lt;= #{endMonth}
+		and date_format(a.CreateDate,'%Y-%m') >= #{filterMap.startMonth} and date_format(a.CreateDate,'%Y-%m') &lt;= #{filterMap.endMonth}
 		group by 顶级渠道,月份
 
-		limit #{pageWrapper.start}, #{pageWrapper.pageSize};
-	</select>
-
-	<!-- 退款情况统计（按月） -->
-	<select id="tkqktjy_count" resultType="Integer">
-		select count(*) from (
-		select g.ATOP_Title 顶级渠道,date_format(a.CreateDate,'%Y%m') 月份,ifnull(sum(c.FLRF_RefundMoney),0) 退款
-		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
-		on a.ODER_Note = b.FLOW_OrderId
-		left join netfiance_db.t_finance_bank_refund c
-		on b.FLOW_Uid = c.FLRF_FLUid
-		left join t_device_device_info h
-		on a.ODER_DUid = h.DDI_Uid
-		left join study.t_device_sub_info d
-		on h.DDI_No = d.DDI_No
-		left join netfiance_db.t_shop_shop_info i
-		on a.ODER_SPUid = i.SHOP_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_list f
-		ON i.SHOP_AGUid = f.AGNT_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_top g
-		ON f.AGNT_ATUid = g.ATOP_Uid
-		where a.ODER_State = 0
-		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
-		and d.DSI_Anti is null
-		and date_format(a.CreateDate,'%Y-%m') >= #{startMonth} and date_format(a.CreateDate,'%Y-%m') &lt;= #{endMonth}
-		group by 顶级渠道,月份
-		) temp;
 	</select>
 
 	<!-- 退款情况统计（按日） -->
@@ -292,36 +246,9 @@
 		where a.ODER_State = 0
 		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
 		and d.DSI_Anti is null
-		and date_format(a.CreateDate,'%Y-%m') = #{queryMonth}
+		and date_format(a.CreateDate,'%Y-%m') = #{filterMap.queryMonth}
+		and g.ATOP_Title = #{filterMap.channelValue}
 		group by 顶级渠道,日期
-
-		limit #{pageWrapper.start}, #{pageWrapper.pageSize};
-	</select>
-
-	<!-- 退款情况统计（按日） -->
-	<select id="tkqktjr_count" resultType="Integer">
-		select count(*) from (
-		select g.ATOP_Title 顶级渠道 ,date(a.CreateDate) 日期,dayname(a.CreateDate),ifnull(sum(c.FLRF_RefundMoney),0) 退款
-		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
-		on a.ODER_Note = b.FLOW_OrderId
-		left join netfiance_db.t_finance_bank_refund c
-		on b.FLOW_Uid = c.FLRF_FLUid
-		left join t_device_device_info h
-		on a.ODER_DUid = h.DDI_Uid
-		left join study.t_device_sub_info d
-		on h.DDI_No = d.DDI_No
-		left join netfiance_db.t_shop_shop_info i
-		on a.ODER_SPUid = i.SHOP_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_list f
-		ON i.SHOP_AGUid = f.AGNT_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_top g
-		ON f.AGNT_ATUid = g.ATOP_Uid
-		where a.ODER_State = 0
-		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
-		and d.DSI_Anti is null
-		and date_format(a.CreateDate,'%Y-%m') = #{queryMonth}
-		group by 顶级渠道,日期
-		) temp;
 	</select>
 
 

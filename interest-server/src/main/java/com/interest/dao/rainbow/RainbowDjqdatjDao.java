@@ -11,9 +11,9 @@ import java.util.List;
 public interface RainbowDjqdatjDao {
 
     // 机器属性信息
-    List<HashMap> jqsxxx_list(PageWrapper pageWrapper, String startDate, String endDate);
+    List<HashMap> jqsxxx_list(@Param("pageWrapper") PageWrapper pageWrapper, @Param("filterMap") HashMap filterMap);
 
-    int jqsxxx_list_count(String startDate, String endDate);
+    int jqsxxx_list_count(@Param("filterMap") HashMap filterMap);
 
     List<HashMap> jqsxxx(String ddiNo, String startDate, String endDate);
 
@@ -27,7 +27,7 @@ public interface RainbowDjqdatjDao {
 
     List<HashMap> yyzt3_jqrjgcrs(String ddiNo, String startDate, String endDate);
 
-    List<HashMap> yyzt3_jqrjxgcrs(String ddiNo, String startDate, String endDate);
+    List<HashMap> yyzt3_jqrjxgcrs(String ddiNo, String startDate, String endDate, String shopNo);
 
     List<HashMap> yyzt3_jqrjfgrs(String ddiNo, String startDate, String endDate);
 

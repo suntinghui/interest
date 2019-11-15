@@ -9,10 +9,10 @@ import java.util.List;
 public interface RainbowSrtjService {
 
 	// 销售额情况统计（按月）
-	List<HashMap> xsetjy(String startMonth, String endMonth);
+	List<HashMap> xsetjy(HashMap filterMap);
 
 	// 收入情况统计（按日）
-	PageResult srtjr(PageWrapper pageWrapper, String queryMonth);
+	List<HashMap> srtjr(HashMap filterMap);
 
 	// 分渠道设备数量
 	List<HashMap> fqdsbsl(String startDate, String endDate);
@@ -27,12 +27,12 @@ public interface RainbowSrtjService {
 	PageResult qdfcbl(PageWrapper pageWrapper, String queryMonth);
 
 	// 退款情况统计（合计）
-	List<HashMap> tkqktjhj(String startMonth, String endMonth);
+	List<HashMap> tkqktjhj(HashMap filterMap);
 
 	// 退款情况统计（按月）
-	PageResult tkqktjy(PageWrapper pageWrapper, String startMonth, String endMonth);
+	List<HashMap> tkqktjy(HashMap filterMap);
 
 	// 退款情况统计（按日）
-	PageResult tkqktjr(PageWrapper pageWrapper, String queryMonth);
+	List<HashMap> tkqktjr(HashMap filterMap);
 
 	}
