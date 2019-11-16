@@ -7,15 +7,48 @@
 	<div style="margin: 40px;">
 		<div>
 			<Row style="margin-bottom: 25px;">
-
+		
 				<Col span="8">日期：
-				<Date-picker :value="queryDate"  @on-change='handleDateChange' type="date" editable="false" placement="bottom-start" placeholder="选择日期" style="width: 250px"></Date-picker>
+				<Date-picker :value="dateValue" @on-change='handleDateChange' type="daterange" editable="false" :options="dateOptions"
+				 placement="bottom-start" placeholder="选择日期" :clearable="false" style="width: 250px"></Date-picker>
 				</Col>
-
-				<Col span="8" style="text-align: center;"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
-
+		
+				<Col span="8">所属地区：
+				<Select v-model="selectValue.areaValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.areaList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
+				</Select>
+				</Col>
+		
+				<Col span="8">设备：
+				<Select v-model="selectValue.deviceTypeValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.deviceTypeList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
+				</Select>
+				</Col>
+		
 			</Row>
-			
+			<Row style="margin-bottom: 25px;">
+		
+				<Col span="8">渠道：
+				<Select v-model="selectValue.channelValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.channelList" :value="item.paramValue" :key="item.paramValue">{{ item.paramValue }}</Option>
+				</Select>
+				</Col>
+		
+				<Col span="8" style="display: none;">网点：
+				<Select v-model="selectValue.shopValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.shopList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}
+						({{item.paramKey}})</Option>
+				</Select>
+				</Col>
+		
+				<Col span="8">网点类型：
+				<Select v-model="selectValue.shopTypeValue" filterable clearable style="width: 250px">
+					<Option v-for="item in this.$store.state.param.shopTypeList" :value="item.paramValue" :key="item.paramValue">{{ item.paramValue }}</Option>
+				</Select>
+				</Col>
+		
+				<Col span="8" style="text-align: left;"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
+			</Row>
 		</div>
 		
 		<Spin size="large" fix v-if="showSpin"></Spin>
@@ -38,7 +71,8 @@
 	export default {
 		data() {
 			return {
-				queryDate: util.dateFormat(util.yestoday()),
+				selectValue:{},
+				dateValue: [util.dateFormat(util.lastWeek(new Date())), util.dateFormat(new Date())],
 				
 				showSpin: false,
 				date: null,
@@ -75,7 +109,15 @@
 						url: "/rainbow/ztbgs",
 						timeout: 1000 * 60 * 2,
 						params: {
-							queryDate: this.queryDate
+							filterMap: {
+								startDate: this.dateValue[0],
+								endDate: this.dateValue[1],
+								deviceTypeValue: this.selectValue.deviceTypeValue,
+								areaValue: this.selectValue.areaValue,
+								channelValue: this.selectValue.channelValue,
+								shopValue: this.selectValue.shopValue,
+								shopTypeValue: this.selectValue.shopTypeValue
+							}
 						}
 					})
 					.then(
@@ -99,7 +141,6 @@
 				this.queryDate = selDate;
 			}
 			
-
 		}
 	};
 </script>

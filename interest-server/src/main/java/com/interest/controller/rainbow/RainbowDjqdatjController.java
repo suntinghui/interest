@@ -45,11 +45,8 @@ public class RainbowDjqdatjController {
     // 详情信息
     @InterestLog
     @GetMapping("/rainbow/jqsxxx_detail")
-    public ResponseWrapper<HashMap> jqsxxx_detail(@RequestParam(value = "startDate") String startDate,
-                                                  @RequestParam(value = "endDate") String endDate,
-                                                  @RequestParam(value = "ddiNo", required = false) String ddiNo,
-                                                  @RequestParam(value = "shopNo", required = false) String shopNo) {
-        HashMap<String, List<HashMap>> resultMap = rainbowDjqdatjService.jqsxxx_detail(startDate, endDate, ddiNo, shopNo);
+    public ResponseWrapper<HashMap> jqsxxx_detail(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        HashMap<String, List<HashMap>> resultMap = rainbowDjqdatjService.jqsxxx_detail(JSON.parseObject(filterMap, HashMap.class));
         return new ResponseWrapper<>(resultMap);
     }
 

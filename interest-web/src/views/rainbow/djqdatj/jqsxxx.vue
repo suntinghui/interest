@@ -31,7 +31,7 @@
 
 				<Col span="8">日期：
 				<Date-picker :value="dateValue" @on-change='handleDateChange' type="daterange" editable="false" :options="dateOptions"
-				 placement="bottom-start" placeholder="选择日期" style="width: 250px"></Date-picker>
+				 placement="bottom-start" :clearable="false" placeholder="选择日期" style="width: 250px"></Date-picker>
 				</Col>
 
 				<Col span="8">设备：
@@ -259,72 +259,86 @@
 				columns_mdsxxx: [{
 						title: "网点编号",
 						key: "网点编号",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "网点名称",
 						key: "网点名称",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "详细地址",
 						key: "详细地址",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "所属区域",
 						key: "所属区域",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "GIS位置",
 						key: "GIS位置",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "门店类型",
 						key: "门店类型",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "门店每日人流量",
 						key: "门店每日人流量",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "人均消费",
 						key: "人均消费",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "距公司距离",
 						key: "距公司距离",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "所属商圈",
 						key: "所属商圈",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "网点开门时间",
 						key: "网点开门时间",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "网点关门时间",
 						key: "网点关门时间",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "所属区域经理",
 						key: "所属区域经理",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "撤店时间",
 						key: "撤店时间",
-						align: "center"
+						align: "center",
+						width: 180,
 					}
 				],
 
@@ -332,47 +346,56 @@
 				columns_yyzt1: [{
 						title: "设备编号",
 						key: "设备编号",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "网点编号",
 						key: "网点编号",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "设备启用时间",
 						key: "设备启用时间",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "网点申请时间",
 						key: "网点申请时间",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "设备撤出时间",
 						key: "设备撤出时间",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "设备目前状态",
 						key: "设备目前状态",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "目前门店状态",
 						key: "目前门店状态",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "所属渠道",
 						key: "所属渠道",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "合作类型",
 						key: "合作类型",
-						align: "center"
+						align: "center",
+						width: 180,
 					}
 				],
 
@@ -537,52 +560,62 @@
 				columns_sbwhtj3: [{
 						title: "加仓时间",
 						key: "加仓时间",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "出库日期",
 						key: "出库日期",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "设备",
 						key: "设备",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "网点编号",
 						key: "网点编号",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "启用时间",
 						key: "启用时间",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "出库包裹号",
 						key: "出库包裹号",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "彩票名称",
 						key: "彩票名称",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "加票额度（元）",
 						key: "加票额度（元）",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "加票张数",
 						key: "加票张数",
-						align: "center"
+						align: "center",
+						width: 180,
 					},
 					{
 						title: "姓名",
 						key: "姓名",
-						align: "center"
+						align: "center",
+						width: 180,
 					}
 				],
 
@@ -878,7 +911,6 @@
 						params: {
 							page: e.pageInfo.page,
 							pageSize: e.pageInfo.pageSize,
-							
 							filterMap: {
 								startDate: this.dateValue[0],
 								endDate: this.dateValue[1],
@@ -913,8 +945,6 @@
 
 				console.log(JSON.stringify(rowData))
 
-				this.showDetailModel = true;
-
 				this.detailInfo = []; // 置空详情数据，否则打开时仍然是上次的数据
 
 				this.queryDetailInfo(rowData['机器编号'], rowData['网点编号']);
@@ -923,22 +953,30 @@
 
 			queryDetailInfo(ddiNo, shopNo) {
 				this.detailTitle = '加载中...';
+				
+				this.showSpin = true;
 
 				this.axios({
 						method: "get",
 						url: "/rainbow/jqsxxx_detail",
 						params: {
-							ddiNo: ddiNo,
-							shopNo: shopNo,
-							startDate: this.dateValue[0],
-							endDate: this.dateValue[1]
+							filterMap: {
+								ddiNo: ddiNo,
+								shopValue: shopNo,
+								startDate: this.dateValue[0],
+								endDate: this.dateValue[1]
+							}
 						}
 					})
 					.then(
 						function(response) {
 							console.log(JSON.stringify(response))
+							
+							this.detailTitle = '详情信息';
 
 							this.detailInfo = response.data.data;
+							
+							this.showDetailModel = true;
 
 						}.bind(this)
 					)
@@ -946,8 +984,7 @@
 						alert(error);
 					})
 					.finally(function() {
-						this.detailTitle = '详情信息';
-
+						this.showSpin = false;
 					}.bind(this));
 			},
 

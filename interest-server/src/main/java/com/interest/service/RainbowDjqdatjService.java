@@ -11,6 +11,6 @@ public interface RainbowDjqdatjService {
 
 	PageResult jqsxxx_list(PageWrapper pageWrapper, HashMap filterMap);
 
-	HashMap<String, List<HashMap>> jqsxxx_detail(String startDate, String endDate, String ddiNo, String shopNo);
+	HashMap<String, List<HashMap>> jqsxxx_detail(HashMap filterMap);
 
 }

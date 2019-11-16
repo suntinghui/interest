@@ -9,9 +9,9 @@
 			<Row style="margin-bottom: 25px;">
 				
 				<Col span="10">起止月份：
-				<Date-picker :value="startMonth"  @on-change='handleStartDateChange' type="month" editable="false"  placement="bottom-start" placeholder="开始月份" style="width: 150px"></Date-picker>
+				<Date-picker :value="startMonth"  @on-change='handleStartDateChange' :clearable="false" type="month" editable="false"  placement="bottom-start" placeholder="开始月份" style="width: 150px"></Date-picker>
 				-
-				<Date-picker :value="endMonth"  @on-change='handleEndDateChange' type="month" editable="false" placement="bottom-start" placeholder="截止月份" style="width: 150px"></Date-picker>
+				<Date-picker :value="endMonth"  @on-change='handleEndDateChange' :clearable="false" type="month" editable="false" placement="bottom-start" placeholder="截止月份" style="width: 150px"></Date-picker>
 				</Col>
 
 				<Col span="4" style="text-align: center;"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
@@ -25,6 +25,11 @@
 		<div style="padding: 10px 0;">
 			<Table border :columns="columns1" :data="data1" :height="450" :search="true"></Table>
 		</div>
+		
+		<Modal closable scrollable :mask-closable="false" v-model="showDetailModel" width="60%" :title="detailTitle" style="padding-left: 30px; padding-right: 30px;">
+			<Table border size="default" :columns="columns2" :data="data2" :height="450" ></Table>
+			<div slot="footer"></div>
+		</Modal>
 		
 	</div>
 </template>
@@ -42,6 +47,9 @@
 			return {
 				startMonth: util.lastMonth(new Date()),
 				endMonth: util.dateFormat(new Date()),
+				showDetailModel: false,
+				detailTitle: '详情信息',
+				
 				showSpin: false,
 				date: null,
 				searchContent: null,
@@ -64,9 +72,54 @@
 						key: "总价值",
 						sortable: true,
 						align: "center"
+					},
+					{
+						title: "操作",
+						key: "Action",
+						align: "center",
+						width: 150,
+						render: (h, params) => {
+							return h('Button', {
+								props: {
+									type: "primary"
+								},
+								on: {
+									click: () => {
+										this.queryDetailInfo(params.row)
+									}
+								}
+							}, "详情")
+						}
 					}
 				],
-				data1: []
+				data1: [],
+				columns2: [
+					{
+						title: "票种",
+						key: "票种",
+						sortable: true,
+						align: "center"
+					},
+					{
+						title: "面值",
+						key: "面值",
+						sortable: true,
+						align: "center"
+					},
+					{
+						title: "采购张数",
+						key: "采购张数",
+						sortable: true,
+						align: "center"
+					},
+					{
+						title: "总价值",
+						key: "总价值",
+						sortable: true,
+						align: "center"
+					}
+				],
+				data2: []
 			};
 		},
 		mounted() {
@@ -83,8 +136,10 @@
 						url: "/rainbow/jkpydcgzjz",
 						timeout: 1000 * 60 * 2,
 						params: {
-							startMonth: this.startMonth,
-							endMonth: this.endMonth
+							filterMap: {
+								startMonth: this.startMonth,
+								endMonth: this.endMonth
+							}
 						}
 					})
 					.then(
@@ -102,6 +157,40 @@
 						this.showSpin = false;
 					}.bind(this));
 
+			},
+			
+			queryDetailInfo(rowData) {
+				this.showSpin = true;
+				
+				this.axios({
+						method: "get",
+						url: "/rainbow/jkpydcgpzmx",
+						timeout: 1000 * 60 * 2,
+						params: {
+							filterMap: {
+								startMonth: rowData["月份"],
+								endMonth: rowData["月份"]+'-31'
+							}
+						}
+					})
+					.then(
+						function(response) {
+							console.log(JSON.stringify(response))
+				
+							this.data2 = response.data.data;
+							
+							this.showDetailModel = true;
+							
+							this.detailTitle = rowData["月份"]
+							
+						}.bind(this)
+					)
+					.catch(function(error) {
+						alert(error);
+					})
+					.finally(function() {
+						this.showSpin = false;
+					}.bind(this));
 			},
 			
 			handleStartDateChange(selMonth) {

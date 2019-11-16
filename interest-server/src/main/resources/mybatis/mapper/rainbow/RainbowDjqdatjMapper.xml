@@ -88,7 +88,7 @@
 	</select>
 
 	<!-- 添加where查询条件。添加LIMIT 1控制只能显示一条数据 -->
-	<select id="jqsxxx" parameterType="String" resultType = "java.util.HashMap">
+	<select id="jqsxxx"  resultType = "java.util.HashMap">
 		select a.DDI_No 机器编号,a.SHOP_No 网点编号,DATE_FORMAT(a.DSI_Try, '%Y-%m-%d') 启用时间,c.SHOP_Address 设备位置,b.DDI_Type 设备类型
 		from study.t_device_sub_info a left join t_device_device_info b
 		on a.DDI_No = b.DDI_No
@@ -102,12 +102,33 @@
 		on c.SHOP_Uid = d.SHOP_Uid
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = c.SHOP_Class
-		where a.DDI_No = #{ddiNo}
+		where 1=1
+
+		and date(a.DSI_Try) >= #{filterMap.startDate} and date(a.DSI_Try) &lt;= #{filterMap.endDate}
+
+		<if test="null != filterMap.ddiNo">
+			and a.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and a.SHOP_No = #{filterMap.shopValue}
+		</if>
+
 		#and a.DDI_No = '{{设备编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and b.DDI_Type = '{{ 设备类型 }}'
 		#and a.SHOP_No = '{{ 网点编号 }}'
-		and date(a.DSI_Try) >= #{startDate} and date(a.DSI_Try) &lt;= #{endDate}
 		#and t.DICT_Name = '{{ 网点类型 }}'
 		#and d.SHOP_Area = '{{ 所属地区 }}'
 
@@ -115,7 +136,7 @@
 	</select>
 
 	<!-- 添加where查询条件。添加LIMIT 1控制只能显示一条数据 -->
-	<select id="mdsxxx" parameterType="String" resultType = "java.util.HashMap">
+	<select id="mdsxxx"  resultType = "java.util.HashMap">
 		select a.SHOP_No 网点编号,a.SHOP_Title 网点名称,a.SHOP_Address 详细地址,c.SHOP_Area 所属区域,a.SHOP_Position GIS位置,t.DICT_Name 门店类型,c.SHOP_Traffic 门店每日人流量,c.SHOP_Consume 人均消费,c.SHOP_Distance 距公司距离,c.SHOP_ShoppingCenter 所属商圈,c.SHOP_OpenTime 网点开门时间,c.SHOP_CloseTime 网点关门时间,c.SHOP_AreaManager 所属区域经理,c.SHOP_Withdraw 撤店时间
 		from  netfiance_db.t_shop_shop_info a
 		left join study.t_shop_sub_info c
@@ -128,7 +149,34 @@
 		on d.DDI_SPUid = a.SHOP_Uid
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = a.SHOP_Class
-		where a.SHOP_No = #{shopNo}
+
+		where 1=1
+
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and d.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and c.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and p.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and a.SHOP_No = #{filterMap.shopValue}
+		</if>
+
+
+		#where a.SHOP_No = '{{门店编码}}'
+		#and g.ATOP_Title = '{{ 渠道名称 }}'
+		#and d.DDI_Type = '{{ 设备类型 }}'
+		#and a.SHOP_No = '{{ 网点编号 }}'
+		#and date(a.CreateDate) >='{{ 起始时间 }}' and date(a.CreateDate) &lt;='{{ 截止时间 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		#and c.SHOP_Area  = '{{ 所属地区 }}'
+
 	</select>
 
 	<!-- 运营状态信息-1 -->
@@ -155,18 +203,39 @@
 		on p.DICT_Value = b.SHOP_Class
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_type' ) q
 		on q.DICT_Value = b.SHOP_Type
-		where c.DDI_No = #{ddiNo}
+		where 1=1
+
+		and date(a.DSI_Try) >= #{filterMap.startDate} and date(a.DSI_Try) &lt;= #{filterMap.endDate}
+
+		<if test="null != filterMap.ddiNo">
+			and c.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and c.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and p.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and a.SHOP_No = #{filterMap.shopValue}
+		</if>
+
 		#and a.SHOP_No = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and c.DDI_Type = '{{ 设备类型 }}'
-		and date(a.DSI_Try) >= #{startDate} and date(a.DSI_Try) &lt;= #{endDate}
 		#and p.DICT_Name = '{{ 网点类型 }}'
 		#and d.SHOP_Area = '{{ 所属地区 }}'
 	</select>
 
 	<!-- 运营状态信息-2 -->
 	<select id="yyzt2" resultType="java.util.HashMap">
-		select b.DDI_No 机器编号,c.SHOP_No 网点编号,date(e.DSI_Try) 启用时间,round(sum(a.DOL_Length)/60,1) last_hour 设备累计开机时间（时）,count(distinct(date(a.DOL_Start))) '累计开机天数',round(sum(a.DOL_Length)/60/count(distinct(date(a.DOL_Start))),1) '日均开机时长（小时）',
+		select b.DDI_No 机器编号,c.SHOP_No 网点编号,date(e.DSI_Try) 启用时间,round(sum(a.DOL_Length)/60, 1) 设备累计开机时间（时）,count(distinct(date(a.DOL_Start))) 累计开机天数,round(sum(a.DOL_Length)/60/count(distinct(date(a.DOL_Start))),1) '日均开机时长（小时）',
 		timestampdiff(day,date(e.DSI_Try),curdate())+1-count(distinct(date(a.DOL_Start))) '累计关机天数',(timestampdiff(day,date(e.DSI_Try),curdate())+1-count(distinct(date(a.DOL_Start))))/(timestampdiff(month,date(e.DSI_Try),curdate())+1) '月均关机天数'
 		from t_device_online_list a left join t_device_device_info b
 		on a.DOL_DUid = b.DDI_Uid
@@ -184,162 +253,325 @@
 		on t.DICT_Value = c.SHOP_Class
 		where DOL_Length &lt;> 0
 		and a.CreateDate >= e.DSI_Try and (a.CreateDate &lt;= e.DSI_Withdraw or e.DSI_Withdraw is null)
-		and b.DDI_No = #{ddiNo}
+
+		<if test="null != filterMap.shopValue">
+			and c.SHOP_No = #{filterMap.shopValue}
+		</if>
+		<if test="null != filterMap.ddiNo">
+			and b.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+
 		#and c.SHOP_No = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and b.DDI_Type = '{{ 设备类型 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
 		#and d.SHOP_Area = '{{ 所属地区 }}'
+
 		group by SHOP_Title,b.DDI_No,启用时间
 	</select>
 
 	<!-- 运营状态信息-3   机器获客总人数 -->
 	<select id="yyzt3_jqhkzrs" resultType="java.util.HashMap">
-		select DDI_No 设备编号,SHOP_No 网点编号,启用时间,count(ODER_USUid) 机器获客总人数
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) 机器获客总人数
 		from
-		(select a.ODER_USUid,a.ODER_Uid,t.DDI_No,c.SHOP_No,date(m.DSI_Try) 启用时间,min(a.CreateDate)
-		from t_shop_order_info a left join netfiance_db.t_shop_shop_info c
-		on a.ODER_SPUid = c.SHOP_Uid
-		left join study.t_shop_sub_info d
-		on c.SHOP_No = d.SHOP_No
-		LEFT JOIN netfiance_db.t_shop_agent_list f
-		ON c.SHOP_AGUid = f.AGNT_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_top g
-		ON f.AGNT_ATUid = g.ATOP_Uid
-		join t_customer_user_info e
-		on a.ODER_USUid = e.USER_Uid
-		join t_device_device_info t
-		on a.ODER_DUid = t.DDI_Uid
-		left join study.t_device_sub_info m
-		on t.DDI_No = m.DDI_No
-		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) p
-		on p.DICT_Value = c.SHOP_Class
-		where  ODER_State = 0
-		and USER_Type = 2
-		and a.CreateDate >= m.DSI_Try and (a.CreateDate &lt;= m.DSI_Withdraw or m.DSI_Withdraw is null)
-		and t.DDI_No = #{ddiNo}
-		and date(e.CreateDate) >= #{startDate} and date(e.CreateDate) &lt;= #{endDate}
-		#and SHOP_No = '{{门店编码}}'
-		#and g.ATOP_Title = '{{ 渠道名称 }}'
-		#and t.DDI_Type = '{{ 设备类型 }}'
-		#and p.DICT_Name = '{{ 网点类型 }}'
-		#and d.SHOP_Area = '{{ 所属地区 }}'
-		group by a.ODER_USUid ) t
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
+		from study.t_device_sub_info a left join t_device_device_info b
+		on a.DDI_No = b.DDI_No
+		left join netfiance_db.t_shop_shop_info d
+		on d.SHOP_No = a.SHOP_No
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on a.SHOP_No = g.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = d.SHOP_Class
+		where a.DSI_Anti is null
 
-		group by 设备编号,网点编号,启用时间
+		<if test="null != filterMap.shopValue">
+			and g.SHOP_No = #{filterMap.shopValue}
+		</if>
+		<if test="null != filterMap.ddiNo">
+			and a.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and g.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and b.DDI_Type = '{{设备类型}}'
+		#and f.ATOP_Title = {{选择渠道}}
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.SHOP_Area = '{{ 所属地区 }}'
+		#and d.SHOP_No = '{{ 所属门店 }}'
+		#and t.DICT_Name = '{{ 网点类型 }}'
+		order by dt) first_sub             #每台机器在网点真实开启时间
+
+		left join
+
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid
+		from t_shop_order_info e left join t_device_device_info b
+		on e.ODER_DUid = b.DDI_Uid
+		left join study.t_device_sub_info a
+		on b.DDI_No = a.DDI_No
+		where date(e.CreateDate)>=#{filterMap.startDate} and date(e.CreateDate) &lt;=#{filterMap.endDate}
+		and e.ODER_State = 0
+		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
+		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
+
+		where first_sub.dt &lt;=#{filterMap.endDate}
+		group by DDI_No,SHOP_No,启用时间
+
 
 	</select>
 
 	<!-- 运营状态信息-3   机器日均购彩人数 -->
 	<select id="yyzt3_jqrjgcrs" resultType="java.util.HashMap">
-		select DDI_No 机器编号,SHOP_No 网点编号,启用时间,sum(每日购彩用户数) 累计购彩人数,查询时段内运营天数,sum(每日购彩用户数)/查询时段内运营天数 '机器日均购彩人数'
+		select *,tol_user/搜索时段内天数 机器日均购彩人数
 		from
 		(
-		select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,count(distinct(a.ODER_USUid)) 每日购彩用户数,
-		case when date(c.DSI_Try) >= #{startDate} then datediff(#{endDate}, #{startDate})+1
-		else datediff(#{endDate},date(c.DSI_Try))+1 end as '查询时段内运营天数'
-		from t_shop_order_info a left join t_device_device_info b
-		on a.ODER_DUid = b.DDI_Uid
-		left join study.t_device_sub_info c
-		on b.DDI_No = c.DDI_No
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) tol_user,
+		case when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt>=#{filterMap.endDate} then datediff(#{filterMap.endDate},first_sub.dt)+1
+		when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt &lt;#{filterMap.endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
+		when first_sub.draw_dt &lt;#{filterMap.startDate} then 0
+		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >= #{filterMap.startDate} and first_sub.draw_dt &lt; #{filterMap.endDate} then datediff(first_sub.draw_dt,#{filterMap.startDate})+1
+		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >=#{filterMap.endDate} then datediff(#{filterMap.endDate},#{filterMap.startDate})+1
+		when first_sub.dt>#{filterMap.endDate} then 0 end as 搜索时段内天数
+		from
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
+		from study.t_device_sub_info a left join t_device_device_info b
+		on a.DDI_No = b.DDI_No
 		left join netfiance_db.t_shop_shop_info d
-		on a.ODER_SPUid = d.SHOP_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_list f
-		ON d.SHOP_AGUid = f.AGNT_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_top g
-		ON f.AGNT_ATUid = g.ATOP_Uid
-		left join study.t_shop_sub_info e
-		on d.SHOP_No = e.SHOP_No
+		on d.SHOP_No = a.SHOP_No
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on a.SHOP_No = g.SHOP_No
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = d.SHOP_Class
-		where a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		and a.ODER_State = 0
-		and c.DSI_Anti is null
-		and b.DDI_No = #{ddiNo}
-		and date(a.CreateDate)>= #{startDate} and date(a.CreateDate)  &lt;= #{endDate}
-		#and d.SHOP_No = '{{门店编码}}'
-		#and g.ATOP_Title = '{{ 渠道名称 }}'
-		#and b.DDI_Type = '{{ 设备类型 }}'
+		where a.DSI_Anti is null
+
+
+		<if test="null != filterMap.shopValue">
+			and d.SHOP_No = #{filterMap.shopValue}
+		</if>
+		<if test="null != filterMap.ddiNo">
+			and a.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and g.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and b.DDI_Type = '{{设备类型}}'
+		#and f.ATOP_Title = {{选择渠道}}
+		#and a.DDI_No = '{{设备编码}}'
+		#and g.SHOP_Area = '{{ 所属地区 }}'
+		#and d.SHOP_No = '{{ 所属门店 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
-		#and e.SHOP_Area = '{{ 所属地区 }}'
-		group by DDI_No,SHOP_No,启用时间   ) sheet
+		order by dt) first_sub             #每台机器在网点真实开启时间
+
+		left join
+
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid
+		from t_shop_order_info e left join t_device_device_info b
+		on e.ODER_DUid = b.DDI_Uid
+		left join study.t_device_sub_info a
+		on b.DDI_No = a.DDI_No
+		where date(e.CreateDate)>=#{filterMap.startDate} and date(e.CreateDate) &lt;=#{filterMap.endDate}
+		and e.ODER_State = 0
+		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
+		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
+
+		where first_sub.dt &lt;=#{filterMap.endDate}
+		group by DDI_No,SHOP_No,启用时间   )t
+
 
 	</select>
 
 	<!-- 运营状态信息-3   机器日均新购彩人数 -->
 	<select id="yyzt3_jqrjxgcrs" resultType="java.util.HashMap">
-		select DDI_No 机器编号,SHOP_No 网点编号,启用时间,sum(每日购彩用户数) 累计购彩人数,查询时段内运营天数,sum(每日购彩用户数)/查询时段内运营天数 '机器日均购彩人数'
+		select *,新用户总数/搜索时段内天数 机器日均新购彩人数
 		from
 		(
-		select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,count(distinct(a.ODER_USUid)) 每日购彩用户数,
-		case when date(c.DSI_Try)>= #{startDate}  then datediff(#{endDate} ,#{startDate} )+1
-		else datediff(#{endDate} ,date(c.DSI_Try))+1 end as '查询时段内运营天数'
-		from t_shop_order_info a left join t_device_device_info b
-		on a.ODER_DUid = b.DDI_Uid
-		left join study.t_device_sub_info c
-		on b.DDI_No = c.DDI_No
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) 新用户总数,
+		case when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt>=#{filterMap.endDate} then datediff(#{filterMap.endDate},first_sub.dt)+1
+		when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt &lt;#{filterMap.endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
+		when first_sub.draw_dt &lt;#{filterMap.startDate} then 0
+		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >= #{filterMap.startDate} and first_sub.draw_dt &lt; #{filterMap.endDate} then datediff(first_sub.draw_dt,#{filterMap.startDate})+1
+		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >=#{filterMap.endDate} then datediff(#{filterMap.endDate},#{filterMap.startDate})+1
+		when first_sub.dt>#{filterMap.endDate} then 0 end as 搜索时段内天数     #需判断查询起始时间、截止时间，与设备开启时间、撤机时间之间的关系
+		from
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
+		from study.t_device_sub_info a left join t_device_device_info b
+		on a.DDI_No = b.DDI_No
 		left join netfiance_db.t_shop_shop_info d
-		on a.ODER_SPUid = d.SHOP_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_list f
-		ON d.SHOP_AGUid = f.AGNT_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_top g
-		ON f.AGNT_ATUid = g.ATOP_Uid
-		left join study.t_shop_sub_info e
-		on d.SHOP_No = e.SHOP_No
+		on d.SHOP_No = a.SHOP_No
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on a.SHOP_No = g.SHOP_No
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = d.SHOP_Class
-		left join t_customer_user_info h
-		on a.ODER_USUid = h.USER_Uid
-		where a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		and a.ODER_State = 0
-		and c.DSI_Anti is null
-		and a.CreateDate &lt;= h.CreateDate
-		and c.SHOP_No = #{shopNo}
-		#and g.ATOP_Title = '{{ 渠道名称 }}'
-		#and b.DDI_Type = '{{ 设备类型 }}'
+		where a.DSI_Anti is null
+
+		<if test="null != filterMap.shopValue">
+			and d.SHOP_No = #{filterMap.shopValue}
+		</if>
+		<if test="null != filterMap.ddiNo">
+			and a.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and g.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and b.DDI_Type = '{{设备类型}}'
+		#and f.ATOP_Title = {{选择渠道}}
+		#and a.DDI_No = '{{设备编码}}'
+		#and d.SHOP_No = '{{ 所属门店 }}'
+		#and g.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
-		#and e.SHOP_Area = '{{ 所属地区 }}'
-		group by DDI_No,SHOP_No,启用时间   ) sheet
+		order by dt) first_sub             #每台机器在网点真实开启时间
+
+		left join
+
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid
+		from t_shop_order_info e left join t_device_device_info b
+		on e.ODER_DUid = b.DDI_Uid
+		left join study.t_device_sub_info a
+		on b.DDI_No = a.DDI_No
+		left join t_customer_user_info h
+		on e.ODER_USUid = h.USER_Uid
+		where date(e.CreateDate)>=#{filterMap.startDate} and date(e.CreateDate) &lt;=#{filterMap.endDate}
+		and e.ODER_State = 0
+		and e.CreateDate &lt;= h.CreateDate
+		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
+		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
+
+		where first_sub.dt &lt;=#{filterMap.endDate}
+		group by DDI_No,SHOP_No,启用时间   )t
+
 
 	</select>
 
 
 	<!-- 运营状态信息-3   机器日均复购人数 -->
 	<select id="yyzt3_jqrjfgrs" resultType="java.util.HashMap">
-		select DDI_No 机器编号,SHOP_No 网点编号,启用时间,sum(每日购彩用户数) 累计购彩人数,查询时段内运营天数,sum(每日购彩用户数)/查询时段内运营天数 '机器日均购彩人数'
+		select *,复购用户总数/搜索时段内天数 机器日均复购人数
 		from
 		(
-		select c.DDI_No,c.SHOP_No,date(c.DSI_Try) 启用时间,date(a.CreateDate) dt,count(distinct(a.ODER_USUid)) 每日购彩用户数,
-		case when date(c.DSI_Try)>= #{startDate}  then datediff(#{endDate} ,#{startDate} )+1
-		else datediff(#{endDate} ,date(c.DSI_Try))+1 end as '查询时段内运营天数'
-		from t_shop_order_info a left join t_device_device_info b
-		on a.ODER_DUid = b.DDI_Uid
-		left join study.t_device_sub_info c
-		on b.DDI_No = c.DDI_No
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) 复购用户总数,
+		case when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt>=#{filterMap.endDate} then datediff(#{filterMap.endDate},first_sub.dt)+1
+		when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt &lt;#{filterMap.endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
+		when first_sub.draw_dt &lt;#{filterMap.startDate} then 0
+		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >= #{filterMap.startDate} and first_sub.draw_dt &lt; #{filterMap.endDate} then datediff(first_sub.draw_dt,#{filterMap.startDate})+1
+		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >=#{filterMap.endDate} then datediff(#{filterMap.endDate},#{filterMap.startDate})+1
+		when first_sub.dt>#{filterMap.endDate} then 0 end as 搜索时段内天数     #需判断查询起始时间、截止时间，与设备开启时间、撤机时间之间的关系
+		from
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
+		from study.t_device_sub_info a left join t_device_device_info b
+		on a.DDI_No = b.DDI_No
 		left join netfiance_db.t_shop_shop_info d
-		on a.ODER_SPUid = d.SHOP_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_list f
-		ON d.SHOP_AGUid = f.AGNT_Uid
-		LEFT JOIN netfiance_db.t_shop_agent_top g
-		ON f.AGNT_ATUid = g.ATOP_Uid
-		left join study.t_shop_sub_info e
-		on d.SHOP_No = e.SHOP_No
+		on d.SHOP_No = a.SHOP_No
+		left join netfiance_db.t_shop_agent_list e
+		on d.SHOP_AGUid = e.AGNT_Uid
+		left join netfiance_db.t_shop_agent_top f
+		on e.AGNT_ATUid = f.ATOP_Uid
+		left join study.t_shop_sub_info g
+		on a.SHOP_No = g.SHOP_No
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = d.SHOP_Class
-		left join t_customer_user_info h
-		on a.ODER_USUid = h.USER_Uid
-		where a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		and a.ODER_State = 0
-		and c.DSI_Anti is null
-		and a.CreateDate > h.CreateDate
-		and b.DDI_No = #{ddiNo}
-		and date(a.CreateDate) >= #{startDate}  and date(a.CreateDate) &lt;= #{endDate}
-		#and d.SHOP_No = '{{门店编码}}'
-		#and g.ATOP_Title = '{{ 渠道名称 }}'
-		#and b.DDI_Type = '{{ 设备类型 }}'
+		where a.DSI_Anti is null
+
+		<if test="null != filterMap.shopValue">
+			and d.SHOP_No = #{filterMap.shopValue}
+		</if>
+		<if test="null != filterMap.ddiNo">
+			and a.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and f.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and g.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
+		#and b.DDI_Type = '{{设备类型}}'
+		#and f.ATOP_Title = {{选择渠道}}
+		#and a.DDI_No = '{{设备编码}}'
+		#and d.SHOP_No = '{{ 所属门店 }}'
+		#and g.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
-		#and e.SHOP_Area = '{{ 所属地区 }}'
-		group by DDI_No,SHOP_No,启用时间   ) sheet
+
+		order by dt) first_sub             #每台机器在网点真实开启时间
+
+		left join
+
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid
+		from t_shop_order_info e left join t_device_device_info b
+		on e.ODER_DUid = b.DDI_Uid
+		left join study.t_device_sub_info a
+		on b.DDI_No = a.DDI_No
+		left join t_customer_user_info h
+		on e.ODER_USUid = h.USER_Uid
+		where date(e.CreateDate)>=#{filterMap.startDate} and date(e.CreateDate) &lt;=#{filterMap.endDate}
+		and e.ODER_State = 0
+		and e.CreateDate > h.CreateDate
+		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
+		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
+
+		where first_sub.dt &lt;=#{filterMap.endDate}
+		group by DDI_No,SHOP_No,启用时间   )t
+
 
 	</select>
 
@@ -371,13 +603,35 @@
 		on t.DICT_Value = i.SHOP_Class
 		where a.updated_at >= k.DSI_Try and (a.updated_at &lt;= k.DSI_Withdraw or k.DSI_Withdraw is null)
 		and k.DSI_Anti is null
-		and h.DDI_No = #{ddiNo}
-		and date(a.updated_at) >= #{startDate}  and date(a.updated_at) &lt;= #{endDate}
+
+		<if test="null != filterMap.ddiNo">
+			and h.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and i.SHOP_No = #{filterMap.shopValue}
+		</if>
+
+		and date(a.updated_at) >= #{filterMap.startDate}  and date(a.updated_at) &lt;= #{filterMap.endDate}
+
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and h.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and j.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+
 		#and i.SHOP_No = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and h.DDI_Type = '{{ 设备类型 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
 		#and j.SHOP_Area = '{{ 所属地区 }}'
+
 		group by a.package_no,e.COUP_Title
 		order by a.created_at
 
@@ -404,12 +658,34 @@
 		on t.DICT_Value = i.SHOP_Class
 		where c.DSI_Anti is null
 		and a.ModifyDate >= c.DSI_Try and (a.ModifyDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		and b.DDI_No = #{ddiNo}
+
+		<if test="null != filterMap.ddiNo">
+			and b.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and c.SHOP_No = #{filterMap.shopValue}
+		</if>
+
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and b.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and j.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		
+		
 		#and c.SHOP_No = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and b.DDI_Type = '{{ 设备类型 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
 		#and j.SHOP_Area = '{{ 所属地区 }}'
+		
 		order by 设备编码,DSL_No
 
 	</select>
@@ -433,8 +709,30 @@
 		on i.SHOP_No = j.SHOP_No
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = i.SHOP_Class
-		where h.DDI_No = #{ddiNo}
-		and date(a.updated_at) >= #{startDate}  and date(a.updated_at) &lt;= #{endDate}
+		where 1 = 1
+
+		<if test="null != filterMap.ddiNo">
+			and h.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and i.SHOP_No = #{filterMap.shopValue}
+		</if>
+
+		and date(a.updated_at) >= #{filterMap.startDate}  and date(a.updated_at) &lt;= #{filterMap.endDate}
+
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and h.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and j.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and t.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		
 		#and i.SHOP_No = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and h.DDI_Type = '{{ 设备类型 }}'
@@ -466,8 +764,29 @@
 		where c.DSI_Anti is null
 		and a.ODER_State = 0
 		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		and c.DDI_No = #{ddiNo}
-		and date(a.CreateDate) >= #{startDate}  and date(a.CreateDate) &lt;= #{endDate}
+
+		<if test="null != filterMap.ddiNo">
+			and c.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and c.SHOP_No = #{filterMap.shopValue}
+		</if>
+
+		and date(a.CreateDate) >= #{filterMap.startDate}  and date(a.CreateDate) &lt;= #{filterMap.endDate}
+
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and h.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and j.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and p.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		
 		#and c.SHOP_No  = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and h.DDI_Type = '{{ 设备类型 }}'
@@ -501,8 +820,29 @@
 		where c.ODER_State = 0
 		and e.DSI_Anti is null
 		and a.CreateDate >= e.DSI_Try and (a.CreateDate &lt;= e.DSI_Withdraw or e.DSI_Withdraw is null)
-		and d.DDI_No = #{ddiNo}
-		and date(a.CreateDate) >= #{startDate}  and date(a.CreateDate) &lt;= #{endDate}
+
+		<if test="null != filterMap.ddiNo">
+			and d.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and i.SHOP_No = #{filterMap.shopValue}
+		</if>
+
+		and date(a.CreateDate) >= #{filterMap.startDate}  and date(a.CreateDate) &lt;= #{filterMap.endDate}
+
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and h.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and j.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and p.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		
 		#and i.SHOP_No  = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and h.DDI_Type = '{{ 设备类型 }}'
@@ -536,8 +876,29 @@
 		where d.DSI_Anti is null
 		and a.ODER_State = 0
 		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
-		and d.DDI_No = #{ddiNo}
-		and date(a.CreateDate) >= #{startDate}  and date(a.CreateDate) &lt;= #{endDate}
+
+		<if test="null != filterMap.ddiNo">
+			and d.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and d.SHOP_No = #{filterMap.shopValue}
+		</if>
+
+		and date(a.CreateDate) >= #{filterMap.startDate}  and date(a.CreateDate) &lt;= #{filterMap.endDate}
+
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and h.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and j.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and p.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		
 		#and d.SHOP_No  = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and h.DDI_Type = '{{ 设备类型 }}'
@@ -570,7 +931,26 @@
 		and a.ODER_State = 0
 		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
 		and date(a.CreateDate) = curdate()
-		and c.DDI_No = #{ddiNo}
+
+		<if test="null != filterMap.ddiNo">
+			and c.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and c.SHOP_No = #{filterMap.shopValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and h.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and j.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and p.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		
 		#and c.SHOP_No  = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and h.DDI_Type = '{{ 设备类型 }}'
@@ -605,7 +985,26 @@
 		and e.DSI_Anti is null
 		and a.CreateDate >= e.DSI_Try and (a.CreateDate &lt;= e.DSI_Withdraw or e.DSI_Withdraw is null)
 		and date(a.CreateDate) = curdate()
-		and d.DDI_No = #{ddiNo}
+
+		<if test="null != filterMap.ddiNo">
+			and d.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.shopValue">
+			and i.SHOP_No = #{filterMap.shopValue}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and h.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and j.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and p.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		
 		#and i.SHOP_No  = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and h.DDI_Type = '{{ 设备类型 }}'
@@ -636,11 +1035,30 @@
 		on p.DICT_Value = e.SHOP_Class
 		left join study.t_shop_sub_info j
 		on e.SHOP_No = j.SHOP_No
-		where date(n.CreateDate) >= #{startDate}  and date(n.CreateDate) &lt;= #{endDate}
+		where date(n.CreateDate) >= #{filterMap.startDate}  and date(n.CreateDate) &lt;= #{filterMap.endDate}
 		and ODER_State = 0
 		and b.DSI_Anti is null
 		and n.CreateDate >= b.DSI_Try and (n.CreateDate &lt;= b.DSI_Withdraw or b.DSI_Withdraw is null)
-		and a.DDI_No = #{ddiNo}
+
+		<if test="null != filterMap.shopValue">
+			and e.SHOP_No = #{filterMap.shopValue}
+		</if>
+		<if test="null != filterMap.ddiNo">
+			and a.DDI_No = #{filterMap.ddiNo}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and a.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and j.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and p.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
+		
 		#and e.SHOP_No = '{{门店编码}}'
 		#and g.ATOP_Title = '{{ 渠道名称 }}'
 		#and a.DDI_Type = '{{ 设备类型 }}'

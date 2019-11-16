@@ -26,6 +26,12 @@ public interface RainbowSrtjService {
 	// 渠道分成比例
 	PageResult qdfcbl(PageWrapper pageWrapper, String queryMonth);
 
+	List<HashMap> qdfcxq(HashMap filterMap);
+
+	List<HashMap> srqktj(HashMap filterMap);
+
+	List<HashMap> srqktjmx(HashMap filterMap);
+
 	// 退款情况统计（合计）
 	List<HashMap> tkqktjhj(HashMap filterMap);
 
@@ -35,4 +41,4 @@ public interface RainbowSrtjService {
 	// 退款情况统计（按日）
 	List<HashMap> tkqktjr(HashMap filterMap);
 
-	}
+}

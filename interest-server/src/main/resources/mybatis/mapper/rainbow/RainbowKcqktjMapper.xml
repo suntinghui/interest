@@ -2,7 +2,57 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.interest.dao.rainbow.RainbowKcqktjDao">
 
-	<!-- 库存概览, 添加分页 -->
+	<select id="jkpydcgzjz" resultType="java.util.HashMap">
+		select date_format(a.created_at,'%Y-%m') 月份,count(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
+		from t_storage_checkin_list a left join t_customer_coupon_sub_info b
+		on left(a.lottery_start_id,5) = b.COUPS_Prefix
+		left join t_customer_coupon_info c
+		on c.COUP_Uid = b.COUPS_CPUid
+		where date(a.created_at) >= #{filterMap.startMonth} and date(a.created_at) &lt;= #{filterMap.endMonth}
+		group by 月份
+	</select>
+
+	<select id="jkpydcgpzmx" resultType="java.util.HashMap">
+		select date_format(a.created_at,'%Y-%m') 月份,c.COUP_Title 票种,c.COUP_Money 面值,count(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
+		from t_storage_checkin_list a left join t_customer_coupon_sub_info b
+		on left(a.lottery_start_id,5) = b.COUPS_Prefix
+		left join t_customer_coupon_info c
+		on c.COUP_Uid = b.COUPS_CPUid
+		where date(a.created_at) >= #{filterMap.startMonth} and date(a.created_at) &lt;= #{filterMap.endMonth}
+		group by 月份,票种
+	</select>
+
+	<!-- 即开票库存数 -->
+	<select id="jkpkcs" resultType="java.util.HashMap">
+		SELECT SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量
+		FROM
+		(SELECT c.COUP_Title 票种,c.COUP_Money 面值,a.lottery_count 数量,case when d.package_no IS NOT NULL then 1 ELSE 0 END AS 出库标记
+		FROM t_storage_checkin_list a JOIN t_customer_coupon_sub_info b
+		ON left(a.lottery_start_id,5) = b.COUPS_Prefix
+		LEFT JOIN t_customer_coupon_info c
+		ON b.COUPS_CPUid = c.COUP_Uid
+		LEFT JOIN t_storage_checkout_packages_detail d
+		ON a.lottery_start_id = d.lottery_start_id
+		WHERE  date(a.created_at) >= #{filterMap.startDate} and  date(a.created_at) &lt;= #{filterMap.endDate}  )　sheet1
+	</select>
+
+	<!-- 即开票库存数明细 -->
+	<select id="jkpkcsmx" resultType="java.util.HashMap">
+		SELECT 票种,面值,SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量,(SUM(数量)-SUM(数量*出库标记))*面值 金额
+		FROM
+		(SELECT c.COUP_Title 票种,c.COUP_Money 面值,a.lottery_count 数量,case when d.package_no IS NOT NULL then 1 ELSE 0 END AS 出库标记
+		FROM t_storage_checkin_list a JOIN t_customer_coupon_sub_info b
+		ON left(a.lottery_start_id,5) = b.COUPS_Prefix
+		LEFT JOIN t_customer_coupon_info c
+		ON b.COUPS_CPUid = c.COUP_Uid
+		LEFT JOIN t_storage_checkout_packages_detail d
+		ON a.lottery_start_id = d.lottery_start_id
+		WHERE  date(a.created_at) >= #{filterMap.startDate} and  date(a.created_at) &lt;= #{filterMap.endDate}  )　sheet1
+		GROUP BY 票种
+
+	</select>
+
+	<!-- 即开票库配送情况 -->
 	<select id="jkppsgk" resultType="java.util.HashMap" >
 		select date(a.created_at) 日期,sum(b.lottery_count) 即开票数量（张）,sum(b.lottery_count*d.COUP_Money) 总价值（元）,count(distinct(a.package_no)) 总包裹数
 		from t_storage_checkout_packages a left join  t_storage_checkout_packages_detail b
@@ -25,7 +75,7 @@
 		on f.SHOP_No = j.SHOP_No
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = f.SHOP_Class
-		where date(a.created_at) >= #{startDate} and date(a.created_at) &lt;= #{endDate}
+		where date(a.created_at) >= #{filterMap.startDate} and date(a.created_at) &lt;= #{filterMap.endDate}
 		and a.created_at >= e.DSI_Try and (a.created_at &lt;= e.DSI_Withdraw or e.DSI_Withdraw is null)
 		and DSI_Anti is null
 		#and h.ATOP_Title = {{选择渠道}}
@@ -33,50 +83,11 @@
 		#and t.DICT_Name = '{{ 网点类型 }}'
 		#and j.SHOP_Area = '{{ 所属地区 }}'
 		group by 日期
-
-
-		limit #{pageWrapper.start},#{pageWrapper.pageSize};
 	</select>
 
-	<!-- 库存概览，在最外层加了个select count *  -->
-	<select id="jkppsgk_count" resultType="Integer">
-		select count(*) from
-		(
-		select date(a.created_at) 日期,sum(b.lottery_count) 即开票数量（张）,sum(b.lottery_count*d.COUP_Money) 总价值（元）,count(distinct(a.package_no)) 总包裹数
-		from t_storage_checkout_packages a left join  t_storage_checkout_packages_detail b
-		ON a.package_no = b.package_no
-		LEFT JOIN t_customer_coupon_sub_info c
-		ON left(b.lottery_start_id,5) = c.COUPS_Prefix
-		LEFT JOIN t_customer_coupon_info d
-		ON d.COUP_Uid = c.COUPS_CPUid
-		left join study.t_device_sub_info e
-		on a.device_no = e.DDI_No
-		left join netfiance_db.t_shop_shop_info f
-		on e.SHOP_No = f.SHOP_No
-		left join t_device_device_info g
-		on a.device_no = g.DDI_No
-		left join netfiance_db.t_shop_agent_list e
-		on f.SHOP_AGUid = e.AGNT_Uid
-		left join netfiance_db.t_shop_agent_top h
-		on e.AGNT_ATUid = h.ATOP_Uid
-		left join study.t_shop_sub_info j
-		on f.SHOP_No = j.SHOP_No
-		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
-		on t.DICT_Value = f.SHOP_Class
-		where date(a.created_at) >= #{startDate} and date(a.created_at) &lt;= #{endDate}
-		and a.created_at >= e.DSI_Try and (a.created_at &lt;= e.DSI_Withdraw or e.DSI_Withdraw is null)
-		and DSI_Anti is null
-		#and h.ATOP_Title = {{选择渠道}}
-		#and g.DDI_Type = {{选择设备类型}}
-		#and t.DICT_Name = '{{ 网点类型 }}'
-		#and j.SHOP_Area = '{{ 所属地区 }}'
-		group by 日期
-		) temp
-	</select>
-
-	<!-- 库存明细, 添加分页 -->
+	<!-- 即开票库配送明细 -->
 	<select id="jkppsmx" resultType="java.util.HashMap" >
-		select date(a.created_at) 日期,a.device_no 设备编号,f.SHOP_No 网点编号,f.SHOP_Title 网点名称,d.COUP_Title 票种,d.COUP_Money 面值,sum(b.lottery_count) 即开票数量（张）,sum(b.lottery_count*d.COUP_Money) 总价值（元）,a.created_at 出库时间,a.updated_at 加仓时间,m.USER_Nickname 配送员昵称,f.SHOP_Address 门店地址
+		select date(a.created_at) 日期,a.device_no 设备编号,f.SHOP_No 网点编号,f.SHOP_Title 网点名称,d.COUP_Title 票种,d.COUP_Money 面值,sum(b.lottery_count) 即开票数量（张）,sum(b.lottery_count*d.COUP_Money) 总价值（元）,DATE_FORMAT(a.created_at, '%Y-%m-%d %H:%i:%s') 出库时间,DATE_FORMAT(a.updated_at, '%Y-%m-%d %H:%i:%s') 加仓时间,m.USER_Nickname 配送员昵称,f.SHOP_Address 门店地址
 		from t_storage_checkout_packages a left join  t_storage_checkout_packages_detail b
 		ON a.package_no = b.package_no
 		LEFT JOIN t_customer_coupon_sub_info c
@@ -99,7 +110,7 @@
 		on f.SHOP_No = j.SHOP_No
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = f.SHOP_Class
-		where date(a.created_at) >= #{startDate} and date(a.created_at) &lt;= #{endDate}
+		where date(a.created_at) >= #{filterMap.startDate} and date(a.created_at) &lt;= #{filterMap.endDate}
 		and a.created_at >= e.DSI_Try and (a.created_at &lt;= e.DSI_Withdraw or e.DSI_Withdraw is null)
 		and DSI_Anti is null
 		#and h.ATOP_Title = {{选择渠道}}
@@ -108,45 +119,6 @@
 		#and j.SHOP_Area = '{{ 所属地区 }}'
 		group by 日期,设备编号,网点编号,票种,出库时间,加仓时间,配送员昵称
 
-		limit #{pageWrapper.start},#{pageWrapper.pageSize};
-	</select>
-
-	<!-- 库存明细，在最外层加了个select count *  -->
-	<select id="jkppsmx_count" resultType="Integer">
-		select count(*) from
-		(
-		select date(a.created_at) 日期,a.device_no 设备编号,f.SHOP_No 网点编号,f.SHOP_Title 网点名称,d.COUP_Title 票种,d.COUP_Money 面值,sum(b.lottery_count) 即开票数量（张数）,sum(b.lottery_count*d.COUP_Money) 总价值（元）,a.created_at 出库时间,a.updated_at 加仓时间,m.USER_Nickname 配送员昵称,f.SHOP_Address 门店地址
-		from t_storage_checkout_packages a left join  t_storage_checkout_packages_detail b
-		ON a.package_no = b.package_no
-		LEFT JOIN t_customer_coupon_sub_info c
-		ON left(b.lottery_start_id,5) = c.COUPS_Prefix
-		LEFT JOIN t_customer_coupon_info d
-		ON d.COUP_Uid = c.COUPS_CPUid
-		left join t_customer_user_info m
-		on a.delivery_id = m.USER_Uid
-		left join study.t_device_sub_info e
-		on a.device_no = e.DDI_No
-		left join netfiance_db.t_shop_shop_info f
-		on e.SHOP_No = f.SHOP_No
-		left join t_device_device_info g
-		on a.device_no = g.DDI_No
-		left join netfiance_db.t_shop_agent_list e
-		on f.SHOP_AGUid = e.AGNT_Uid
-		left join netfiance_db.t_shop_agent_top h
-		on e.AGNT_ATUid = h.ATOP_Uid
-		left join study.t_shop_sub_info j
-		on f.SHOP_No = j.SHOP_No
-		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
-		on t.DICT_Value = f.SHOP_Class
-		where date(a.created_at) >= #{startDate} and date(a.created_at) &lt;= #{endDate}
-		and a.created_at >= e.DSI_Try and (a.created_at &lt;= e.DSI_Withdraw or e.DSI_Withdraw is null)
-		and DSI_Anti is null
-		#and h.ATOP_Title = {{选择渠道}}
-		#and g.DDI_Type = {{选择设备类型}}
-		#and t.DICT_Name = '{{ 网点类型 }}'
-		#and j.SHOP_Area = '{{ 所属地区 }}'
-		group by 日期,设备编号,网点编号,票种,出库时间,加仓时间,配送员昵称
-		) temp
 	</select>
 
 	<!-- 出库包裹数 -->
@@ -168,7 +140,25 @@
 		on l.DICT_Value = e.SHOP_Class
 		where DSI_Anti is null
 		and a.created_at >= b.SHOP_No and (a.created_at &lt;= b.DSI_Withdraw or b.DSI_Withdraw is null)
-		and date(a.created_at)>=#{startDate} and date(a.created_at) &lt;= #{endDate}
+
+		<if test="null != filterMap.startDate">
+			and date(a.created_at) >= #{filterMap.startDate}
+		</if>
+		<if test="null != filterMap.endDate">
+			and date(a.created_at) &lt;= #{filterMap.endDate}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and c.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and l.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
 
 		#and g.ATOP_Title = {{选择渠道}}
 		#and c.DDI_Type = {{选择设备类型}}
@@ -197,7 +187,25 @@
 		on l.DICT_Value = e.SHOP_Class
 		where DSI_Anti is null
 		and a.created_at >= b.SHOP_No and (a.created_at &lt;= b.DSI_Withdraw or b.DSI_Withdraw is null)
-		and a.created_at &lt;= #{queryDate} and (a.updated_at >= #{queryDate} or a.updated_at = a.created_at)
+
+		<if test="null != filterMap.startDate">
+			and a.created_at >= #{filterMap.startDate}
+		</if>
+		<if test="null != filterMap.endDate">
+			and a.created_at &lt;= #{filterMap.endDate}
+		</if>
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		<if test="null != filterMap.deviceTypeValue">
+			and c.DDI_Type = #{filterMap.deviceTypeValue}
+		</if>
+		<if test="null != filterMap.areaValue">
+			and d.SHOP_Area = #{filterMap.areaValue}
+		</if>
+		<if test="null != filterMap.shopTypeValue">
+			and l.DICT_Name = #{filterMap.shopTypeValue}
+		</if>
 
 		#and g.ATOP_Title = {{选择渠道}}
 		#and c.DDI_Type = {{选择设备类型}}
@@ -209,53 +217,7 @@
 
 	</select>
 
-	<select id="jkpydcgzjz" resultType="java.util.HashMap">
-		select date_format(a.created_at,'%Y%m') 月份,count(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
-		from t_storage_checkin_list a left join t_customer_coupon_sub_info b
-		on left(a.lottery_start_id,5) = b.COUPS_Prefix
-		left join t_customer_coupon_info c
-		on c.COUP_Uid = b.COUPS_CPUid
-		where date(a.created_at) >= #{startMonth} and date(a.created_at) &lt;= #{endMonth}
-		group by 月份
-	</select>
 
-	<select id="jkpydcgpzmx" resultType="java.util.HashMap">
-		select date_format(a.created_at,'%Y%m') 月份,c.COUP_Title 票种,c.COUP_Money 面值,count(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
-		from t_storage_checkin_list a left join t_customer_coupon_sub_info b
-		on left(a.lottery_start_id,5) = b.COUPS_Prefix
-		left join t_customer_coupon_info c
-		on c.COUP_Uid = b.COUPS_CPUid
-		where date(a.created_at) >= #{startMonth} and date(a.created_at) &lt;= #{endMonth}
-		group by 月份,票种
-	</select>
-
-	<select id="jkpkcs" resultType="java.util.HashMap">
-		SELECT SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量
-		FROM
-		(SELECT c.COUP_Title 票种,c.COUP_Money 面值,a.lottery_count 数量,case when d.package_no IS NOT NULL then 1 ELSE 0 END AS 出库标记
-		FROM t_storage_checkin_list a JOIN t_customer_coupon_sub_info b
-		ON left(a.lottery_start_id,5) = b.COUPS_Prefix
-		LEFT JOIN t_customer_coupon_info c
-		ON b.COUPS_CPUid = c.COUP_Uid
-		LEFT JOIN t_storage_checkout_packages_detail d
-		ON a.lottery_start_id = d.lottery_start_id
-		WHERE date(a.created_at) &lt;= #{queryMonth}    )　sheet1
-	</select>
-
-	<select id="jkpkcsmx" resultType="java.util.HashMap">
-		SELECT 票种,面值,SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量
-		FROM
-		(SELECT c.COUP_Title 票种,c.COUP_Money 面值,a.lottery_count 数量,case when d.package_no IS NOT NULL then 1 ELSE 0 END AS 出库标记
-		FROM t_storage_checkin_list a JOIN t_customer_coupon_sub_info b
-		ON left(a.lottery_start_id,5) = b.COUPS_Prefix
-		LEFT JOIN t_customer_coupon_info c
-		ON b.COUPS_CPUid = c.COUP_Uid
-		LEFT JOIN t_storage_checkout_packages_detail d
-		ON a.lottery_start_id = d.lottery_start_id
-		WHERE date(a.created_at) &lt;= #{queryMonth}  )　sheet1
-		GROUP BY 票种
-
-	</select>
 
 
 

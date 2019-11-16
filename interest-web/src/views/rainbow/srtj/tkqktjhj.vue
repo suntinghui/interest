@@ -9,9 +9,9 @@
 			<Row style="margin-bottom: 25px;">
 				
 				<Col span="10">起止月份：
-				<Date-picker :value="startMonth"  @on-change='handleStartDateChange' type="month" editable="false"  placement="bottom-start" placeholder="开始月份" style="width: 150px"></Date-picker>
-				-
-				<Date-picker :value="endMonth"  @on-change='handleEndDateChange' type="month" editable="false" placement="bottom-start" placeholder="截止月份" style="width: 150px"></Date-picker>
+				<Date-picker :value="startMonth"  @on-change='handleStartDateChange'  :clearable="false"  type="month" editable="false"  placement="bottom-start" placeholder="开始月份" style="width: 150px"></Date-picker>
+				至
+				<Date-picker :value="endMonth"  @on-change='handleEndDateChange'  :clearable="false"  type="month" editable="false" placement="bottom-start" placeholder="截止月份" style="width: 150px"></Date-picker>
 				</Col>
 				
 				

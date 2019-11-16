@@ -1,0 +1,4 @@
+{"id":"192.168.3.22.tm157391502863700002","wasCommitted":true,"participants":[{"uri":"192.168.3.22.tm1","state":"COMMITTING","expires":1573915038700,"resourceName":"masterDataSource"}]}
+{"id":"192.168.3.22.tm157391502863700002","wasCommitted":true,"participants":[{"uri":"192.168.3.22.tm1","state":"TERMINATED","expires":1573915038886,"resourceName":"masterDataSource"}]}
+{"id":"192.168.3.22.tm157391502863500001","wasCommitted":true,"participants":[{"uri":"192.168.3.22.tm2","state":"COMMITTING","expires":1573915038627,"resourceName":"masterDataSource"}]}
+{"id":"192.168.3.22.tm157391502863500001","wasCommitted":true,"participants":[{"uri":"192.168.3.22.tm2","state":"TERMINATED","expires":1573915038945,"resourceName":"masterDataSource"}]}

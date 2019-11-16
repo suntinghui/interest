@@ -33,26 +33,26 @@ public class RainbowDjqdatjServiceImpl implements RainbowDjqdatjService {
 	}
 
 	@Override
-	public HashMap<String, List<HashMap>> jqsxxx_detail(String startDate, String endDate, String ddiNo, String shopNo) {
+	public HashMap<String, List<HashMap>> jqsxxx_detail(HashMap filterMap) {
 		HashMap<String, List<HashMap>> map = new HashMap<>();
 
-		map.put("jqsxxx", RainbowUtil.decodeList(rainbowDjqdatjDao.jqsxxx(ddiNo, startDate, endDate)));
-		map.put("mdsxxx", RainbowUtil.decodeList(rainbowDjqdatjDao.mdsxxx(ddiNo, startDate, endDate, shopNo)));
-		map.put("yyzt1", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt1(ddiNo, startDate, endDate)));
-		map.put("yyzt2", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt2(ddiNo, startDate, endDate)));
-		map.put("yyzt3_jqhkzrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqhkzrs(ddiNo, startDate, endDate)));
-		map.put("yyzt3_jqrjgcrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjgcrs(ddiNo, startDate, endDate)));
-		map.put("yyzt3_jqrjxgcrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjxgcrs(ddiNo, startDate, endDate, shopNo)));
-		map.put("yyzt3_jqrjfgrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjfgrs(ddiNo, startDate, endDate)));
-		map.put("sbwhtj3", RainbowUtil.decodeList(rainbowDjqdatjDao.sbwhtj3(ddiNo, startDate, endDate)));
-		map.put("sbwhtj4", RainbowUtil.decodeList(rainbowDjqdatjDao.sbwhtj4(ddiNo, startDate, endDate)));
-		map.put("sbwhtj5", RainbowUtil.decodeList(rainbowDjqdatjDao.sbwhtj5(ddiNo, startDate, endDate)));
-		map.put("sbjyxx_xs", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_xs(ddiNo, startDate, endDate)));
-		map.put("sbjyxx_tk", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_tk(ddiNo, startDate, endDate)));
-		map.put("sbjyxx_tkddbl", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_tkddbl(ddiNo, startDate, endDate)));
-		map.put("sbjyxx_drxs", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_drxs(ddiNo, startDate, endDate)));
-		map.put("sbjyxx_drtk", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_drtk(ddiNo, startDate, endDate)));
-		map.put("sbjyxx_drpzxl", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_drpzxl(ddiNo, startDate, endDate)));
+		map.put("jqsxxx", RainbowUtil.decodeList(rainbowDjqdatjDao.jqsxxx(filterMap)));
+		map.put("mdsxxx", RainbowUtil.decodeList(rainbowDjqdatjDao.mdsxxx(filterMap)));
+		map.put("yyzt1", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt1(filterMap)));
+		map.put("yyzt2", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt2(filterMap)));
+		map.put("yyzt3_jqhkzrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqhkzrs(filterMap)));
+		map.put("yyzt3_jqrjgcrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjgcrs(filterMap)));
+		map.put("yyzt3_jqrjxgcrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjxgcrs(filterMap)));
+		map.put("yyzt3_jqrjfgrs", RainbowUtil.decodeList(rainbowDjqdatjDao.yyzt3_jqrjfgrs(filterMap)));
+		map.put("sbwhtj3", RainbowUtil.decodeList(rainbowDjqdatjDao.sbwhtj3(filterMap)));
+		map.put("sbwhtj4", RainbowUtil.decodeList(rainbowDjqdatjDao.sbwhtj4(filterMap)));
+		map.put("sbwhtj5", RainbowUtil.decodeList(rainbowDjqdatjDao.sbwhtj5(filterMap)));
+		map.put("sbjyxx_xs", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_xs(filterMap)));
+		map.put("sbjyxx_tk", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_tk(filterMap)));
+		map.put("sbjyxx_tkddbl", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_tkddbl(filterMap)));
+		map.put("sbjyxx_drxs", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_drxs(filterMap)));
+		map.put("sbjyxx_drtk", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_drtk(filterMap)));
+		map.put("sbjyxx_drpzxl", RainbowUtil.decodeList(rainbowDjqdatjDao.sbjyxx_drpzxl(filterMap)));
 
 		return map;
 	}

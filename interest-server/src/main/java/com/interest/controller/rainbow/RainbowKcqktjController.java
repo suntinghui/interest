@@ -1,5 +1,6 @@
 package com.interest.controller.rainbow;
 
+import com.alibaba.fastjson.JSON;
 import com.interest.annotation.InterestLog;
 import com.interest.model.utils.PageResult;
 import com.interest.model.utils.PageWrapper;
@@ -28,78 +29,69 @@ public class RainbowKcqktjController {
     @Resource(name = "rainbowKcqktjServiceImpl")
     private RainbowKcqktjService rainbowKcqktjService;
 
-    @InterestLog
-    @GetMapping("/rainbow/jkppsgk")
-    public ResponseWrapper<PageResult> jkppsgk(@RequestParam(value = "pageSize", required = false) int pageSize,
-                                               @RequestParam(value = "page", required = false) int page,
-                                               @RequestParam(value = "startDate", required = false) String startDate,
-                                               @RequestParam(value = "endDate", required = false) String endDate) {
-        PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-        PageResult pageResult = rainbowKcqktjService.jkppsgk(pageWrapper, startDate, endDate);
-        return new ResponseWrapper<>(pageResult);
-    }
-
-
-    @InterestLog
-    @GetMapping("/rainbow/jkppsmx")
-    public ResponseWrapper<PageResult> jkppsmx(@RequestParam(value = "pageSize", required = false) int pageSize,
-                                               @RequestParam(value = "page", required = false) int page,
-                                               @RequestParam(value = "startDate", required = false) String startDate,
-                                               @RequestParam(value = "endDate", required = false) String endDate) {
-        PageWrapper pageWrapper = new PageWrapper(pageSize, page);
-        PageResult pageResult = rainbowKcqktjService.jkppsmx(pageWrapper, startDate, endDate);
-        return new ResponseWrapper<>(pageResult);
-    }
-
-    //  出库包裹数
-    @InterestLog
-    @GetMapping("/rainbow/ckbgs")
-    public ResponseWrapper<List<HashMap>> ckbgs(@RequestParam(value = "startDate", required = false) String startDate,
-                                                @RequestParam(value = "endDate", required = false) String endDate) {
-        List<HashMap> list = rainbowKcqktjService.ckbgs(startDate, endDate);
-        return new ResponseWrapper<>(list);
-    }
-
-    //  在途包裹数
-    @InterestLog
-    @GetMapping("/rainbow/ztbgs")
-    public ResponseWrapper<List<HashMap>> ztbgs(@RequestParam(value = "queryDate", required = false) String queryDate) {
-        List<HashMap> list = rainbowKcqktjService.ztbgs(queryDate);
-        return new ResponseWrapper<>(list);
-    }
-
     // 即开票月度采购总价值
     @InterestLog
     @GetMapping("/rainbow/jkpydcgzjz")
-    public ResponseWrapper<List<HashMap>> jkpydcgzjz(@RequestParam(value = "startMonth", required = false) String startMonth,
-                                                     @RequestParam(value = "endMonth", required = false) String endMonth) {
-        List<HashMap> list = rainbowKcqktjService.jkpydcgzjz(startMonth, endMonth);
+    public ResponseWrapper<List<HashMap>> jkpydcgzjz(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.jkpydcgzjz(JSON.parseObject(filterMap, HashMap.class));
         return new ResponseWrapper<>(list);
     }
 
     // 即开票月度采购票种明细
     @InterestLog
     @GetMapping("/rainbow/jkpydcgpzmx")
-    public ResponseWrapper<List<HashMap>> jkpydcgpzmx(@RequestParam(value = "startMonth", required = false) String startMonth,
-                                                      @RequestParam(value = "endMonth", required = false) String endMonth) {
-        List<HashMap> list = rainbowKcqktjService.jkpydcgpzmx(startMonth, endMonth);
+    public ResponseWrapper<List<HashMap>> jkpydcgpzmx(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.jkpydcgpzmx(JSON.parseObject(filterMap, HashMap.class));
         return new ResponseWrapper<>(list);
     }
 
     // 即开票库存数(截止24时)
     @InterestLog
     @GetMapping("/rainbow/jkpkcs")
-    public ResponseWrapper<List<HashMap>> jkpkcs(@RequestParam(value = "queryMonth", required = false) String queryMonth) {
-        List<HashMap> list = rainbowKcqktjService.jkpkcs(queryMonth);
+    public ResponseWrapper<List<HashMap>> jkpkcs(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.jkpkcs(JSON.parseObject(filterMap, HashMap.class));
         return new ResponseWrapper<>(list);
     }
 
     // 即开票库存数明细(截止24时)
     @InterestLog
     @GetMapping("/rainbow/jkpkcsmx")
-    public ResponseWrapper<List<HashMap>> jkpkcsmx(@RequestParam(value = "queryMonth", required = false) String queryMonth) {
-        List<HashMap> list = rainbowKcqktjService.jkpkcsmx(queryMonth);
+    public ResponseWrapper<List<HashMap>> jkpkcsmx(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.jkpkcsmx(JSON.parseObject(filterMap, HashMap.class));
         return new ResponseWrapper<>(list);
     }
+
+    @InterestLog
+    @GetMapping("/rainbow/jkppsgk")
+    public ResponseWrapper<List<HashMap>> jkppsgk(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.jkppsgk(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
+    }
+
+
+    @InterestLog
+    @GetMapping("/rainbow/jkppsmx")
+    public ResponseWrapper<List<HashMap>> jkppsmx(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.jkppsmx(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
+    }
+
+    //  出库包裹数
+    @InterestLog
+    @GetMapping("/rainbow/ckbgs")
+    public ResponseWrapper<List<HashMap>> ckbgs(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.ckbgs(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
+    }
+
+    //  在途包裹数
+    @InterestLog
+    @GetMapping("/rainbow/ztbgs")
+    public ResponseWrapper<List<HashMap>> ztbgs(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.ztbgs(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
+    }
+
+
 
 }

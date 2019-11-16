@@ -9,8 +9,7 @@
 			<Row style="margin-bottom: 25px;">
 		
 				<Col span="8">日期：
-				<Date-picker :value="dateValue" @on-change='handleDateChange' type="daterange" editable="false" :options="dateOptions"
-				 placement="bottom-start" placeholder="选择日期" style="width: 250px"></Date-picker>
+				<Date-picker :value="dateValue" @on-change='handleDateChange'  :clearable="false"  type="daterange" editable="false" :options="dateOptions" placement="bottom-start" placeholder="选择日期" style="width: 250px"></Date-picker>
 				</Col>
 		
 				<Col span="8">所属地区：

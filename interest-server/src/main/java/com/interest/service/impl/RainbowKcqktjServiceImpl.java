@@ -25,55 +25,55 @@ public class RainbowKcqktjServiceImpl implements RainbowKcqktjService {
 	@Autowired
     private ThreadPoolTaskExecutor threadPoolTaskExecutor;
 
-
 	@Override
-	public PageResult jkppsgk(PageWrapper pageWrapper, String startDate, String endDate) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkppsgk(pageWrapper, startDate, endDate));
-		int size = rainbowKcqktjDao.jkppsgk_count(startDate, endDate);
-		return new PageResult<>(list, size);
-	}
-
-	@Override
-	public PageResult jkppsmx(PageWrapper pageWrapper, String startDate, String endDate) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkppsmx(pageWrapper, startDate, endDate));
-		int size = rainbowKcqktjDao.jkppsmx_count(startDate, endDate);
-		return new PageResult<>(list, size);
-	}
-
-	@Override
-	public List<HashMap> ckbgs(String startDate, String endDate) {
-		List<HashMap> list = rainbowKcqktjDao.ckbgs(startDate, endDate);
+	public List<HashMap> jkpydcgzjz(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpydcgzjz(filterMap));
 		return list;
 	}
 
 	@Override
-	public List<HashMap> ztbgs(String queryDate) {
-		List<HashMap> list =  rainbowKcqktjDao.ztbgs(queryDate);
+	public List<HashMap> jkpydcgpzmx(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpydcgpzmx(filterMap));
 		return list;
 	}
 
 	@Override
-	public List<HashMap> jkpydcgzjz(String startMonth, String endMonth) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpydcgzjz(startMonth, endMonth));
+	public List<HashMap> jkpkcs(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpkcs(filterMap));
 		return list;
 	}
 
 	@Override
-	public List<HashMap> jkpydcgpzmx(String startMonth, String endMonth) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpydcgpzmx(startMonth, endMonth));
+	public List<HashMap> jkpkcsmx(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpkcsmx(filterMap));
+		return list;
+	}
+
+
+	@Override
+	public List<HashMap> jkppsgk(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkppsgk(filterMap));
 		return list;
 	}
 
 	@Override
-	public List<HashMap> jkpkcs(String queryMonth) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpkcs(queryMonth));
+	public List<HashMap> jkppsmx(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkppsmx(filterMap));
 		return list;
 	}
 
 	@Override
-	public List<HashMap> jkpkcsmx(String queryMonth) {
-		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.jkpkcsmx(queryMonth));
+	public List<HashMap> ckbgs(HashMap filterMap) {
+		List<HashMap> list = rainbowKcqktjDao.ckbgs(filterMap);
 		return list;
 	}
+
+	@Override
+	public List<HashMap> ztbgs(HashMap filterMap) {
+		List<HashMap> list =  rainbowKcqktjDao.ztbgs(filterMap);
+		return list;
+	}
+
+
 
 }

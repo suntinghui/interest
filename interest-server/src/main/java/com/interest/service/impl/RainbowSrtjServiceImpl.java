@@ -67,6 +67,24 @@ public class RainbowSrtjServiceImpl implements RainbowSrtjService {
 	}
 
 	@Override
+	public List<HashMap> qdfcxq(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.qdfcxq(filterMap));
+		return list;
+	}
+
+	@Override
+	public List<HashMap> srqktj(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.srqktj(filterMap));
+		return list;
+	}
+
+	@Override
+	public List<HashMap> srqktjmx(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.srqktjmx(filterMap));
+		return list;
+	}
+
+	@Override
 	public List<HashMap> tkqktjhj(HashMap filterMap) {
 		List<HashMap> list =  RainbowUtil.decodeList(rainbowSrtjDao.tkqktjhj(filterMap));
 		return list;

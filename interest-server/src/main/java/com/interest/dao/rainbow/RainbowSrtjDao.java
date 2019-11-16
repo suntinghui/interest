@@ -25,6 +25,12 @@ public interface RainbowSrtjDao {
 	List<HashMap> qdfcbl(PageWrapper pageWrapper , String queryMonth);
 	int qdfcbl_count(String queryMonth);
 
+	List<HashMap> qdfcxq(@Param("filterMap") HashMap filterMap);
+
+	List<HashMap> srqktj(@Param("filterMap") HashMap filterMap);
+
+	List<HashMap> srqktjmx(@Param("filterMap") HashMap filterMap);
+
 	List<HashMap> tkqktjhj(@Param("filterMap") HashMap filterMap);
 
 	List<HashMap> tkqktjy(@Param("filterMap") HashMap filterMap);

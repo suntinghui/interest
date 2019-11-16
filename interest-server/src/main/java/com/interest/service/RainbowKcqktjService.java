@@ -7,30 +7,32 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface RainbowKcqktjService {
-	
-	// 库存概况
-	PageResult jkppsgk(PageWrapper pageWrapper, String startDate, String endDate);
-
-	// 库存明细
-	PageResult jkppsmx(PageWrapper pageWrapper, String startDate, String endDate);
-
-	// 出库包裹数
-	List<HashMap> ckbgs(String startDate, String endDate);
-
-	// 在途包裹数
-	List<HashMap> ztbgs(String queryDate);
 
 	// 即开票月度采购总价值
-	List<HashMap> jkpydcgzjz(String startMonth, String endMonth);
+	List<HashMap> jkpydcgzjz(HashMap filterMaph);
 
 	// 即开票月度采购票种明细
-	List<HashMap> jkpydcgpzmx(String startMonth, String endMonth);
+	List<HashMap> jkpydcgpzmx(HashMap filterMap);
 
 	// 即开票库存数(截止24时)
-	List<HashMap> jkpkcs(String queryMonth);
+	List<HashMap> jkpkcs(HashMap filterMap);
 
 	// 即开票库存数明细(截止24时)
-	List<HashMap> jkpkcsmx(String queryMonth);
+	List<HashMap> jkpkcsmx(HashMap filterMap);
+	
+	// 库存概况
+	List<HashMap> jkppsgk(HashMap filterMap);
+
+	// 库存明细
+	List<HashMap> jkppsmx(HashMap filterMap);
+
+	// 出库包裹数
+	List<HashMap> ckbgs(HashMap filterMap);
+
+	// 在途包裹数
+	List<HashMap> ztbgs(HashMap filterMap);
+
+
 
 
 

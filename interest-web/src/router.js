@@ -439,6 +439,11 @@ const routers = [
 	    component: resolve => require(["./views/rainbow/srtj/qdfcbl.vue"], resolve)
 	  },
 	  {
+	    path: "rainbow/srqktj", // 收入情况统计
+	    name: "rainbow/srqktj",
+	    component: resolve => require(["./views/rainbow/srtj/srqktj.vue"], resolve)
+	  },
+	  {
 	    path: "rainbow/tkqktjhj", // 退款合计
 	    name: "rainbow/tkqktjhj",
 	    component: resolve => require(["./views/rainbow/srtj/tkqktjhj.vue"], resolve)

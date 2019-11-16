@@ -15,38 +15,38 @@ public interface RainbowDjqdatjDao {
 
     int jqsxxx_list_count(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> jqsxxx(String ddiNo, String startDate, String endDate);
+    List<HashMap> jqsxxx(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> mdsxxx(String ddiNo, String startDate, String endDate, String shopNo);
+    List<HashMap> mdsxxx(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> yyzt1(String ddiNo, String startDate, String endDate);
+    List<HashMap> yyzt1(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> yyzt2(String ddiNo, String startDate, String endDate);
+    List<HashMap> yyzt2(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> yyzt3_jqhkzrs(String ddiNo, String startDate, String endDate);
+    List<HashMap> yyzt3_jqhkzrs(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> yyzt3_jqrjgcrs(String ddiNo, String startDate, String endDate);
+    List<HashMap> yyzt3_jqrjgcrs(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> yyzt3_jqrjxgcrs(String ddiNo, String startDate, String endDate, String shopNo);
+    List<HashMap> yyzt3_jqrjxgcrs(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> yyzt3_jqrjfgrs(String ddiNo, String startDate, String endDate);
+    List<HashMap> yyzt3_jqrjfgrs(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> sbwhtj3(String ddiNo, String startDate, String endDate);
+    List<HashMap> sbwhtj3(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> sbwhtj4(String ddiNo, String startDate, String endDate);
+    List<HashMap> sbwhtj4(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> sbwhtj5(String ddiNo, String startDate, String endDate);
+    List<HashMap> sbwhtj5(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> sbjyxx_xs(String ddiNo, String startDate, String endDate);
+    List<HashMap> sbjyxx_xs(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> sbjyxx_tk(String ddiNo, String startDate, String endDate);
+    List<HashMap> sbjyxx_tk(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> sbjyxx_tkddbl(String ddiNo, String startDate, String endDate);
+    List<HashMap> sbjyxx_tkddbl(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> sbjyxx_drxs(String ddiNo, String startDate, String endDate);
+    List<HashMap> sbjyxx_drxs(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> sbjyxx_drtk(String ddiNo, String startDate, String endDate);
+    List<HashMap> sbjyxx_drtk(@Param("filterMap") HashMap filterMap);
 
-    List<HashMap> sbjyxx_drpzxl(String ddiNo, String startDate, String endDate);
+    List<HashMap> sbjyxx_drpzxl(@Param("filterMap") HashMap filterMap);
 
 }

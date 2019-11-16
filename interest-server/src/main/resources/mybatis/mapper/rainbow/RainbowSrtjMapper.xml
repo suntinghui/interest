@@ -175,12 +175,126 @@
 		limit #{pageWrapper.start}, #{pageWrapper.pageSize};
 	</select>
 
+	<select id="qdfcxq" resultType="java.util.HashMap">
+		select g.ATOP_Title 顶级渠道 ,date(a.CreateDate) 日期,ROUND(0.01*g.ATOP_ShopBonus*(sum(a.ODER_Money)-ifnull(sum(c.FLRF_RefundMoney),0)), 2) 门店分成金额,dayname(a.CreateDate),ROUND(0.01*(g.ATOP_AllBonus-g.ATOP_ShopBonus)*(sum(a.ODER_Money)-ifnull(sum(c.FLRF_RefundMoney),0)),2) 渠道分成金额
+		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join netfiance_db.t_finance_bank_refund c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on a.ODER_SPUid = i.SHOP_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		where a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and d.DSI_Anti is null
+		and date_format(a.CreateDate,'%Y-%m') = #{filterMap.queryMonth}
+		and g.ATOP_Title = #{filterMap.channelValue}
+		group by 顶级渠道,日期
+	</select>
+
 	<select id="qdfcbl_count" resultType="Integer">
 		select count(*) from (
 		select g.ATOP_Title 顶级渠道,g.ATOP_ShopBonus 门店分成比例,g.ATOP_AllBonus 全部分成比例,(g.ATOP_AllBonus-g.ATOP_ShopBonus) 渠道分成比例
 		from netfiance_db.t_shop_agent_top g
 		group by 顶级渠道
 		) temp;
+	</select>
+
+	<!-- 收入情况列表 -->
+	<select id="srqktj" resultType="java.util.HashMap">
+		select g.ATOP_Title 顶级渠道,date_format(a.CreateDate,'%Y-%m') 月份, ROUND(sum((a.ODER_Money-ifnull(c.FLRF_RefundMoney,0))*(0.09-0.01*g.ATOP_AllBonus)),2)  收入
+		from t_shop_order_info a left join (select FLOW_OrderId,FLOW_Uid from netfiance_db.t_finance_bank_flow where FLOW_Mode= 1 ) b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join (select FLRF_FLUid,FLRF_RefundMoney from netfiance_db.t_finance_bank_refund where FLRF_State = 5)  c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on a.ODER_SPUid = i.SHOP_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		where a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and d.DSI_Anti is null
+		and date_format(a.CreateDate,'%Y-%m') >= #{filterMap.startMonth} and date_format(a.CreateDate,'%Y-%m') &lt;= #{filterMap.endMonth}
+
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+
+		group by 顶级渠道,月份
+
+		union all
+
+		select '寄售',date_format(a.ModifyDate,'%Y%m') 月份, ROUND(sum(a.ODER_RealMoney*(0.09-0.01*g.ATOP_AllBonus)), 2) 收入
+		from netfiance_db.t_shop_order_info a left join netfiance_db.t_shop_shop_info i
+		on a.ODER_SPUid = i.SHOP_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		where a.ODER_State = 5
+		and date_format(a.ModifyDate,'%Y-%m') >= #{filterMap.startMonth} and date_format(a.ModifyDate,'%Y-%m')  &lt;= #{filterMap.endMonth}
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		group by 寄售,月份
+
+	</select>
+
+	<!-- 收入情况明细 -->
+	<select id="srqktjmx" resultType="java.util.HashMap">
+		select g.ATOP_Title 顶级渠道,date(a.CreateDate) 日期, ROUND(sum((a.ODER_Money-ifnull(c.FLRF_RefundMoney,0))*(0.09-0.01*g.ATOP_AllBonus)), 2) 收入
+		from t_shop_order_info a left join (select FLOW_OrderId,FLOW_Uid from netfiance_db.t_finance_bank_flow where FLOW_Mode= 1 ) b
+		on a.ODER_Note = b.FLOW_OrderId
+		left join (select FLRF_FLUid,FLRF_RefundMoney from netfiance_db.t_finance_bank_refund where FLRF_State = 5)  c
+		on b.FLOW_Uid = c.FLRF_FLUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on a.ODER_SPUid = i.SHOP_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		where a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and d.DSI_Anti is null
+		and date_format(a.CreateDate,'%Y-%m') = #{filterMap.queryMonth}
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		group by 顶级渠道,日期
+
+		union all
+
+		select '寄售',date(a.ModifyDate) 日期, ROUND(sum(a.ODER_RealMoney*(0.09-0.01*g.ATOP_AllBonus)), 2)收入
+		from netfiance_db.t_shop_order_info a left join netfiance_db.t_shop_shop_info i
+		on a.ODER_SPUid = i.SHOP_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		where a.ODER_State = 5
+		and date_format(a.ModifyDate,'%Y-%m')  = #{filterMap.queryMonth}
+		<if test="null != filterMap.channelValue">
+			and g.ATOP_Title = #{filterMap.channelValue}
+		</if>
+		group by 寄售,日期
+
 	</select>
 
 	<!-- 退款情况统计（合计） -->

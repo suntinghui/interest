@@ -87,6 +87,30 @@ public class RainbowSrtjController {
         return new ResponseWrapper<>(pageResult);
     }
 
+    // 渠道分成详情
+    @InterestLog
+    @GetMapping("/rainbow/qdfcxq")
+    public ResponseWrapper<List<HashMap>> qdfcxq(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowSrtjService.qdfcxq(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
+    }
+
+    // 收入情况统计
+    @InterestLog
+    @GetMapping("/rainbow/srqktj")
+    public ResponseWrapper<List<HashMap>> srqktj(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowSrtjService.srqktj(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
+    }
+
+    // 收入情况明细
+    @InterestLog
+    @GetMapping("/rainbow/srqktjmx")
+    public ResponseWrapper<List<HashMap>> srqktjmx(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowSrtjService.srqktjmx(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
+    }
+
     // 退款情况统计（合计）
     @InterestLog
     @GetMapping("/rainbow/tkqktjhj")
