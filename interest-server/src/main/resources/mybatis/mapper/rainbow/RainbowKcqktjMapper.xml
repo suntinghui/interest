@@ -3,7 +3,7 @@
 <mapper namespace="com.interest.dao.rainbow.RainbowKcqktjDao">
 
 	<select id="jkpydcgzjz" resultType="java.util.HashMap">
-		select date_format(a.created_at,'%Y-%m') 月份,count(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
+		select date_format(a.created_at,'%Y-%m') 月份,sum(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
 		from t_storage_checkin_list a left join t_customer_coupon_sub_info b
 		on left(a.lottery_start_id,5) = b.COUPS_Prefix
 		left join t_customer_coupon_info c
@@ -13,7 +13,7 @@
 	</select>
 
 	<select id="jkpydcgpzmx" resultType="java.util.HashMap">
-		select date_format(a.created_at,'%Y-%m') 月份,c.COUP_Title 票种,c.COUP_Money 面值,count(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
+		select date_format(a.created_at,'%Y-%m') 月份,c.COUP_Title 票种,c.COUP_Money 面值,sum(a.lottery_count) 采购张数,sum(a.lottery_count*c.COUP_Money) 总价值
 		from t_storage_checkin_list a left join t_customer_coupon_sub_info b
 		on left(a.lottery_start_id,5) = b.COUPS_Prefix
 		left join t_customer_coupon_info c
