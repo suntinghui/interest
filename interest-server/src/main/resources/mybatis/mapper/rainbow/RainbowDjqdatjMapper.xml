@@ -349,7 +349,7 @@
 
 	<!-- 运营状态信息-3   机器日均购彩人数 -->
 	<select id="yyzt3_jqrjgcrs" resultType="java.util.HashMap">
-		select *,tol_user/搜索时段内天数 机器日均购彩人数
+		select DDI_No 机器编号, SHOP_No 网点编号, 启用时间, tol_user 累计购彩人数, 搜索时段内天数 查询时段内运营天数,tol_user/搜索时段内天数 机器日均购彩人数
 		from
 		(
 		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) tol_user,
@@ -423,7 +423,7 @@
 
 	<!-- 运营状态信息-3   机器日均新购彩人数 -->
 	<select id="yyzt3_jqrjxgcrs" resultType="java.util.HashMap">
-		select *,新用户总数/搜索时段内天数 机器日均新购彩人数
+		select DDI_No 机器编号,SHOP_No 网点编号, 启用时间,新用户总数,搜索时段内天数,新用户总数/搜索时段内天数 机器日均新购彩人数
 		from
 		(
 		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) 新用户总数,
@@ -500,7 +500,7 @@
 
 	<!-- 运营状态信息-3   机器日均复购人数 -->
 	<select id="yyzt3_jqrjfgrs" resultType="java.util.HashMap">
-		select *,复购用户总数/搜索时段内天数 机器日均复购人数
+		select DDI_No 机器编号,SHOP_No 网点编号, 启用时间,复购用户总数, 搜索时段内天数,复购用户总数/搜索时段内天数 机器日均复购人数
 		from
 		(
 		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) 复购用户总数,
@@ -1035,7 +1035,7 @@
 		on p.DICT_Value = e.SHOP_Class
 		left join study.t_shop_sub_info j
 		on e.SHOP_No = j.SHOP_No
-		where date(n.CreateDate) >= #{filterMap.startDate}  and date(n.CreateDate) &lt;= #{filterMap.endDate}
+		where date(n.CreateDate) = curdate()   #默认为当日
 		and ODER_State = 0
 		and b.DSI_Anti is null
 		and n.CreateDate >= b.DSI_Try and (n.CreateDate &lt;= b.DSI_Withdraw or b.DSI_Withdraw is null)

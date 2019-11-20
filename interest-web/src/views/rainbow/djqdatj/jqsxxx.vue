@@ -57,8 +57,7 @@
 
 				<Col span="8">网点：
 				<Select v-model="selectValue.shopValue" filterable clearable style="width: 250px">
-					<Option v-for="item in this.$store.state.param.shopList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}
-						({{item.paramKey}})</Option>
+					<Option v-for="item in this.$store.state.param.shopList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}-{{item.paramKey}}</Option>
 				</Select>
 				</Col>
 
@@ -132,7 +131,7 @@
 					<Table border size="small" :columns="columns_sbjyxx_drtk" :data="this.detailInfo.sbjyxx_drtk"></Table>
 
 					<p class="subTitle">当日票种数量</p>
-					<Table border size="small" :columns="columns_sbjyxx_drpzsl" :data="this.detailInfo.sbjyxx_drpzsl"></Table>
+					<Table border size="small" :columns="columns_sbjyxx_drpzxl" :data="this.detailInfo.sbjyxx_drpzxl"></Table>
 
 				</Tab-pane>
 			</Tabs>
@@ -154,7 +153,7 @@
 	export default {
 		data() {
 			return {
-				dateValue: [util.dateFormat(util.lastWeek(new Date())), util.dateFormat(new Date())],
+				dateValue: ['2019-01-01', util.dateFormat(new Date())],
 				dataList: [], // 列表数据
 				showDetailModel: false, // 控制是否显示详情
 				detailInfo: {}, // 某条数据下的所有的详情信息
@@ -435,12 +434,12 @@
 				// 运营状态信息-3   机器获客总人数
 				columns_yyzt3_jqhkzrs: [{
 						title: "设备编号",
-						key: "设备编号",
+						key: "DDI_No",
 						align: "center"
 					},
 					{
 						title: "网点编号",
-						key: "网点编号",
+						key: "SHOP_No",
 						align: "center"
 					},
 					{
@@ -506,18 +505,18 @@
 						align: "center"
 					},
 					{
-						title: "累计购彩人数",
-						key: "累计购彩人数",
+						title: "新用户总数",
+						key: "新用户总数",
 						align: "center"
 					},
 					{
-						title: "查询时段内运营天数",
-						key: "查询时段内运营天数",
+						title: "搜索时段内天数",
+						key: "搜索时段内天数",
 						align: "center"
 					},
 					{
-						title: "机器日均购彩人数",
-						key: "机器日均购彩人数",
+						title: "机器日均新购彩人数",
+						key: "机器日均新购彩人数",
 						align: "center"
 					}
 				],
@@ -540,18 +539,18 @@
 						align: "center"
 					},
 					{
-						title: "累计购彩人数",
-						key: "累计购彩人数",
+						title: "复购用户总数",
+						key: "复购用户总数",
 						align: "center"
 					},
 					{
-						title: "查询时段内运营天数",
-						key: "查询时段内运营天数",
+						title: "搜索时段内天数",
+						key: "搜索时段内天数",
 						align: "center"
 					},
 					{
-						title: "机器日均购彩人数",
-						key: "机器日均购彩人数",
+						title: "机器日均复购人数",
+						key: "机器日均复购人数",
 						align: "center"
 					}
 				],
@@ -770,7 +769,8 @@
 				columns_sbjyxx_drxs: [{
 						title: "设备编号",
 						key: "设备编号",
-						align: "center"
+						align: "center",
+						width:180
 					},
 					{
 						title: "网点编号",
@@ -808,7 +808,8 @@
 				columns_sbjyxx_drtk: [{
 						title: "设备编号",
 						key: "设备编号",
-						align: "center"
+						align: "center",
+						width:180
 					},
 					{
 						title: "网点编号",
@@ -838,10 +839,11 @@
 				],
 
 				// 设备交易信息-当日票种销量
-				columns_sbjyxx_drpzsl: [{
+				columns_sbjyxx_drpzxl: [{
 						title: "设备编号",
 						key: "设备编号",
-						align: "center"
+						align: "center",
+						width:180
 					},
 					{
 						title: "网点编号",
@@ -849,8 +851,8 @@
 						align: "center"
 					},
 					{
-						title: "启动时间",
-						key: "启动时间",
+						title: "启用时间",
+						key: "启用时间",
 						align: "center"
 					},
 					{

@@ -36,8 +36,7 @@
 		
 				<Col span="8" style="display: none;">网点：
 				<Select v-model="selectValue.shopValue" filterable clearable style="width: 250px">
-					<Option v-for="item in this.$store.state.param.shopList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}
-						({{item.paramKey}})</Option>
+					<Option v-for="item in this.$store.state.param.shopList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}-{{item.paramKey}}</Option>
 				</Select>
 				</Col>
 		

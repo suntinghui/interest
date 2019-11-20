@@ -7,9 +7,9 @@
 		select dt 日期,sum(单设备日销售额) 总销售额,sum(单设备日退款额) 总退款额,round(avg(单设备日销售额),2) 平均单台销售额,max(单设备日销售额)单台最大销售额
 		from
 		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,sum(a.ODER_Money) 单设备日销售额,sum(c.FLRF_RefundMoney) 单设备日退款额
-		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		from t_shop_order_info a left join  (select FLOW_OrderId,FLOW_Uid from netfiance_db.t_finance_bank_flow where FLOW_Mode= 1 ) b
 		on a.ODER_Note = b.FLOW_OrderId
-		left join netfiance_db.t_finance_bank_refund c
+		left join (select FLRF_FLUid,FLRF_RefundMoney from netfiance_db.t_finance_bank_refund where FLRF_State = 5)  c
 		on b.FLOW_Uid = c.FLRF_FLUid
 		left join t_device_device_info h
 		on a.ODER_DUid = h.DDI_Uid
@@ -70,9 +70,9 @@
 		select dt 日期,sum(单设备日销售额) 总销售额,sum(单设备日退款额) 总退款额,avg(单设备日销售额) 平均单台销售额,max(单设备日销售额)单台最大销售额
 		from
 		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,sum(a.ODER_Money) 单设备日销售额,sum(c.FLRF_RefundMoney) 单设备日退款额
-		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		from t_shop_order_info a left join  (select FLOW_OrderId,FLOW_Uid from netfiance_db.t_finance_bank_flow where FLOW_Mode= 1 ) b
 		on a.ODER_Note = b.FLOW_OrderId
-		left join netfiance_db.t_finance_bank_refund c
+		left join (select FLRF_FLUid,FLRF_RefundMoney from netfiance_db.t_finance_bank_refund where FLRF_State = 5)  c
 		on b.FLOW_Uid = c.FLRF_FLUid
 		left join t_device_device_info h
 		on a.ODER_DUid = h.DDI_Uid
@@ -129,9 +129,9 @@
 		select ATOP_Title 渠道,DDI_Type 设备类型,dt 日期,sum(单设备日销售额) 总销售额,sum(单设备日退款额) 总退款额,round(avg(单设备日销售额), 2) 平均单台销售额,max(单设备日销售额)单台最大销售额
 		from
 		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,g.ATOP_Title,sum(a.ODER_Money) 单设备日销售额,sum(c.FLRF_RefundMoney) 单设备日退款额
-		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		from t_shop_order_info a left join  (select FLOW_OrderId,FLOW_Uid from netfiance_db.t_finance_bank_flow where FLOW_Mode= 1 ) b
 		on a.ODER_Note = b.FLOW_OrderId
-		left join netfiance_db.t_finance_bank_refund c
+		left join (select FLRF_FLUid,FLRF_RefundMoney from netfiance_db.t_finance_bank_refund where FLRF_State = 5)  c
 		on b.FLOW_Uid = c.FLRF_FLUid
 		left join t_device_device_info h
 		on a.ODER_DUid = h.DDI_Uid
@@ -182,9 +182,9 @@
 		select ATOP_Title 渠道,DDI_Type 设备类型,dt 日期,sum(单设备日销售额) 总销售额,sum(单设备日退款额) 总退款额,round(avg(单设备日销售额), 2) 平均单台销售额,max(单设备日销售额)单台最大销售额
 		from
 		(select d.DDI_No 设备编号,d.SHOP_No 网点编号,date(d.DSI_Try) 启用时间,date(a.CreateDate) dt,h.DDI_Type,g.ATOP_Title,sum(a.ODER_Money) 单设备日销售额,sum(c.FLRF_RefundMoney) 单设备日退款额
-		from t_shop_order_info a left join netfiance_db.t_finance_bank_flow b
+		from t_shop_order_info a left join  (select FLOW_OrderId,FLOW_Uid from netfiance_db.t_finance_bank_flow where FLOW_Mode= 1 ) b
 		on a.ODER_Note = b.FLOW_OrderId
-		left join netfiance_db.t_finance_bank_refund c
+		left join (select FLRF_FLUid,FLRF_RefundMoney from netfiance_db.t_finance_bank_refund where FLRF_State = 5)  c
 		on b.FLOW_Uid = c.FLRF_FLUid
 		left join t_device_device_info h
 		on a.ODER_DUid = h.DDI_Uid

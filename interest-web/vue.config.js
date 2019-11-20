@@ -52,11 +52,12 @@ module.exports = {
 	devServer: {
 		compress: true,
 		host: "0.0.0.0", // 允许外部ip访问
-		port: 8812,
+		port: 8811,
 		hotOnly: false,
 		proxy: {
 			"/interest": {
-				target: "http://localhost:8812",
+				target: "http://118.190.205.233:8812",
+				// target: "http://localhost:8812",
 				secure: false
 			}
 		} // 设置代理
