@@ -349,16 +349,16 @@
 
 	<!-- 运营状态信息-3   机器日均购彩人数 -->
 	<select id="yyzt3_jqrjgcrs" resultType="java.util.HashMap">
-		select DDI_No 机器编号, SHOP_No 网点编号, 启用时间, tol_user 累计购彩人数, 搜索时段内天数 查询时段内运营天数,tol_user/搜索时段内天数 机器日均购彩人数
+		select DDI_No 机器编号, SHOP_No 网点编号,启用时间, sum(tol_user) 累计购彩人数, avg(搜索时段内天数) 查询时段内运营天数, ROUND(sum(tol_user)/avg(搜索时段内天数), 2) 机器日均购彩人数
 		from
 		(
-		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) tol_user,
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,day_o,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) tol_user,
 		case when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt>=#{filterMap.endDate} then datediff(#{filterMap.endDate},first_sub.dt)+1
 		when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt &lt;#{filterMap.endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
 		when first_sub.draw_dt &lt;#{filterMap.startDate} then 0
 		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >= #{filterMap.startDate} and first_sub.draw_dt &lt; #{filterMap.endDate} then datediff(first_sub.draw_dt,#{filterMap.startDate})+1
 		when first_sub.dt &lt;#{filterMap.startDate} and first_sub.draw_dt >=#{filterMap.endDate} then datediff(#{filterMap.endDate},#{filterMap.startDate})+1
-		when first_sub.dt>#{filterMap.endDate} then 0 end as 搜索时段内天数
+		when first_sub.dt>#{filterMap.endDate} then 0 end as 搜索时段内天数     #需判断查询起始时间、截止时间，与设备开启时间、撤机时间之间的关系
 		from
 		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,ifnull(date(a.DSI_Withdraw),now()) draw_dt,b.DDI_Type
 		from study.t_device_sub_info a left join t_device_device_info b
@@ -374,7 +374,6 @@
 		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
 		on t.DICT_Value = d.SHOP_Class
 		where a.DSI_Anti is null
-
 
 		<if test="null != filterMap.shopValue">
 			and d.SHOP_No = #{filterMap.shopValue}
@@ -399,13 +398,13 @@
 		#and f.ATOP_Title = {{选择渠道}}
 		#and a.DDI_No = '{{设备编码}}'
 		#and g.SHOP_Area = '{{ 所属地区 }}'
-		#and d.SHOP_No = '{{ 所属门店 }}'
+		#and d. SHOP_No = '{{ 所属门店 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
 		order by dt) first_sub             #每台机器在网点真实开启时间
 
 		left join
 
-		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid,date(e.CreateDate) day_o
 		from t_shop_order_info e left join t_device_device_info b
 		on e.ODER_DUid = b.DDI_Uid
 		left join study.t_device_sub_info a
@@ -416,17 +415,19 @@
 		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
 
 		where first_sub.dt &lt;=#{filterMap.endDate}
-		group by DDI_No,SHOP_No,启用时间   )t
+
+		group by DDI_No,SHOP_No,启用时间,day_o  )t
+		group by 机器编号,网点编号,启用时间
 
 
 	</select>
 
 	<!-- 运营状态信息-3   机器日均新购彩人数 -->
 	<select id="yyzt3_jqrjxgcrs" resultType="java.util.HashMap">
-		select DDI_No 机器编号,SHOP_No 网点编号, 启用时间,新用户总数,搜索时段内天数,新用户总数/搜索时段内天数 机器日均新购彩人数
+		select DDI_No 机器编号, SHOP_No 网点编号,启用时间, sum(tol_user) 新用户总数,avg(搜索时段内天数) 查询时段内运营天数, ROUND(sum(tol_user)/avg(搜索时段内天数), 2) 机器日均新购彩人数
 		from
 		(
-		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) 新用户总数,
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,day_o,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) tol_user,
 		case when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt>=#{filterMap.endDate} then datediff(#{filterMap.endDate},first_sub.dt)+1
 		when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt &lt;#{filterMap.endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
 		when first_sub.draw_dt &lt;#{filterMap.startDate} then 0
@@ -471,14 +472,14 @@
 		#and b.DDI_Type = '{{设备类型}}'
 		#and f.ATOP_Title = {{选择渠道}}
 		#and a.DDI_No = '{{设备编码}}'
-		#and d.SHOP_No = '{{ 所属门店 }}'
+		#and d. SHOP_No = '{{ 所属门店 }}'
 		#and g.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
 		order by dt) first_sub             #每台机器在网点真实开启时间
 
 		left join
 
-		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid,date(e.CreateDate) day_o
 		from t_shop_order_info e left join t_device_device_info b
 		on e.ODER_DUid = b.DDI_Uid
 		left join study.t_device_sub_info a
@@ -487,23 +488,23 @@
 		on e.ODER_USUid = h.USER_Uid
 		where date(e.CreateDate)>=#{filterMap.startDate} and date(e.CreateDate) &lt;=#{filterMap.endDate}
 		and e.ODER_State = 0
-		and e.CreateDate &lt;= h.CreateDate
+		and date(e.CreateDate) &lt;= date(h.CreateDate)
 		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
 		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
 
 		where first_sub.dt &lt;=#{filterMap.endDate}
-		group by DDI_No,SHOP_No,启用时间   )t
-
+		group by DDI_No,SHOP_No,启用时间,day_o  )t
+		group by 机器编号,网点编号,启用时间
 
 	</select>
 
 
 	<!-- 运营状态信息-3   机器日均复购人数 -->
 	<select id="yyzt3_jqrjfgrs" resultType="java.util.HashMap">
-		select DDI_No 机器编号,SHOP_No 网点编号, 启用时间,复购用户总数, 搜索时段内天数,复购用户总数/搜索时段内天数 机器日均复购人数
+		select DDI_No 机器编号, SHOP_No 网点编号,启用时间, sum(tol_user) 复购用户总数,avg(搜索时段内天数) 查询时段内运营天数, ROUND(sum(tol_user)/avg(搜索时段内天数), 2) 机器日均复购人数
 		from
 		(
-		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) 复购用户总数,
+		select first_sub.DDI_No,first_sub.SHOP_No,first_sub.dt 启用时间,day_o,DDI_Type,ifnull(count(distinct(ODER_USUid)),0) tol_user,
 		case when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt>=#{filterMap.endDate} then datediff(#{filterMap.endDate},first_sub.dt)+1
 		when first_sub.dt>=#{filterMap.startDate} and first_sub.draw_dt &lt;#{filterMap.endDate} then datediff(first_sub.draw_dt,first_sub.dt)+1
 		when first_sub.draw_dt &lt;#{filterMap.startDate} then 0
@@ -548,15 +549,14 @@
 		#and b.DDI_Type = '{{设备类型}}'
 		#and f.ATOP_Title = {{选择渠道}}
 		#and a.DDI_No = '{{设备编码}}'
-		#and d.SHOP_No = '{{ 所属门店 }}'
+		#and d. SHOP_No = '{{ 所属门店 }}'
 		#and g.SHOP_Area = '{{ 所属地区 }}'
 		#and t.DICT_Name = '{{ 网点类型 }}'
-
 		order by dt) first_sub             #每台机器在网点真实开启时间
 
 		left join
 
-		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid
+		(select a.DDI_No,a.SHOP_No,date(a.DSI_Try) dt,e.ODER_Uid,e.ODER_USUid,date(e.CreateDate) day_o
 		from t_shop_order_info e left join t_device_device_info b
 		on e.ODER_DUid = b.DDI_Uid
 		left join study.t_device_sub_info a
@@ -565,13 +565,13 @@
 		on e.ODER_USUid = h.USER_Uid
 		where date(e.CreateDate)>=#{filterMap.startDate} and date(e.CreateDate) &lt;=#{filterMap.endDate}
 		and e.ODER_State = 0
-		and e.CreateDate > h.CreateDate
+		and date(e.CreateDate) > date(h.CreateDate)
 		and e.CreateDate >= a.DSI_Try and (e.CreateDate &lt;= a.DSI_Withdraw or a.DSI_Withdraw is null) ) order_detail
 		on first_sub.DDI_No = order_detail.DDI_No and first_sub.SHOP_No = order_detail.SHOP_No and first_sub.dt = order_detail.dt
 
 		where first_sub.dt &lt;=#{filterMap.endDate}
-		group by DDI_No,SHOP_No,启用时间   )t
-
+		group by DDI_No,SHOP_No,启用时间,day_o  )t
+		group by 机器编号,网点编号,启用时间
 
 	</select>
 

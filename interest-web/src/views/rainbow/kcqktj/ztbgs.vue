@@ -9,8 +9,8 @@
 			<Row style="margin-bottom: 25px;">
 		
 				<Col span="8">日期：
-				<Date-picker :value="dateValue" @on-change='handleDateChange' type="daterange" editable="false" :options="dateOptions"
-				 placement="bottom-start" placeholder="选择日期" :clearable="false" style="width: 250px"></Date-picker>
+				<Date-picker :value="queryDate" @on-change='handleDateChange' type="datetime" editable="false" 
+				 placement="bottom-start" placeholder="选择时间" :clearable="false" style="width: 250px"></Date-picker>
 				</Col>
 		
 				<Col span="8">所属地区：
@@ -71,7 +71,7 @@
 		data() {
 			return {
 				selectValue:{},
-				dateValue: [util.dateFormat(util.lastWeek(new Date())), util.dateFormat(new Date())],
+				queryDate: util.datetimeFormat(new Date()),
 				
 				showSpin: false,
 				date: null,
@@ -109,8 +109,7 @@
 						timeout: 1000 * 60 * 2,
 						params: {
 							filterMap: {
-								startDate: this.dateValue[0],
-								endDate: this.dateValue[1],
+								queryDate: this.queryDate,
 								deviceTypeValue: this.selectValue.deviceTypeValue,
 								areaValue: this.selectValue.areaValue,
 								channelValue: this.selectValue.channelValue,

@@ -510,8 +510,8 @@
 						align: "center"
 					},
 					{
-						title: "搜索时段内天数",
-						key: "搜索时段内天数",
+						title: "查询时段内运营天数",
+						key: "查询时段内运营天数",
 						align: "center"
 					},
 					{
@@ -544,8 +544,8 @@
 						align: "center"
 					},
 					{
-						title: "搜索时段内天数",
-						key: "搜索时段内天数",
+						title: "查询时段内运营天数",
+						key: "查询时段内运营天数",
 						align: "center"
 					},
 					{

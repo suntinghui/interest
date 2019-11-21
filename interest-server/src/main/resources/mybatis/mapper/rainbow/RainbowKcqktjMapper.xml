@@ -188,11 +188,8 @@
 		where DSI_Anti is null
 		and a.created_at >= b.SHOP_No and (a.created_at &lt;= b.DSI_Withdraw or b.DSI_Withdraw is null)
 
-		<if test="null != filterMap.startDate">
-			and a.created_at >= #{filterMap.startDate}
-		</if>
-		<if test="null != filterMap.endDate">
-			and a.created_at &lt;= #{filterMap.endDate}
+		<if test="null != filterMap.queryDate">
+			and a.created_at &lt;= #{filterMap.queryDate} and (a.updated_at >=#{filterMap.queryDate} or a.updated_at = a.created_at)
 		</if>
 		<if test="null != filterMap.channelValue">
 			and g.ATOP_Title = #{filterMap.channelValue}
@@ -212,17 +209,8 @@
 		#and d.SHOP_Area = '{{ 所属地区 }}'
 		#and l.DICT_Name = '{{ 网点类型 }}'
 
-
 		group by DDI_Type
-
 	</select>
-
-
-
-
-
-
-
 
 
 </mapper>
