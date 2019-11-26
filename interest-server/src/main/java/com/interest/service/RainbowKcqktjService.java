@@ -26,6 +26,12 @@ public interface RainbowKcqktjService {
 	// 库存明细
 	List<HashMap> jkppsmx(HashMap filterMap);
 
+	// 票仓实时余量
+	List<HashMap> pcssyl(HashMap filterMap);
+
+	// 票仓实时余量详情
+	List<HashMap> pcssylxq(HashMap filterMap);
+
 	// 出库包裹数
 	List<HashMap> ckbgs(HashMap filterMap);
 

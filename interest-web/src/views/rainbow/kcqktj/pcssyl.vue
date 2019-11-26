@@ -1,4 +1,4 @@
-<!-- 即开票库存数(截止24时)  -->
+<!-- 票仓实时余量 -->
 <style>
 
 </style>
@@ -8,12 +8,7 @@
 		<div>
 			<Row style="margin-bottom: 25px;">
 
-				<Col span="8">日期：
-				<Date-picker :value="dateValue" @on-change='handleDateChange' :clearable="false" type="daterange" editable="false"
-				 :options="dateOptions" placement="bottom-start" placeholder="选择日期" style="width: 250px"></Date-picker>
-				</Col>
-
-				<Col span="4" style="text-align: center;"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
+				<Col span="10" style="text-align: left;">当前票仓实时余量统计</Col>
 
 			</Row>
 
@@ -21,11 +16,11 @@
 
 		<Spin size="large" fix v-if="showSpin"></Spin>
 
-		<div style="padding: 10px 0;">
+		<div>
 			<Table border :columns="columns1" :data="data1" :height="450" :search="true"></Table>
 		</div>
 
-		<Modal closable scrollable :mask-closable="false" v-model="showDetailModel" width="60%" :title="detailTitle" style="padding-left: 30px; padding-right: 30px;">
+		<Modal closable scrollable :mask-closable="false" v-model="showDetailModel" width="60%" title="票仓实时余量" style="padding-left: 30px; padding-right: 30px;">
 			<Table border size="default" :columns="columns2" :data="data2" :height="450"></Table>
 			<div slot="footer"></div>
 		</Modal>
@@ -44,9 +39,8 @@
 	export default {
 		data() {
 			return {
-				dateValue: ['2019-08-01', util.dateFormat(new Date())],
+				dateValue: [util.dateFormat(util.lastWeek(new Date())), util.dateFormat(new Date())],
 				showDetailModel: false,
-				detailTitle: "详情",
 
 				showSpin: false,
 				date: null,
@@ -54,81 +48,70 @@
 				groupId: [],
 				/*表显示字段*/
 				columns1: [{
-						title: "入库数量",
-						key: "入库数量",
-						sortable: true,
+						title: "实时余量",
+						key: "实时余量",
 						align: "center"
 					},
 					{
-						title: "出库数量",
-						key: "出库数量",
-						sortable: true,
-						align: "center"
-					},
-					{
-						title: "库存数量",
-						key: "库存数量",
-						sortable: true,
-						align: "center"
-					}, {
-						title: "库存金额",
-						key: "库存金额",
-						sortable: true,
+						title: "余票金额",
+						key: "余票金额",
 						align: "center"
 					},
 					{
 						title: "操作",
 						key: "Action",
 						align: "center",
-						width: 150,
+						width: 300,
 						render: (h, params) => {
-							return h('Button', {
-								props: {
-									type: "primary"
-								},
-								on: {
-									click: () => {
-										this.queryDetailInfo(params.row)
+							return [h('Button', {
+									props: {
+										type: "primary"
+									},
+									on: {
+										click: () => {
+											this.queryDetailInfo(params.row)
+										}
 									}
-								}
-							}, "详情")
+								}, "详情"),
+								h('Button', {
+									props: {
+										type: "info"
+									},
+									style: {
+										margin: '15px'
+									},
+									on: {
+										click: () => {
+											this.search()
+										}
+									}
+								}, "刷新")
+							]
 						}
 					}
 				],
 				data1: [],
 				columns2: [{
-						title: "票种",
-						key: "票种",
+						title: "仓内票种",
+						key: "仓内票种",
 						sortable: true,
 						align: "center"
 					},
 					{
-						title: "面值",
-						key: "面值",
+						title: "票种金额",
+						key: "票种金额",
 						sortable: true,
 						align: "center"
 					},
 					{
-						title: "入库数量",
-						key: "入库数量",
+						title: "余票张数",
+						key: "余票张数",
 						sortable: true,
 						align: "center"
 					},
 					{
-						title: "出库数量",
-						key: "出库数量",
-						sortable: true,
-						align: "center"
-					},
-					{
-						title: "库存数量",
-						key: "库存数量",
-						sortable: true,
-						align: "center"
-					},
-					{
-						title: "库存金额",
-						key: "库存金额",
+						title: "余票金额",
+						key: "余票金额",
 						sortable: true,
 						align: "center"
 					}
@@ -147,13 +130,10 @@
 
 				this.axios({
 						method: "get",
-						url: "/rainbow/jkpkcs",
+						url: "/rainbow/pcssyl",
 						timeout: 1000 * 60 * 2,
 						params: {
-							filterMap: {
-								startDate: this.dateValue[0],
-								endDate: this.dateValue[1],
-							}
+
 						}
 					})
 					.then(
@@ -178,7 +158,7 @@
 
 				this.axios({
 						method: "get",
-						url: "/rainbow/jkpkcsmx",
+						url: "/rainbow/pcssylxq",
 						timeout: 1000 * 60 * 2,
 						params: {
 							filterMap: {
@@ -195,8 +175,6 @@
 
 							this.showDetailModel = true;
 
-							this.detailTitle = this.dateValue[0] + " 至 " + this.dateValue[1];
-
 						}.bind(this)
 					)
 					.catch(function(error) {
@@ -206,11 +184,6 @@
 						this.showSpin = false;
 					}.bind(this));
 			},
-
-			handleDateChange(daterange) {
-				this.dateValue = daterange;
-			}
-
 
 		}
 	};

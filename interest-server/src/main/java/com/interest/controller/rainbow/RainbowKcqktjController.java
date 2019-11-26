@@ -76,6 +76,20 @@ public class RainbowKcqktjController {
         return new ResponseWrapper<>(list);
     }
 
+    @InterestLog
+    @GetMapping("/rainbow/pcssyl")
+    public ResponseWrapper<List<HashMap>> pcssyl(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.pcssyl(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
+    }
+
+    @InterestLog
+    @GetMapping("/rainbow/pcssylxq")
+    public ResponseWrapper<List<HashMap>> pcssylxq(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> list = rainbowKcqktjService.pcssylxq(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(list);
+    }
+
     //  出库包裹数
     @InterestLog
     @GetMapping("/rainbow/ckbgs")

@@ -22,6 +22,10 @@ public interface RainbowKcqktjDao {
 
 	List<HashMap> jkppsmx(@Param("filterMap") HashMap filterMap);
 
+	List<HashMap> pcssyl(@Param("filterMap") HashMap filterMap);
+
+	List<HashMap> pcssylxq(@Param("filterMap") HashMap filterMap);
+
 	List<HashMap> ckbgs(@Param("filterMap") HashMap filterMap);
 
 	List<HashMap> ztbgs(@Param("filterMap") HashMap filterMap);

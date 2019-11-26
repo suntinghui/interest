@@ -63,6 +63,18 @@ public class RainbowKcqktjServiceImpl implements RainbowKcqktjService {
 	}
 
 	@Override
+	public List<HashMap> pcssyl(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.pcssyl(filterMap));
+		return list;
+	}
+
+	@Override
+	public List<HashMap> pcssylxq(HashMap filterMap) {
+		List<HashMap> list =  RainbowUtil.decodeList(rainbowKcqktjDao.pcssylxq(filterMap));
+		return list;
+	}
+
+	@Override
 	public List<HashMap> ckbgs(HashMap filterMap) {
 		List<HashMap> list = rainbowKcqktjDao.ckbgs(filterMap);
 		return list;

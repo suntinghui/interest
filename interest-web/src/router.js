@@ -378,6 +378,11 @@ const routers = [
 	    component: resolve => require(["./views/rainbow/kcqktj/jkppsmx.vue"], resolve)
 	  },
 	  {
+	    path: "rainbow/pcssyl", // 票仓实时余量
+	    name: "rainbow/pcssyl",
+	    component: resolve => require(["./views/rainbow/kcqktj/pcssyl.vue"], resolve)
+	  },
+	  {
 	    path: "rainbow/ckbgs", // 出库包裹数
 	    name: "rainbow/ckbgs",
 	    component: resolve => require(["./views/rainbow/kcqktj/ckbgs.vue"], resolve)

@@ -24,7 +24,9 @@
 
 	<!-- 即开票库存数 -->
 	<select id="jkpkcs" resultType="java.util.HashMap">
-		SELECT SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量
+		select SUM(入库数量) 入库数量,SUM(出库数量) 出库数量,SUM(库存数量) 库存数量,SUM(库存金额) 库存金额
+		from(
+		SELECT SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量,(SUM(数量)-SUM(数量*出库标记))*面值 库存金额
 		FROM
 		(SELECT c.COUP_Title 票种,c.COUP_Money 面值,a.lottery_count 数量,case when d.package_no IS NOT NULL then 1 ELSE 0 END AS 出库标记
 		FROM t_storage_checkin_list a JOIN t_customer_coupon_sub_info b
@@ -33,12 +35,13 @@
 		ON b.COUPS_CPUid = c.COUP_Uid
 		LEFT JOIN t_storage_checkout_packages_detail d
 		ON a.lottery_start_id = d.lottery_start_id
-		WHERE  date(a.created_at) >= #{filterMap.startDate} and  date(a.created_at) &lt;= #{filterMap.endDate}  )　sheet1
+		WHERE  date(a.created_at) >= #{filterMap.startDate} and  date(a.created_at) &lt;= #{filterMap.endDate} )　sheet1
+		GROUP BY 票种  )t
 	</select>
 
 	<!-- 即开票库存数明细 -->
 	<select id="jkpkcsmx" resultType="java.util.HashMap">
-		SELECT 票种,面值,SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量,(SUM(数量)-SUM(数量*出库标记))*面值 金额
+		SELECT 票种,面值,SUM(数量) 入库数量,SUM(数量*出库标记) 出库数量,SUM(数量)-SUM(数量*出库标记) 库存数量,(SUM(数量)-SUM(数量*出库标记))*面值 库存金额
 		FROM
 		(SELECT c.COUP_Title 票种,c.COUP_Money 面值,a.lottery_count 数量,case when d.package_no IS NOT NULL then 1 ELSE 0 END AS 出库标记
 		FROM t_storage_checkin_list a JOIN t_customer_coupon_sub_info b
@@ -49,7 +52,6 @@
 		ON a.lottery_start_id = d.lottery_start_id
 		WHERE  date(a.created_at) >= #{filterMap.startDate} and  date(a.created_at) &lt;= #{filterMap.endDate}  )　sheet1
 		GROUP BY 票种
-
 	</select>
 
 	<!-- 即开票库配送情况 -->
@@ -118,6 +120,56 @@
 		#and t.DICT_Name = '{{ 网点类型 }}'
 		#and j.SHOP_Area = '{{ 所属地区 }}'
 		group by 日期,设备编号,网点编号,票种,出库时间,加仓时间,配送员昵称
+
+	</select>
+
+	<select id="pcssyl" resultType="java.util.HashMap" >
+		select sum(实时余量) 实时余量,sum(票种金额*实时余量) 余票金额
+		from
+		(select c.DDI_No 设备编码,c.SHOP_No 网点编码,DSL_No 机头编号,date(c.DSI_Try) 启用时间,d.COUP_Title 仓内票种,d.COUP_Money 票种金额,a.DSL_Count 实时余量
+		from t_device_sub_list a left join t_device_device_info b
+		on a.DSL_DUid = b.DDI_Uid
+		left join study.t_device_sub_info c
+		on b.DDI_No = c.DDI_No
+		join t_customer_coupon_info d
+		on a.DSL_CPUid = d.COUP_Uid
+		left join netfiance_db.t_shop_shop_info i
+		on c.SHOP_No= i.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join study.t_shop_sub_info j
+		on i.SHOP_No = j.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = i.SHOP_Class
+		where c.DSI_Anti is null
+		and a.ModifyDate >= c.DSI_Try and (a.ModifyDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)   )t;
+	</select>
+
+	<select id="pcssylxq" resultType="java.util.HashMap" >
+		select 仓内票种,票种金额,sum(实时余量) 余票张数,sum(票种金额*实时余量) 余票金额
+		from
+		(select c.DDI_No 设备编码,c.SHOP_No 网点编码,DSL_No 机头编号,date(c.DSI_Try) 启用时间,d.COUP_Title 仓内票种,d.COUP_Money 票种金额,a.DSL_Count 实时余量
+		from t_device_sub_list a left join t_device_device_info b
+		on a.DSL_DUid = b.DDI_Uid
+		left join study.t_device_sub_info c
+		on b.DDI_No = c.DDI_No
+		join t_customer_coupon_info d
+		on a.DSL_CPUid = d.COUP_Uid
+		left join netfiance_db.t_shop_shop_info i
+		on c.SHOP_No= i.SHOP_No
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		left join study.t_shop_sub_info j
+		on i.SHOP_No = j.SHOP_No
+		left join (select DICT_Value,DICT_Name from netfiance_db.t_sys_dictionary_info where DICT_Field = 'shop_class' ) t
+		on t.DICT_Value = i.SHOP_Class
+		where c.DSI_Anti is null
+		and a.ModifyDate >= c.DSI_Try and (a.ModifyDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)   )t
+		group by 仓内票种
 
 	</select>
 

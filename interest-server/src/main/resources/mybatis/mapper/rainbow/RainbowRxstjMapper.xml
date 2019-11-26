@@ -419,7 +419,7 @@
 		and date(DATE_ADD(a.CreateDate,interval 1 minute)) &lt;= #{filterMap.endDate} and date(DATE_ADD(a.CreateDate,interval 1 minute)) >= #{filterMap.startDate}
 		and c.DSI_Anti is null
 		and a.CreateDate >= c.DSI_Try and (a.CreateDate &lt;= c.DSI_Withdraw or c.DSI_Withdraw is null)
-		group by DDI_No,SHOP_No,启用时间) t
+		group by DDI_No,SHOP_No,启用时间, dt) t
 		where last_hour &lt;> 0
 		group by DDI_No,SHOP_No,启用时间       )sheet2
 		on sheet1.DDI_No = sheet2.DDI_No and sheet1.SHOP_No = sheet2.SHOP_No and sheet1.启用时间 = sheet2.启用时间    )tol_sheet
