@@ -31,4 +31,9 @@ public class RelationServiceImpl implements RelationService {
 		}
 	}
 
+	@Override
+	public void insertRelation(RelationEntity relationEntity) {
+		relationDao.insertRelation(relationEntity);
+	}
+
 }

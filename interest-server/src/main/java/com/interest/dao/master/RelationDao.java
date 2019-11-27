@@ -32,4 +32,6 @@ public interface RelationDao {
 	 * @param relationList
 	 */
 	void insertRelations(List<RelationEntity> relationList);
+
+	void insertRelation (RelationEntity relationEntity);
 }

@@ -1,0 +1,2 @@
+{"id":"192.168.3.22.tm157484289580800001","wasCommitted":true,"participants":[{"uri":"192.168.3.22.tm1","state":"COMMITTING","expires":1574842905888,"resourceName":"masterDataSource"}]}
+{"id":"192.168.3.22.tm157484289580800001","wasCommitted":true,"participants":[{"uri":"192.168.3.22.tm1","state":"TERMINATED","expires":1574842906057,"resourceName":"masterDataSource"}]}

@@ -19,5 +19,5 @@ public interface RelationService {
 	 */
 	void insertRelations(List<RelationEntity> relationList);
 
-	
+	void insertRelation (RelationEntity relationEntity);
 }

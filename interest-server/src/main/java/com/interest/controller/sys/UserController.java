@@ -5,8 +5,10 @@ import com.interest.model.utils.PageResult;
 import com.interest.model.entity.UserEntity;
 import com.interest.model.request.UserInfoRequest;
 import com.interest.model.response.UserInfoResponse;
+import com.interest.model.utils.ResponseStatus;
 import com.interest.model.utils.ResponseWrapper;
 import com.interest.picture.PictureService;
+import com.interest.service.RelationService;
 import com.interest.service.UserService;
 import com.interest.utils.SecurityAuthenUtil;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -27,6 +30,9 @@ public class UserController {
 
     @Resource(name = "userServiceImpl")
     private UserService userService;
+
+    @Resource(name = "relationServiceImpl")
+    private RelationService relationService;
 
     @Autowired
     private PictureService pictureService;
@@ -66,10 +72,15 @@ public class UserController {
      */
     @InterestLog
     @PostMapping("/users/user")
-    public ResponseWrapper<UserEntity> insertUser(@RequestBody UserEntity userEntity) {
-        userService.insertUser(userEntity);
-        log.debug("The method is ending");
-        return new ResponseWrapper<>(userEntity);
+    public ResponseWrapper<Object> insertUser(@RequestBody UserEntity userEntity) {
+        try {
+            userService.insertUser(userEntity);
+            log.debug("The method is ending");
+            return new ResponseWrapper<>(userEntity);
+        } catch (Exception e) {
+            log.debug("The method is ending");
+            return new ResponseWrapper<>(ResponseStatus.FAIL_4000, e.getMessage());
+        }
     }
 
     /**

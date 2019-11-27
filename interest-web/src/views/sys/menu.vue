@@ -16,7 +16,7 @@
             </Row>
         </div>            
         <div>
-            <ul>
+            <ul style="list-style-type: none;">
                 <li>
                     <Button class="operation-button" type="primary" icon="md-add" @click="openNewModal()">新建</Button>
                     <Button class="operation-button" type="success" icon="md-build" @click="openModifyModal()">修改</Button>
