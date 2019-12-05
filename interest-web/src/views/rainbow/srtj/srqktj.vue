@@ -9,11 +9,11 @@
 			<Row style="margin-bottom: 25px;">
 
 				<Col span="10">起止月份：
-				<Date-picker :value="startMonth" @on-change='handleStartDateChange' :clearable="false"  type="month" editable="false" placement="bottom-start"
-				 placeholder="开始月份" style="width: 150px"></Date-picker>
+				<Date-picker :value="startMonth" @on-change='handleStartDateChange' :clearable="false" type="month" editable="false"
+				 placement="bottom-start" placeholder="开始月份" style="width: 150px"></Date-picker>
 				-
-				<Date-picker :value="endMonth" @on-change='handleEndDateChange' :clearable="false"  type="month" editable="false" placement="bottom-start"
-				 placeholder="截止月份" style="width: 150px"></Date-picker>
+				<Date-picker :value="endMonth" @on-change='handleEndDateChange' :clearable="false" type="month" editable="false"
+				 placement="bottom-start" placeholder="截止月份" style="width: 150px"></Date-picker>
 				</Col>
 
 				<Col span="8">渠道：
@@ -36,7 +36,7 @@
 
 		<!-- 该月份下的每日详情 -->
 		<Modal closable scrollable :mask-closable="false" v-model="showDetailModel" width="60%" :title="detailTitle" style="padding-left: 30px; padding-right: 30px;">
-			<Table border size="small" :columns="columns2" :data="data2" :height="450" ></Table>
+			<Table border ref="dayTable" size="small" :columns="columns2" :data="data2" :height="450"></Table>
 			<div slot="footer"></div>
 		</Modal>
 
@@ -59,8 +59,8 @@
 
 				showDetailModel: false,
 				detailTitle: "详情",
-				
-				selectValue:{},
+
+				selectValue: {},
 
 				showSpin: false,
 				date: null,
@@ -89,24 +89,40 @@
 						title: "操作",
 						key: "Action",
 						align: "center",
-						width: 150,
+						width: 250,
 						render: (h, params) => {
-							return h('Button', {
-								props: {
-									type: "primary"
-								},
-								on: {
-									click: () => {
-										this.queryDetailInfo(params.row)
+							return [h('Button', {
+									props: {
+										type: "primary"
+									},
+									style: {
+										margin: '15px'
+									},
+									on: {
+										click: () => {
+											this.queryDetailInfo(params.row)
+										}
 									}
-								}
-							}, "详情")
+								}, "详情"),
+								h('Button', {
+									props: {
+										type: "primary"
+									},
+									style: {
+										margin: '15px'
+									},
+									on: {
+										click: () => {
+											this.downloadData(params.row)
+										}
+									}
+								}, "下载")
+							]
 						}
 					}
 				],
 				data1: [],
-				columns2: [
-					{
+				columns2: [{
 						title: "日期",
 						key: "日期",
 						align: "center",
@@ -151,7 +167,7 @@
 
 							this.data1 = response.data.data;
 							this.total = response.data.data.totalCount;
-							
+
 
 						}.bind(this)
 					)
@@ -183,8 +199,8 @@
 
 							this.data2 = response.data.data;
 							this.showDetailModel = true;
-							
-							this.detailTitle = rowData['顶级渠道']+'  '+rowData['月份'];
+
+							this.detailTitle = rowData['顶级渠道'] + '  ' + rowData['月份'];
 
 						}.bind(this)
 					)
@@ -197,12 +213,49 @@
 					}.bind(this));
 
 			},
-			
+
+			downloadData(rowData) {
+				this.showSpin = true;
+
+				this.axios({
+						method: "get",
+						url: "/rainbow/srqktjmx",
+						timeout: 1000 * 60 * 2,
+						params: {
+							filterMap: {
+								channelValue: rowData['顶级渠道'],
+								queryMonth: rowData['月份']
+							}
+						},
+					})
+					.then(
+						function(response) {
+							console.log(JSON.stringify(response))
+
+							this.data2 = response.data.data;
+
+							this.$refs.dayTable.exportCsv({
+								filename: rowData['顶级渠道'] + '_' + rowData['月份'],
+								columns: this.columns2,
+								data: this.data2
+							});
+
+						}.bind(this)
+					)
+					.catch(function(error) {
+						alert(error);
+					})
+					.finally(function() {
+						this.showSpin = false;
+
+					}.bind(this));
+			},
+
 			handleStartDateChange(selMonth) {
-				console.log('===='+selMonth)
+				console.log('====' + selMonth)
 				this.startMonth = selMonth;
 			},
-			
+
 			handleEndDateChange(selMonth) {
 				this.endMonth = selMonth;
 			}

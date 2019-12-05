@@ -104,9 +104,10 @@
 						url: "/rainbow/srtjr",
 						timeout: 1000 * 60 * 2,
 						params: {
-							page: e.pageInfo.page,
-							pageSize: e.pageInfo.pageSize,
-							queryMonth: this.dateValue,
+							filterMap: {
+								channelValue: rowData['顶级渠道'],
+								queryMonth: rowData['月份']
+							}
 						},
 					})
 					.then(
