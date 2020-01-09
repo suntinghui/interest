@@ -488,7 +488,7 @@ export default {
     },
     /*modal的cancel点击事件*/
     cancel() {
-      this.$Message.info("点击了取消");
+      // this.$Message.info("点击了取消");
     },
     /*table选择后触发事件*/
     change(e) {

@@ -106,6 +106,7 @@ Http状态码
 		1. 401 清除token信息并跳转到登录页面
 		2. 403 无权限，跳转到首页
 如果你项目启动有错误：
+
 --
 1. 项目启动报错，请试一下用管理员权限输入命令。
 2. 启动报错：Invalid options in vue.config.js: "publicPath" is not allowed，请把vue.config.js中的publicPath改成baseUrl。

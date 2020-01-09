@@ -25,8 +25,8 @@
 </style>
 
 <template>
-	<div style="margin: 40px;">
-		<div>
+	<div style="margin-top: 10px; margin-bottom: 10px;">
+		<div style="margin-left: 20px; margin-right: 20px;">
 			<Row style="margin-bottom: 25px;">
 
 				<Col span="8">日期：
@@ -66,7 +66,7 @@
 					<Option v-for="item in this.$store.state.param.shopTypeList" :value="item.paramKey" :key="item.paramKey">{{ item.paramValue }}</Option>
 				</Select>
 				</Col>
-				
+
 				<Col span="8" style="text-align: left;"><Button type="primary" shape="circle" icon="ios-search" @click="search()">搜索</Button></Col>
 			</Row>
 		</div>
@@ -74,7 +74,7 @@
 		<Spin size="large" fix v-if="showSpin"></Spin>
 
 		<div style="padding: 10px 0;">
-			<Table border :columns="columns_list" :data="dataList" :height="350"></Table>
+			<Table border :columns="columns_list" :data="dataList"></Table>
 		</div>
 		<div style="text-align: right;">
 			<Page :total="total" :page-size="pageInfo.pageSize" show-sizer show-total @on-page-size-change="e=>{pageSizeChange(e)}"
@@ -134,7 +134,12 @@
 					<Table border size="small" :columns="columns_sbjyxx_drpzxl" :data="this.detailInfo.sbjyxx_drpzxl"></Table>
 
 				</Tab-pane>
+
+				<Tab-pane label="交易统计" name="name6" style="height:400px;overflow-y:auto;overflow-x:hidden; padding-left: 20px; padding-right: 20px;">
+					<div style="width: 800px; height:400px;" ref="chart" id="chart"></div>
+				</Tab-pane>
 			</Tabs>
+
 
 			<div slot="footer"></div>
 		</Modal>
@@ -146,6 +151,7 @@
 <script>
 	import util from '../../../util.js'
 	import data from '../../../data.js'
+
 	// for axios add finally
 	import promiseFinally from 'promise.prototype.finally';
 	promiseFinally.shim();
@@ -157,9 +163,9 @@
 				dataList: [], // 列表数据
 				showDetailModel: false, // 控制是否显示详情
 				detailInfo: {}, // 某条数据下的所有的详情信息
-				
-				selectValue:{},
-				
+
+				selectValue: {},
+
 				tabCheck: "name1",
 				showSpin: false,
 				detailTitle: '加载中...',
@@ -770,7 +776,7 @@
 						title: "设备编号",
 						key: "设备编号",
 						align: "center",
-						width:180
+						width: 180
 					},
 					{
 						title: "网点编号",
@@ -809,7 +815,7 @@
 						title: "设备编号",
 						key: "设备编号",
 						align: "center",
-						width:180
+						width: 180
 					},
 					{
 						title: "网点编号",
@@ -843,7 +849,7 @@
 						title: "设备编号",
 						key: "设备编号",
 						align: "center",
-						width:180
+						width: 180
 					},
 					{
 						title: "网点编号",
@@ -888,6 +894,7 @@
 			this.getDataList({
 				pageInfo: this.pageInfo
 			});
+
 		},
 		methods: {
 			initPageInfo() {
@@ -900,6 +907,7 @@
 				this.getDataList({
 					pageInfo: this.pageInfo
 				});
+
 			},
 
 			/*得到列表数据*/
@@ -951,11 +959,13 @@
 
 				this.queryDetailInfo(rowData['机器编号'], rowData['网点编号']);
 
+				this.loadCharts();
+
 			},
 
 			queryDetailInfo(ddiNo, shopNo) {
 				this.detailTitle = '加载中...';
-				
+
 				this.showSpin = true;
 
 				this.axios({
@@ -973,11 +983,11 @@
 					.then(
 						function(response) {
 							console.log(JSON.stringify(response))
-							
+
 							this.detailTitle = '详情信息';
 
 							this.detailInfo = response.data.data;
-							
+
 							this.showDetailModel = true;
 
 						}.bind(this)
@@ -988,6 +998,106 @@
 					.finally(function() {
 						this.showSpin = false;
 					}.bind(this));
+			},
+
+			loadCharts() {
+				var echarts = require('echarts/lib/echarts');
+				// 引入柱状图
+				require('echarts/lib/chart/scatter');
+				// 引入提示框和标题组件
+				require('echarts/lib/component/tooltip');
+				require('echarts/lib/component/title');
+				require('echarts/lib/component/dataZoom');
+				require('echarts/lib/component/legend');
+
+				let myChart = echarts.init(document.getElementById('chart'));
+
+				var data = [
+					[
+						[28604, 77, 17096869, 'Australia', 1990],
+						[31163, 77.4, 27662440, 'Canada', 1990],
+						[1516, 68, 1154605773, 'China', 1990],
+						[13670, 74.7, 10582082, 'Cuba', 1990],
+						[28599, 75, 4986705, 'Finland', 1990],
+						[29476, 77.1, 56943299, 'France', 1990],
+						[31476, 75.4, 78958237, 'Germany', 1990],
+						[28666, 78.1, 254830, 'Iceland', 1990],
+						[1777, 57.7, 870601776, 'India', 1990],
+						[29550, 79.1, 122249285, 'Japan', 1990],
+						[2076, 67.9, 20194354, 'North Korea', 1990],
+						[12087, 72, 42972254, 'South Korea', 1990],
+						[24021, 75.4, 3397534, 'New Zealand', 1990],
+						[43296, 76.8, 4240375, 'Norway', 1990],
+						[10088, 70.8, 38195258, 'Poland', 1990],
+						[19349, 69.6, 147568552, 'Russia', 1990],
+						[10670, 67.3, 53994605, 'Turkey', 1990],
+						[26424, 75.7, 57110117, 'United Kingdom', 1990],
+						[37062, 75.4, 252847810, 'United States', 1990]
+					]
+				];
+
+				var option = {
+					title: {
+						text: '1990 与 2015 年各国家人均寿命与 GDP'
+					},
+					legend: {
+						right: 10,
+						data: ['1990']
+					},
+					xAxis: {
+						splitLine: {
+							lineStyle: {
+								type: 'dashed'
+							}
+						}
+					},
+					yAxis: {
+						splitLine: {
+							lineStyle: {
+								type: 'dashed'
+							}
+						},
+						scale: true
+					},
+					series: [{
+						name: '1990',
+						data: data[0],
+						type: 'scatter',
+						symbolSize: function(data) {
+							return Math.sqrt(data[2]) / 5e2;
+						},
+						emphasis: {
+							label: {
+								show: true,
+								formatter: function(param) {
+									return param.data[3];
+								},
+								position: 'top'
+							}
+						},
+						itemStyle: {
+							shadowBlur: 10,
+							shadowColor: 'rgba(120, 36, 50, 0.5)',
+							shadowOffsetY: 5,
+							color: new echarts.graphic.RadialGradient(0.4, 0.3, 1, [{
+								offset: 0,
+								color: 'rgb(251, 118, 123)'
+							}, {
+								offset: 1,
+								color: 'rgb(204, 46, 72)'
+							}])
+						}
+					}],
+					dataZoom: [{
+						show: true,
+						type: 'slider',
+						top: '90%',
+						start: 0,
+						end: 100
+					}],
+				};
+
+				myChart.setOption(option);
 			},
 
 			/*分页点击事件*/

@@ -338,7 +338,7 @@ export default {
       this.$router.push("/page/home");
     },
     cancel() {
-      this.$Message.info("点击了取消");
+      // this.$Message.info("点击了取消");
     },
     emailOk(email) {
       this.$refs[email].validate(valid => {
