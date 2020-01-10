@@ -1068,5 +1068,31 @@
 
 	</select>
 
+	<select id="jqsxxx_transfer_list" resultType="java.util.HashMap">
+		select a.ODER_Uid,c.SHOP_Title 网点名称,d.DDI_No 设备编号,a.ODER_Money 订单金额,DATE_FORMAT(a.CreateDate, '%Y-%m-%d %k:%i:%s') 订单时间,a.ODER_CoupMoney 代金券金额,a.ODER_Coup 代金券码
+		from t_shop_order_info a
+		join netfiance_db.t_shop_shop_info c
+		on a.ODER_SPUid = c.SHOP_Uid
+		left join t_device_device_info d
+		on a.ODER_DUid = d.DDI_Uid
+		where date(a.CreateDate) >= #{filterMap.startDate} and date(a.CreateDate) &lt;= #{filterMap.endDate}
+		and a.ODER_State = 0
+		and d.DDI_No = #{filterMap.ddiNo}
+		and c.SHOP_No = #{filterMap.shopValue}
+	</select>
+
+	<select id="jqsxxx_transfer_minmax" resultType="java.util.HashMap">
+		select Min(a.ODER_Money) min, MAX(a.ODER_Money) max
+		from t_shop_order_info a
+		join netfiance_db.t_shop_shop_info c
+		on a.ODER_SPUid = c.SHOP_Uid
+		left join t_device_device_info d
+		on a.ODER_DUid = d.DDI_Uid
+		where date(a.CreateDate) >= #{filterMap.startDate} and date(a.CreateDate) &lt;= #{filterMap.endDate}
+		and a.ODER_State = 0
+		and d.DDI_No = #{filterMap.ddiNo}
+		and c.SHOP_No = #{filterMap.shopValue}
+	</select>
+
 	
 </mapper>

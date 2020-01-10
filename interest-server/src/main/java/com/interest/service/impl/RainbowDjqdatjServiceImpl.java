@@ -57,5 +57,28 @@ public class RainbowDjqdatjServiceImpl implements RainbowDjqdatjService {
 		return map;
 	}
 
+	@Override
+	public HashMap<String, Object> jqsxxx_transfer_list(HashMap filterMap) {
+		HashMap<String, Object> map = new HashMap<>();
+
+		List<HashMap> list = RainbowUtil.decodeList(rainbowDjqdatjDao.jqsxxx_transfer_list(filterMap));
+		HashMap<String, String> minmaxMap = rainbowDjqdatjDao.jqsxxx_transfer_minmax(filterMap);
+		map.put("list", list);
+
+		try {
+			map.put("min", minmaxMap.get("min"));
+		} catch (Exception e) {
+			map.put("min", "0");
+		}
+
+		try {
+			map.put("max", minmaxMap.get("max"));
+		} catch (Exception e) {
+			map.put("max", "0");
+		}
+
+		return map;
+	}
+
 
 }

@@ -163,6 +163,7 @@
 				dataList: [], // 列表数据
 				showDetailModel: false, // 控制是否显示详情
 				detailInfo: {}, // 某条数据下的所有的详情信息
+				transferInfo: {},
 
 				selectValue: {},
 
@@ -957,9 +958,11 @@
 
 				this.detailInfo = []; // 置空详情数据，否则打开时仍然是上次的数据
 
+				this.transferInfo = [];
+
 				this.queryDetailInfo(rowData['机器编号'], rowData['网点编号']);
 
-				this.loadCharts();
+				this.queryTransferInfo(rowData['机器编号'], rowData['网点编号']);
 
 			},
 
@@ -1000,6 +1003,39 @@
 					}.bind(this));
 			},
 
+			queryTransferInfo(ddiNo, shopNo) {
+				this.showSpin = true;
+				
+				this.axios({
+						method: "get",
+						url: "/rainbow/jqsxxx_transfer_list",
+						params: {
+							filterMap: {
+								ddiNo: ddiNo,
+								shopValue: shopNo,
+								startDate: this.dateValue[0],
+								endDate: this.dateValue[1]
+							}
+						}
+					})
+					.then(
+						function(response) {
+							console.log(JSON.stringify(response))
+
+							this.transferInfo = response.data.data;
+
+							this.loadCharts();
+
+						}.bind(this)
+					)
+					.catch(function(error) {
+						alert(error);
+					})
+					.finally(function() {
+						this.showSpin = false;
+					}.bind(this));
+			},
+
 			loadCharts() {
 				var echarts = require('echarts/lib/echarts');
 				// 引入柱状图
@@ -1011,40 +1047,21 @@
 				require('echarts/lib/component/legend');
 
 				let myChart = echarts.init(document.getElementById('chart'));
-
-				var data = [
-					[
-						[28604, 77, 17096869, 'Australia', 1990],
-						[31163, 77.4, 27662440, 'Canada', 1990],
-						[1516, 68, 1154605773, 'China', 1990],
-						[13670, 74.7, 10582082, 'Cuba', 1990],
-						[28599, 75, 4986705, 'Finland', 1990],
-						[29476, 77.1, 56943299, 'France', 1990],
-						[31476, 75.4, 78958237, 'Germany', 1990],
-						[28666, 78.1, 254830, 'Iceland', 1990],
-						[1777, 57.7, 870601776, 'India', 1990],
-						[29550, 79.1, 122249285, 'Japan', 1990],
-						[2076, 67.9, 20194354, 'North Korea', 1990],
-						[12087, 72, 42972254, 'South Korea', 1990],
-						[24021, 75.4, 3397534, 'New Zealand', 1990],
-						[43296, 76.8, 4240375, 'Norway', 1990],
-						[10088, 70.8, 38195258, 'Poland', 1990],
-						[19349, 69.6, 147568552, 'Russia', 1990],
-						[10670, 67.3, 53994605, 'Turkey', 1990],
-						[26424, 75.7, 57110117, 'United Kingdom', 1990],
-						[37062, 75.4, 252847810, 'United States', 1990]
-					]
-				];
-
+				
+				var data = [];
+				
+				for (var i=0; i<this.transferInfo.list.length; i++) {
+					var item = this.transferInfo.list[i]
+					var obj = [item['订单时间'], item['订单金额'],item['订单金额'] , item['网点名称']]
+					data.push(obj);
+				}
+				
 				var option = {
 					title: {
-						text: '1990 与 2015 年各国家人均寿命与 GDP'
-					},
-					legend: {
-						right: 10,
-						data: ['1990']
+						text: ''
 					},
 					xAxis: {
+						type: 'time',
 						splitLine: {
 							lineStyle: {
 								type: 'dashed'
@@ -1060,17 +1077,17 @@
 						scale: true
 					},
 					series: [{
-						name: '1990',
-						data: data[0],
+						name: '',
+						data: data,
 						type: 'scatter',
 						symbolSize: function(data) {
-							return Math.sqrt(data[2]) / 5e2;
+							return data[2] / 5;
 						},
 						emphasis: {
 							label: {
 								show: true,
 								formatter: function(param) {
-									return param.data[3];
+									return param.data[3]+" 在 "+param.data[0]+" 发生交易 "+param.data[1]+"元";
 								},
 								position: 'top'
 							}

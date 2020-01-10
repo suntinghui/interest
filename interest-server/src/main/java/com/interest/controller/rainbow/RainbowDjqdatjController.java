@@ -50,4 +50,12 @@ public class RainbowDjqdatjController {
         return new ResponseWrapper<>(resultMap);
     }
 
+    // 查询交易明细
+    @InterestLog
+    @GetMapping("/rainbow/jqsxxx_transfer_list")
+    public ResponseWrapper<HashMap> jqsxxx_transfer_list(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        HashMap<String, Object> resultMap = rainbowDjqdatjService.jqsxxx_transfer_list(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(resultMap);
+    }
+
 }

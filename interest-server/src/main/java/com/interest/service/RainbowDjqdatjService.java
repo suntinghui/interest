@@ -13,4 +13,6 @@ public interface RainbowDjqdatjService {
 
 	HashMap<String, List<HashMap>> jqsxxx_detail(HashMap filterMap);
 
+	HashMap<String, Object> jqsxxx_transfer_list(HashMap filterMap);
+
 }
