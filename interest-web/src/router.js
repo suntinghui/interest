@@ -463,6 +463,11 @@ const routers = [
 	    name: "rainbow/tkqktjr",
 	    component: resolve => require(["./views/rainbow/srtj/tkqktjr.vue"], resolve)
 	  },
+	  {
+	    path: "rainbow/wdjyxx", // 网点交易信息
+	    name: "rainbow/wdjyxx",
+	    component: resolve => require(["./views/rainbow/jsc/wdjyxx.vue"], resolve)
+	  },
 	  
 	  
 	  

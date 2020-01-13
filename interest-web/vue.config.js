@@ -56,8 +56,8 @@ module.exports = {
 		hotOnly: false,
 		proxy: {
 			"/interest": {
-				// target: "http://118.190.205.233:8812",
-				target: "http://localhost:8812",
+				target: "http://118.190.205.233:8812",
+				// target: "http://localhost:8812",
 				secure: false
 			}
 		} // 设置代理
