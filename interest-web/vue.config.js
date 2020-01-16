@@ -18,7 +18,10 @@ module.exports = {
 			'vue-router': 'VueRouter',
 			'vuex': 'Vuex',
 			'axios': 'axios',
-			'echarts': 'echarts'
+			// 'echarts': 'echarts',
+			'BMap':'BMap',
+			'BMapLib': 'BMapLib',
+			
 		},
 		plugins: [
 			new webpack.ProvidePlugin({
@@ -56,8 +59,8 @@ module.exports = {
 		hotOnly: false,
 		proxy: {
 			"/interest": {
-				target: "http://118.190.205.233:8812",
-				// target: "http://localhost:8812",
+				// target: "http://118.190.205.233:8812",
+				target: "http://localhost:8812",
 				secure: false
 			}
 		} // 设置代理

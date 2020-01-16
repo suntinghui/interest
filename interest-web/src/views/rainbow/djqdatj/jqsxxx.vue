@@ -1037,14 +1037,7 @@
 			},
 
 			loadCharts() {
-				var echarts = require('echarts/lib/echarts');
-				// 引入柱状图
-				require('echarts/lib/chart/scatter');
-				// 引入提示框和标题组件
-				require('echarts/lib/component/tooltip');
-				require('echarts/lib/component/title');
-				require('echarts/lib/component/dataZoom');
-				require('echarts/lib/component/legend');
+				var echarts = require('echarts');
 
 				let myChart = echarts.init(document.getElementById('chart'));
 				
