@@ -1094,5 +1094,42 @@
 		and c.SHOP_No = #{filterMap.shopValue}
 	</select>
 
+	<select id="wdjyxx" resultType="java.util.HashMap">
+		select  o.DDI_No,o.SHOP_No,o.SHOP_Title,o.SHOP_Position,date_format(激活时间,'%Y%m%d') 激活时间,ifnull(date_format(停止时间,'%Y%m%d'),'--') 停止时间,ifnull(i.MTT_money,0) 交易金额总计,ifnull(i.MTT_count,0) 交易张数总计
+		from
+		(select a.DDI_No,a.SHOP_No,k.SHOP_Position,b.SHOP_Title,date_format(DSI_Try,'%Y%m%d') 激活时间,date_format(DSI_WithDraw,'%Y%m%d') 停止时间
+		from study.t_device_sub_info a left join netfiance_db.t_shop_shop_info b
+		on b.SHOP_No = a.SHOP_No
+		left join t_shop_shop_info k
+		on b.SHOP_Uid = k.SHOP_Uid
+		where date(a.DSI_Try) &lt;= #{filterMap.endDate}
+		and (date(a.DSI_Withdraw) >= #{filterMap.startDate} or a.DSI_Withdraw is null)
+		and a.DSI_Anti is null )o    #查询时段内全部运营设备
+
+		left join
+
+		(select i.SHOP_No,h.DDI_No,sum(b.ODDT_Money*b.ODDT_Count) as MTT_money,sum(b.ODDT_Count) MTT_count
+		from t_shop_order_info a left join t_shop_order_detail b
+		on a.ODER_Uid = b.ODDT_ODUid
+		left join t_device_device_info h
+		on a.ODER_DUid = h.DDI_Uid
+		left join study.t_device_sub_info d
+		on h.DDI_No = d.DDI_No
+		left join netfiance_db.t_shop_shop_info i
+		on a.ODER_SPUid = i.SHOP_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_list f
+		ON i.SHOP_AGUid = f.AGNT_Uid
+		LEFT JOIN netfiance_db.t_shop_agent_top g
+		ON f.AGNT_ATUid = g.ATOP_Uid
+		where a.ODER_State = 0
+		and a.CreateDate >= d.DSI_Try and (a.CreateDate &lt;= d.DSI_Withdraw or d.DSI_Withdraw is null)
+		and d.DSI_Anti is null
+		and date(a.CreateDate) >= #{filterMap.startDate} and date(a.CreateDate) &lt;= #{filterMap.endDate}
+		group by SHOP_No,DDI_No ) i
+
+		on o.DDI_No = i.DDI_No and o.SHOP_No = i.SHOP_No;
+
+	</select>
+
 	
 </mapper>

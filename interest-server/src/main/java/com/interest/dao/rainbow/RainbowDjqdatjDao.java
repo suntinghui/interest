@@ -52,6 +52,8 @@ public interface RainbowDjqdatjDao {
     List<HashMap> jqsxxx_transfer_list(@Param("filterMap") HashMap filterMap);
     HashMap jqsxxx_transfer_minmax(@Param("filterMap") HashMap filterMap);
 
+    List<HashMap> wdjyxx(@Param("filterMap") HashMap filterMap);
+
 
 
 }

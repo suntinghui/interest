@@ -18,9 +18,8 @@ module.exports = {
 			'vue-router': 'VueRouter',
 			'vuex': 'Vuex',
 			'axios': 'axios',
-			// 'echarts': 'echarts',
-			'BMap':'BMap',
-			'BMapLib': 'BMapLib',
+			'echarts': 'echarts',
+			'AMap': 'AMap'
 			
 		},
 		plugins: [

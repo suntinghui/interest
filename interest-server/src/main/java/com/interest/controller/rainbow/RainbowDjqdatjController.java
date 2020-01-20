@@ -58,4 +58,12 @@ public class RainbowDjqdatjController {
         return new ResponseWrapper<>(resultMap);
     }
 
+    // 网点交易信息
+    @InterestLog
+    @GetMapping("/rainbow/wdjyxx")
+    public ResponseWrapper<List> wdjyxx(@RequestParam(value = "filterMap", required = false) String filterMap) {
+        List<HashMap> resultMap = rainbowDjqdatjService.wdjyxx(JSON.parseObject(filterMap, HashMap.class));
+        return new ResponseWrapper<>(resultMap);
+    }
+
 }

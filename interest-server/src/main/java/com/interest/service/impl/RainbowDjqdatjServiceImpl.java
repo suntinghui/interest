@@ -80,5 +80,11 @@ public class RainbowDjqdatjServiceImpl implements RainbowDjqdatjService {
 		return map;
 	}
 
+	@Override
+	public List<HashMap> wdjyxx(HashMap filterMap) {
+		List<HashMap> list = RainbowUtil.decodeList(rainbowDjqdatjDao.wdjyxx(filterMap));
+		return list;
+	}
+
 
 }
